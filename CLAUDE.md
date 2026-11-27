@@ -12,6 +12,7 @@ Team background: full-stack web (React, Node.js).
 - `context/04-evaluation.md`: judging criteria (relevance / innovativeness+business / team, 1/3 each; ties go to relevance) and how to score well
 - `context/05-tools-and-data.md`: hackathon-provided tools (CDSE, APEx, FlyPix, KINEIS…), Copernicus and Galileo services, open data, setup steps
 - `context/06-competition.md`: the 127 registered hackathon projects by cluster, the market landscape (US, CN, EU), strategic lessons
+- `context/07-news-signals.md`: live news leads from X (Baltic GPS jamming from a dark ship this week, cable incidents, competitors)
 - `context/sources/`: the original rules PDF and text, and a CSV of registered projects
 
 ## Ideas
