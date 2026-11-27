@@ -27,3 +27,5 @@ R = relevance, I = innovativeness and business, T = team fit (web dev).
 | Faked sensor readings | #1 | Cross-check utility sensor claims against satellite flood maps | |
 | HeatSafe | #2 (weak) | Street-level heat and older people | Weak link to the theme |
 | Breathe (consumer smoke alerts) | #2 | — | Dropped: competes with free Google, Apple and government tools |
+| [Tiny Crops](06-tiny-crops.md) | #2 (pivot) | Region-specific crop and weather monitoring; pivot: map farmland lost to war or disaster | Earlier team idea, written up. Weak fit as-is; crowded damage-map cluster; no Galileo role |
+| [OMRE](07-omre.md) | #2 (pivot) / #3 | Satellite evidence of a plot's past state; originally for small farmers vs false EUDR claims, pivot: war-damage compensation evidence | Earlier team idea, written up. Pivot overlaps with GroundProof in this hackathon |
