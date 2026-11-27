@@ -1,0 +1,760 @@
+Rules of Contest
+        for the
+ Cassini Hackathons
+   Prize Contest
+    After Corrigendum 1
+    CONTENTS
+
+1     INTRODUCTION ............................................................................................................................... 3
+2     BACKGROUND AND OBJECTIVE OF THE CASSINI HACKATHONS ..................................................... 3
+3     TECHNICAL TERMS OF REFERENCE ................................................................................................. 4
+    3.1       Registrations of Participants.................................................................................................. 4
+    3.2       Structure of the Contest ........................................................................................................ 4
+      3.2.1       Stage 1 – Local Hackathons ............................................................................................... 4
+      3.2.2       Rules for Submission of the applications .......................................................................... 5
+      3.2.3       Stage 2 - European Finals (Demo Day) .............................................................................. 6
+4     LEGAL TERMS OF REFERENCE ......................................................................................................... 7
+    4.1       Eligibility criteria .................................................................................................................... 7
+    4.2       Exclusion criteria.................................................................................................................... 8
+    4.3       Evaluation .............................................................................................................................. 9
+    4.4       The Prize ................................................................................................................................ 9
+      4.4.1       Stage I ................................................................................................................................ 9
+      4.4.2       Stage 2 ............................................................................................................................. 10
+    4.5       Award criteria ...................................................................................................................... 10
+    4.6       Intellectual property of developments................................................................................ 10
+5     SCHEDULE OF THE CONTEST ......................................................................................................... 11
+6     REQUESTS FOR ADDITIONAL INFORMATION ................................................................................ 13
+7     ORGANISATIONAL COSTS .............................................................................................................. 14
+8     OTHER CONDITIONS ...................................................................................................................... 14
+    8.1       Acceptance of Obligations by Winners................................................................................ 14
+    8.2       Intellectual Property Rights ................................................................................................. 14
+    8.3       Provisions Concerning Payments ........................................................................................ 15
+    8.4       Recovery .............................................................................................................................. 15
+    8.5       Withdrawal of the Prize, Recovery of Payments ................................................................. 16
+    8.6       Assignment of Prizes, Substitution of Prizes ....................................................................... 16
+    8.7       Cancellation of Prize Contest............................................................................................... 16
+    8.8       Security ................................................................................................................................ 16
+    8.9       Liability................................................................................................................................. 16
+    8.10      Applicable Law and Jurisdiction........................................................................................... 16
+    8.11            Severability .......................................................................................................................... 17
+    8.12            Data Protection.................................................................................................................... 17
+9           Annexes ......................................................................................................................................... 17
+
+
+
+    1         INTRODUCTION
+
+This document presents the rules of contest for the Prize to be awarded as a result of four Cassini
+Hackathons.
+
+This Prize Contest will be managed by the EU Agency for the Space Programme (EUSPA), pursuant to
+the contribution agreement concluded with the Commission under the Horizon Europe work
+programme 2024.
+
+The regulatory framework for this EU Funding Programme is set out in:
+
+        -       Regulation (EU, Euratom) 2018/1046 of the European Parliament and of the Council of 18 July
+                2018 on the financial rules applicable to the general budget of the Union, amending
+                Regulations (EU) No 1296/2013, (EU) No 1301/2013, (EU) No 1303/2013, (EU) No 1304/2013,
+                (EU) No 1309/2013, (EU) No 1316/2013, (EU) No 223/2014, (EU) No 283/2014, and Decision
+                No 541/2014/EU and repealing Regulation (EU, Euratom) No 966/2012 (hereinafter the
+                ‘Financial Regulation’ or ‘FR’);
+        -       Regulation (EU) 2021/695 of the European Parliament and of the Council of 28 April 2021
+                establishing Horizon Europe – the Framework Programme for Research and Innovation, laying
+                down its rules for participation and dissemination, and repealing Regulations (EU) No
+                1290/2013 and (EU) No 1291/2013 (hereinafter the ‘HE Regulation’).
+
+    2         BACKGROUND AND OBJECTIVE OF THE CASSINI HACKATHONS
+
+Space technology, data and services have become indispensable in the daily lives of Europeans and
+play an essential role in many application areas including innovative one. Galileo, Europe’s Global
+Navigation Satellite System (GNSS), delivers operational services 24/7 to more than 3 billion users
+around the world. Many sectors of the European economy rely on Galileo precise localisation.
+
+At the same time, Copernicus, the European Earth Observation Programme, offers information
+services that draw from satellite Earth Observation and in-situ data. This information helps to better
+understand how and in what way our planet may be changing, and how this might influence our daily
+lives. Copernicus also boosts commercial applications in many different sectors by providing full and
+open access to Earth observation data and added value information.
+
+In this context, the European Union Agency for the Space Programme (EUSPA) is organising the Cassini
+hackathons aiming at encouraging EU entrepreneurship and business creation by promoting the
+development of innovative solutions, products or services based on Galileo, Copernicus, other EU
+Space Program components and their synergies with other technologies.
+
+The Cassini hackathons intend to raise awareness about the EU space programmes and Cassini
+opportunities to a broad audience of potential entrepreneurs via the organisation of hackathons
+across Europe.
+A Hackathon is an event where individuals or teams come together and collaborate to develop new
+software projects and solutions within a limited time frame. Participants work to develop ideas, create
+functional prototypes or solutions to specific problems, with a focus on innovation and creativity.
+
+The proposed solutions shall make use of the services and data from the EU space programs (i.e.
+Galileo, Copernicus, Govsatcom etc.) and promote synergies among them. Synergies with other non-
+space, deep technologies may also be used in the proposed solutions. Proposals should deliver new
+innovative applications, with commercial and social benefits, impact and a clear market uptake.
+
+Subject to the provisions under Section 4, the contest is open to legal entities/individuals willing to
+make use of their technical experience and knowledge in, among the others, data analytics, artificial
+intelligence, machine learning, earth observation and geographical information systems, global
+positioning systems and internet of things.
+
+The CASSINI Hackathons are part of the implementation of Competitive Space Start-ups for Innovation
+initiative (CASSINI) announced in the SME Strategy for a sustainable and digital Europe.
+
+  3     TECHNICAL TERMS OF REFERENCE
+
+3.1     Registrations of Participants
+
+To participate in the Contest, interested teams or individuals shall register on the dedicated platform
+available at the following link: www.cassini.eu/hackathons. The deadline for registration is set under
+Section 5 below.
+
+3.2     Structure of the Contest
+
+Each Cassini Hackathon is organised in two stages.
+
+The first stage of each Hackathon (‘Local Hackathon’) is organised in cooperation with the 10 local
+organisers and will have the objective to shortlist the best solutions in each one of the 10 selected
+locations. The first ranked solution per location (10 local finalists) will be invited to the second stage
+and will participate in the European Finals - Demo Days.
+
+In the second stage of each Hackathon (‘European Finals – Demo Days’) the first three ranked solutions
+will be awarded a monetary prize (see Section 4.4 below) and will have the opportunity to participate
+in a mentoring scheme for up to 100 mentoring hours per team during a 6-months period maximum.
+
+3.2.1    Stage 1 – Local Hackathons
+
+Participants who registered for the contest within the deadline indicated in Section 5 below will take
+part in one of the 10 Local Hackathons organised per each edition.
+
+Participants will specify the Hackathon location to which they will participate when registering on the
+platform at the indicated link.
+
+The challenges and the location of each Hackathon are published on the dedicated website at the
+following link www.cassini.eu/hackathons. Possible changes or deviations regarding the challenges
+and the locations of the Hackathons will be subject of a Corrigendum and duly published on the
+relevant page above mentioned.
+As a result of stage 1, following the evaluation by the Evaluation Committee based on the award
+criteria as set out in Section 4.5 below, the best ranked solution for each of the Local Hackathons (10
+finalists) will be invited to stage 2.
+
+NOTA BENE: No monetary prize will be awarded in the first stage (‘Local Hackathons’) by EUSPA. In
+case local organisers and/or other partners decide to award monetary prizes following the Local
+Hackathons and based on the outcome thereof, such prize shall not be confused with the Hackathon
+Prize nor considered in any way as a Prize awarded by EUSPA.
+
+3.2.2   Rules for Submission of the applications
+
+Registered participants shall submit their application by 15h00 of the last day of the Local Hackathon
+weekend.
+
+The dedicated platform for the Cassini Hackathons (available at www.cassini.eu/hackathons) shall be
+the only admissible means for submission of the solutions. The language of the platform is English.
+
+The following documents shall be part of the project page on the platform and shall be submitted as
+part of each application:
+
+    •   A short summary of the project (max 2 pages);
+    •   Identification of the team coordinator to serve as the point of contact and referent to
+        represent the team towards EUSPA.
+    •   Description of all team members with brief information and their roles in the team;
+    •   If available, a link to a video or screen capture representing the prototype;
+    •   Explanation of the link with the theme of the Local Hackathon and with (at least) one of the
+        challenges;
+    •   The explanation of the use of Space data, information, services and signals;
+    •   Any APIs, SDKs, frameworks or other software libraries used in the project;
+    •   Any unique hardware used in the project, if any; and
+    •   Optionally, a link to the GitHub repository with the open-source code.
+
+NOTA BENE: Only applications submitted by the deadline set under Section 3.2.2 and 5 and marked
+as completed on the dedicated platform by the established deadline, will be considered as eligible
+and evaluated for the purposes of the Contest.
+
+Teams are encouraged to submit their applications before the deadline in case any IT issues arise.
+
+Each participant (team/individual) can submit only one solution and each participant can be part of
+only one team.
+
+Following the application deadline, eligible solutions (see Nota Bene here above) will be reviewed by
+the appointed Evaluation Committee for the Local Hackathon which will then shortlist the best team
+based on the award criteria set below in Section 4.5.
+
+The best ranked solution in each of the ten (10) Local Hackathons will be invited to compete in the
+following stage European Finals – Demo Days.
+3.2.3   Stage 2 - European Finals (Demo Day)
+
+During the European Finals (Demo Day) the 10 finalists from the local Hackathons will compete for the
+prize (see section 4.4 below).
+
+The European Finals will be held online and will be organised as a live pitching challenge to be held in
+English between the finalists.
+
+The relevant details of the European Finals (Demo Day) will be published, in due time, on the dedicated
+website at the following link www.cassini.eu/hackathons. Possible changes or deviations regarding
+the European Finals (Demo Day) will be subject of a Corrigendum and duly published on the relevant
+page above mentioned.
+
+The 10 finalists will be presenting their solutions to the Evaluation Committee which will evaluate
+them against the award criteria as set out in Section 4.5 below. The Evaluation Committee will then
+rank (in a provisional ranking) the solutions according to the evaluation performed.
+
+Such provisional ranking will be communicated to the participants during the European Finals (Demo
+Day. This ranking shall not be considered as final as it constitutes a provisional ranking subject to
+further checks by the Evaluation Committee.
+
+The decision to award the prize to the best three (3) participants, will be taken by EUSPA’s Authorizing
+Officer based on the recommendation formulated by the Evaluation Committee, following the
+assessment of the eligibility criteria and exclusion criteria as set out below in Section 4.
+
+For the purposes of this assessment, the first five (5) ranked teams/individuals (according to the
+provisional ranking), shall submit, within five (5) working days from the announcement of such
+ranking, the following documents:
+
+ ▪ Declaration of Honour on exclusion criteria (using the template attached hereto as Annex I.B).
+   EUSPA reserves the right to request supporting documents to the declaration of Honour as
+   evidence for exclusion criteria (Art. 136 FR) and grounds for rejection (Art. 141 FR) as described
+   in the Template attached hereto as Annex I.
+   NOTA BENE: In case the Participant is a team of more than one individual, one Declaration of
+   Honour per each team member shall be submitted. If the team member is a legal entity (i.e.
+   companies), then only DoH for the legal entity (company) applying to the contest shall be
+   submitted - no separate natural person DoH for the company’s employees are needed.
+ ▪ Legal Entity Form (using the relevant template available at the following link Legal entities -
+   European Commission (europa.eu)) with a copy of an identity document (national ID card or
+   passport) for each the natural persons participating to the team (one ID for each individual
+   applicant) and, for the legal entity an extract of the national company registry. Participants are
+   required to complete and sign the form and to attach copies of official supporting documents as
+   specified in the header at the top of the Legal Entity Form.
+   NOTA BENE: One Legal Entity Form shall be submitted per each team member participating in
+   the contest. If the team member is a legal entity (i.e. companies), then only LEF for the legal
+   entity (company) applying to the contest shall be submitted - no separate natural person LEF
+   for the company’s employees are needed.
+   NOTA BENE: The photographs, as well as any other personal data (except for the name, date of
+   birth and nationality) included in such ID documents must be concealed by each applicant so
+   that they are not at all visible in the submitted copy. If, despite the aforementioned, the non-
+   mandatory personal data are visible, it is implied that the applicant has given its consent to
+   their processing.
+ ▪ Financial Identification Form (using the relevant template available at the following link Financial
+   identification - European Commission (europa.eu)) including all the supporting documents
+   defined at the bottom of the Financial Identification Form.
+   NOTA BENE: One Financial Identification Form shall be submitted per team with the
+   information of the team coordinator. Legal entities shall submit FIF with the legal entity’s
+   details.
+   NOTA BENE: Please note that in case of award, the prize will be paid to the team member whose
+   information is provided in the Financial Identification Form.
+
+EUSPA reserves the right to request submission of the documents listed above from other participants
+in case the first five (5) ranked ones should not be found compliant with the requirements or fail to
+submit the documents requested by the mentioned deadline.
+
+The documents listed here above shall be submitted via email at the functional mailbox:
+prizes@euspa.europa.eu. The email shall include the following subject: EUSPA-Cassini Hackathons-
+Submission of documents.
+
+The award decision for the contest will be taken by the EUSPA Authorizing Officer responsible upon
+verification, by the Evaluation Committee, of the documents submitted by the first five (5) ranked
+participants as described above with the purpose of verifying compliance with the eligibility criteria as
+set below and the exclusion criteria.
+
+In case any of the top three (3) ranked participants is found to be non-compliant with the eligibility
+criteria as set below and the exclusion criteria, the next ranked participant will be considered for the
+award, provided that the eligibility criteria as set below, and the exclusion criteria are fulfilled.
+
+Following these checks and based on the findings therein, the Evaluation Committee will make its
+recommendation to the Authorizing officer for award.
+
+The three (3) top ranked participants will receive a monetary prize from EUSPA and qualify for a
+mentoring scheme for up to 100 mentoring hours per team during a 6-months period maximum.
+
+The decision to award the prize will be notified to the winning participants and shall serve as the legal
+commitment.
+
+  4    LEGAL TERMS OF REFERENCE
+
+4.1   Eligibility criteria
+
+Subject to paragraph 4.2 below, participation in the contest shall be open on equal terms to all
+economic operators (natural and legal persons) registering both as individuals or as a team,
+established in the territory of the Member States of the European Union and non-EU countries
+associated to the Horizon Europe1 or countries which are in ongoing negotiations for an association
+agreement and where the agreement applies before the award.
+
+Economic operators referred to above are considered established in the above-mentioned countries
+when they are formed in accordance with the law of such country and have their central
+administration or registered office or principal place of business in this country (if legal persons), or
+they are nationals of one of this country (if natural persons). Natural person applicants must be at
+least of 18 years of age by the date of submission of the application.
+
+Each participant (team or individual) shall submit only one application and any individual can be part
+of only one team.
+
+Each team must appoint a team coordinator to serve as the point of contact and referent to represent
+the team towards EUSPA.
+
+4.2     Exclusion criteria
+
+The contest is not open to:
+
+      a) applicants being, at the moment of submission of their application and during the entire
+         period of the prize contest including the prize award, in a situation of exclusion under article
+         136 of the Financial Regulation2 (as per the Declaration of Honour);
+      b) applicants being, at the moment of submission of their application and during the entire
+         period of the prize contest including the prize award, in one of the grounds for rejection under
+         article 141 of the Financial Regulation (as per the Declaration of Honour);
+      c) employees of EUSPA, EUSPA contractors and their employees providing services to the EUSPA,
+         employees of European Commission (‘’EC’’) and European Space Agency (‘’ESA’’), EC and ESA
+         contractors and their employees working in the EGNSS and Copernicus space sector and/or
+         immediate family members (spouses, domestic partners, parents, grandparents, siblings,
+         children and grandchildren) of the EUSPA, EC and ESA;
+      d) beneficiaries of other European Union funding for the same action;
+      e) restricted persons3 falling under the scope of or subject to EU Restrictive Measures. Applicants
+         shall fill in the dedicated section of the Declaration of Honour (Section 11 of the Declaration
+         of Honour) and declare whether the applicant and respective relevant persons4 are not being
+         a Restricted Person and do not fall under the scope of subject to EU Restrictive Measures.
+
+
+
+
+1
+  A list of associated countries can be found here list-3rd-country-participation_horizon-euratom_en.pdf
+(europa.eu).
+2
+  Regulation (EU, Euratom) 2018/1046.
+3
+  Means any entity, individual or group of individuals subject to the EU Restrictive Measures as published in the
+Official Journal of the EU or designated by the EU as subject to the EU Restrictive Measures in the lists provided
+at www.sanctionsmap.eu. Note that the EU Official Journal is the official source of EU law and, in case of conflict,
+its content prevails over that of the EU Sanctions Map .
+4
+  Means a legal person and/or a natural or legal person who is a member of the administrative, management or
+supervisory body of the above-mentioned legal person, and/or who has powers of representation, decision or
+control with regard to the above-mentioned legal person (this covers e.g. company directors, members of
+management or supervisory bodies, and cases where one natural or legal person holds a majority of shares) as
+well as the employees, shareholders, or beneficial owners of the person(s) concerned.
+Notice on the Council Implementing Decision (EU) 2022/2506 on measures for the protection of
+the Union budget against breaches of the principles of the rule of law in Hungary
+
+In accordance to the Council Implementing Decision (EU) 2022/2506 adopted on 15 December 2022
+on measures for the protection of the Union budget against breaches of the principles of the rule of
+law in Hungary it’s been established that, where Union budget is implemented in direct or indirect
+management pursuant to of Article 62(1) points (a) and (c) of Regulation (EU, Euratom) 2018/1046,
+no legal commitments shall be entered into with any public interest established on the basis of the
+Hungarian Act IX of 2021 (or any other entity maintained by such a public interest trust).
+
+4.3     Evaluation
+The documents submitted as part of the applications will be evaluated by the Evaluation Committee
+appointed for the Contest.
+
+In case EUSPA shall deem necessary to clarify certain aspects of the application or should some
+documents be missing, requests for clarifications will be sent to the registered participants from the
+functional mailbox prizes@euspa.europa.eu. Such requests will be addressed to the email address
+provided with the registration. Replies to the requests for clarifications shall be addressed to the
+mentioned functional mailbox.
+
+The solutions presented in both Stage 1 and 2 will be evaluated by the appointed Evaluation
+Committee according to the award criteria defined below (see Section 4.5).
+
+Following the European Finals Demo Days, the first five (5) ranked participants will be requested to
+submit the evidence as per Section 3.2.3 above.
+
+The fulfilment of the eligibility and exclusion criteria will be assessed for the first five (5)
+participants. EUSPA reserves in any case the right to request the relevant documents and assess the
+fulfilment of the criteria with regard to more participants, when and if necessary.
+
+NOTA BENE: In case any of the three (3) top ranked participants should not fulfil the eligibility criteria
+or shall be found to be in one of the situations of exclusion (Article 136 FR) or grounds for rejection
+(Article 141), the participant ranked immediately after shall be considered for the recommendation
+for award, provided it fulfils the mentioned requirements and criteria.
+
+The participants will be notified by the EUSPA of the results of evaluations as soon as possible and in
+any case within 15 calendar days after the award decision has been taken by the authorising officer.
+The decision to award the prize will be notified to the winning applicant and will serve as the legal
+commitment. Furthermore, the awarded teams will be announced on the official contest site.
+
+4.4     The Prize
+
+4.4.1    Stage I
+
+The first ranked participants in each of the 10 Local Hackathons will be invited to compete in the
+European Finals for the award of a monetary prize.
+NOTA BENE: No monetary prize will be awarded in the first stage (‘Local Hackathons’) by EUSPA. In
+case local organisers and/or other partners decide to award monetary prizes following the Local
+Hackathons and based on the outcome thereof, such prize shall not be confused with the Hackathon
+Prize nor considered in any way as a Prize awarded by EUSPA.
+
+4.4.2    Stage 2
+
+The first three ranked participants at the European Finals will receive a prize in the amount of:
+
+      1. EUR 5,000 (five thousand euros) for the first ranked.
+      2. EUR 3,000 (three thousand euros) for the second ranked.
+      3. EUR 1,000 (one thousand euros) for the third ranked.
+
+In total 9.000€ for each Hackathon edition will be awarded to the three top ranked finalists.
+
+In addition to the monetary prize, the first three ranked participants will have the opportunity to
+participate in a mentoring scheme for up to 100 mentoring hours per team during a 6-months period
+maximum.
+
+The decision to award the prize shall be notified to the winning applicant and shall serve as the legal
+commitment.
+
+4.5     Award criteria
+
+The following criteria will be considered for the evaluation of the solutions and shall be applicable to
+both stages:
+
+ Criteria                                                                                   Points
+
+ Relevance of the prototype and business idea to the hackathon theme/challenge              0–5
+
+ Innovativeness of the prototype and value created for future users and customers           0–5
+
+ Quality of the team                                                                        0–5
+
+
+
+Maximum points per team is 15. The team with the highest points wins.
+
+For applications with the same score, the evaluation committee will determine a priority order
+according to the following approach: the winning team will be selected based on the higher score in
+the first criterion (Relevance of the prototype and business idea to the hackathon theme/challenge).
+In case of tie of the overall score and in the first criterion, the winner will be selected based on higher
+score in the second criterion.
+
+4.6     Intellectual property of developments
+
+Participants will retain full ownership of the intellectual property rights on solutions developed within
+the framework of the contest, and exclusivity of commercial exploitation.
+
+Additionally, the winners shall include Galileo/Copernicus/EUSPA branding in marketing material
+related to the development, such as the inclusion of a logo to the app/product webpage or any other
+form agreed without affecting the ownership and exclusivity of the commercial exploitation retained
+by the candidates nor the EC/EUSPA rights on the Galileo and Copernicus trademark.
+
+  5   SCHEDULE OF THE CONTEST
+
+7th Cassini hackathon
+
+      ID      Event                                                           Date
+
+       1.     Announcement of Contest                                      15/07/2024
+
+       2.     Deadline for the registration to Stage 1                     13/09/2024
+
+              Deadline for submission of requests for                      06/09/2024
+       3.
+              clarifications to the EUSPA
+
+              Last date on which clarifications are issued by              09/09/2024
+       4.
+              EUSPA
+
+       5.     Local hackathon weekend                                13/09/2024-15/09/2024
+
+              Invitation to Phase II – European Finals (Demo               15/09/2024
+       6.
+              Days)
+
+       7.     European Finals                                              18/09/2024
+
+              Award of the Prize and notification of the             02/10/2024 (estimated)
+       8.
+              outcome of the contest
+
+
+
+8th Cassini hackathon
+
+      ID      Event                                                           Date
+
+       1.     Announcement of Contest                                      24/09/2024
+
+       2.     Deadline for the registration to Stage 1                     22/11/2024
+
+              Deadline for submission of requests for                      17/11/2024
+       3.
+              clarifications to the EUSPA
+
+              Last date on which clarifications are issued by              18/11/2024
+       4.
+              EUSPA
+       5.     Local hackathon weekend                           22/11/2024-24/11/2024
+
+              Invitation to Phase II – European Finals (Demo         24/11/2024
+       6.
+              Days)
+
+       7.     European Finals                                        27/11/2024
+
+              Award of the Prize and notification of the        11/12/2024 (estimated)
+       8.
+              outcome of the contest
+
+
+
+9th Cassini hackathon
+
+      ID      Event                                                     Date
+
+       1.     Announcement of Contest                           30/01/2025 (estimated)
+
+       2.     Deadline for the registration to Stage 1          28/03/2025 (estimated)
+
+              Deadline for submission of requests for           19/03/2025 (estimated)
+       3.
+              clarifications to the EUSPA
+
+              Last date on which clarifications are issued by   20/03/2025 (estimated)
+       4.
+              EUSPA
+
+              Local hackathon weekend                                28/03/2025-
+       5.
+                                                                30/03/2025(estimated)
+
+              Invitation to Phase II – European Finals (Demo    30/03/2025 (estimated)
+       6.
+              Days)
+
+       7.     European Finals                                   02/03/2025 (estimated)
+
+              Award of the Prize and notification of the        16/03/2025 (estimated)
+       8.
+              outcome of the contest
+
+
+
+10th Cassini hackathon
+
+      ID      Event                                                     Date
+
+       1.     Announcement of Contest                           28/09/2025 (estimated)
+        2.     Deadline for the registration to Stage 1                  26/11/2025 (estimated)
+
+               Deadline for submission of requests for                   20/11/2025 (estimated)
+        3.
+               clarifications to the EUSPA
+
+               Last date on which clarifications are issued by           21/11/2025 (estimated)
+        4.
+               EUSPA
+
+               Local hackathon weekend                                        26/11/2025-
+        5.
+                                                                         28/11/2025(estimated)
+
+               Invitation to Phase II – European Finals (Demo            28/11/2025 (estimated)
+        6.
+               Days)
+
+        7.     European Finals                                           03/12/2025 (estimated)
+
+               Award of the Prize and notification of the                17/12/2025 (estimated)
+        8.
+               outcome of the contest
+
+
+
+NOTA BENE: Any changes or deviations regarding the dates ,including estimated one, as provided in
+this Section will be subject of a Corrigendum and duly published on the relevant website of the
+Hackathon.
+
+6    REQUESTS FOR ADDITIONAL INFORMATION
+
+Participants may request additional information for the sole purpose of clarifying the scope of these
+Terms of Reference.
+
+Any requests for clarification shall be made in writing and sent via email to prizes@euspa.europa.eu.
+The subject of the email shall quote the reference ‘Cassini Hackathons Prize Contest’.
+
+Participants are invited to send the requests for clarification as early as possible. The deadline for
+requests for clarification is six (6) working days before the deadline submission of the applications set
+in Section 3.2.2 above.
+
+Clarifications notes including answers to the questions submitted by the deadline set above, will be
+published by EUSPA on the Hackathons website at the following link www.cassini.eu/hackathons.
+
+The last date on which clarifications are issued by the EUSPA will be 6 working days before the deadline
+submission for each Hackathon.
+  7    ORGANISATIONAL COSTS
+
+Participation to the contest is free of charge for the participants. Costs incurred by the participants for
+the preparation and submission of their application and related to the contest shall be borne by the
+participants and will not be reimbursed.
+
+  8    OTHER CONDITIONS
+
+By registering at the link indicated in Section 3.1, participants accept the terms and conditions of these
+Terms of Reference including the following ones.
+
+8.1   Acceptance of Obligations by Winners
+
+The participants accept that, if they are awarded a Prize, the EUSPA, OLAF and the Court of Auditors
+may carry out checks and audits in relation to the contest and the received Prize in accordance with
+Article 129 of the Financial Regulation.
+
+Participants accept that all prizes awarded in the course of a financial year shall be published in
+accordance with Article 38(1) to (4) of the Financial Regulation.
+
+Particularly, EUSPA shall be permitted to publish:
+
+(a)     the name of the winner,
+
+(b)     its locality,
+
+(c)     the amount of the Prize and its nature and purpose.
+
+Participants may request EUSPA to waive such publication if disclosure risks threatening their security
+and safety or harm their commercial interest.
+
+Participants accept that the EUSPA, after each award, can publish (including on social media accounts)
+information about the applicant, such as team name and/or its application, such as description of the
+application, in order to promote the European space programme components and EUSPA’s initiatives.
+
+8.2   Intellectual Property Rights
+
+EUSPA hereby grants to the Winners a limited, non-exclusive, free-of-charge license to use EUSPA´s
+name, acronym and logo solely in order to promote the win of the Prize Contest.
+
+Winners hereby grants to EUSPA, the European Union and any of its bodies and agencies a limited,
+non-exclusive, irrevocable, free-of-charge license to use certain of Winner´s intellectual property,
+including Winner´s name, acronym and logo, in connection with the Prize Contest and in view to
+promote and create awareness of the Prize results.
+
+Unless the EUSPA requests or agrees otherwise or unless it is impossible, any communication activity
+of the Winner related to the Prize Contests must display:
+
+(a)     the EUSPA logo,
+(b)    the following text: “has been awarded the [name of the Prize] of the European [name of the
+programme] Programme”.
+
+Winners receives the right to name himself as the Winner of this Prize Contest and may use this
+designation in the context of market communication, e.g. on business papers, advertisements, press
+releases, television and radio commercials, as well as in customer communications.
+
+When displayed with another logo, the EUSPA logo must have an appropriate prominence.
+
+Participants may not appropriate the EUSPA logo or any similar trademark either by registration or by
+any other means. Winner shall not create the impression to be otherwise endorsed by EUSPA and/or
+the European Union or part of EUSPA’s and/or European Union’s activities.
+
+8.3   Provisions Concerning Payments
+
+Payments shall be executed in EUR.
+
+Payments shall be deemed to have been made on the date on which EUSPA’s account is debited.
+
+The costs of the bank transfer shall be borne in the following way:
+
+(a)     costs of dispatch charged by EUSPA’s bank shall be borne by EUSPA;
+
+(b)     costs of receipt charged by the Applicant’s bank shall be borne by the Applicant; and
+
+(c)     costs for a repeated transfer caused by one of the parties shall be borne by the party which
+has caused the repeated transfer.
+
+EUSPA shall execute the Payment within the period of thirty (30) days starting from the day following
+the notification of award. If the EUSPA does not pay within the time limits, Winner is entitled to late-
+payment interest as defined in Article 116(5) of the Financial Regulation.
+
+Where, after the award of the Prize, the award procedure proves to have been subject to substantial
+errors, irregularities, or fraud, and where such errors, irregularities or fraud are attributable to the
+Winner, EUSPA may refuse to make payments or may recover amounts already paid in proportion to
+the seriousness of the errors.
+
+8.4   Recovery
+
+If total payments made by EUSPA exceed the amount of the Prize or if recovery is justified in
+accordance with the Rules of Contest, the Winner shall reimburse the appropriate amount in EUR, in
+the manner and within the time limits set by EUSPA. Interest may be recovered based on the statutory
+rate.
+
+EUSPA may, after informing Winner, recover amounts established as certain, of a fixed amount and
+due by offsetting against any amount the Winner has on EUSPA that is certain, of a fixed amount and
+due.
+8.5   Withdrawal of the Prize, Recovery of Payments
+
+EUSPA may withdraw the Prize after its award and recover all payments made, if it finds out that:
+
+(a)     false information, fraud or corruption was used to obtain it;
+
+(b)     a Winner was not eligible or should have been excluded;
+
+(c)     a Winner is in serious breach of his obligations under these Rules of Conduct.
+
+8.6   Assignment of Prizes, Substitution of Prizes
+
+Winners shall not assign the Prize or its part or the rights and obligations arising from the Prize, in
+whole or in part, without prior written authorisation from EUSPA.
+
+In the absence of such authorisation, or in the event of failure to observe the terms thereof,
+assignment by Winner shall not be enforceable against and shall have no effect on EUSPA.
+
+8.7   Cancellation of Prize Contest
+
+EUSPA shall upon its discretion and taking into consideration the principle of proportionality cancel
+the Prize Contest particularly if the objectives of the Prize Contest cannot be fulfilled anymore, or the
+award procedure proves to have been subject to substantial errors, irregularities or fraud, and where
+such errors, irregularities or fraud are attributable to the Winner, or through any form of interference
+by third parties or for any reason beyond the control of EUSPA the Prize Contest cannot be carried out
+as intended.
+
+8.8   Security
+
+Activities related to the Prize Contest must be carried out in compliance with Commission Decision
+2015/444, i.e. security-sensitive information must be EU-classified and if its unauthorised disclosure
+could adversely impact the interests of the European Union or of one or more member state(s).
+Applications that are to security-sensitive cannot be awarded a Prize.
+
+8.9   Liability
+
+The EUSPA shall not be held liable for any damage caused or sustained by any of the Participants,
+including any damage caused to third parties as a consequence of or during the implementation of
+the activities related to the contest.
+
+In line with Article 207 (1) (d) of the Financial Regulation, the applicant shall be liable in the event of
+a claim relating to the activities carried out in the framework of the contest.
+
+8.10 Applicable Law and Jurisdiction
+
+The Prize Contest is governed by the applicable EU Law complemented, where necessary, by the law
+of Belgium. The General Court or, on appeal, the Court of Justice of the European Union, shall have
+sole jurisdiction to hear any dispute between the European Union and any participant concerning the
+interpretation, application or validity of the rules of this contest, if such dispute cannot be settled
+amicably.
+
+8.11 Severability
+
+If any of the provisions hereof is or becomes ineffective or invalid the remaining provisions hereof
+shall not be affected thereby. The ineffective provisions shall be replaced by other effective provisions
+that shall be identical to the commercial purpose of the original provisions or as close thereto as
+possible.
+
+8.12 Data Protection
+
+Personal data gathered for the purpose of the present procedure will be processed pursuant to
+Regulation (EU) 2018/1725 of the European Parliament and of the Council of 23 October 2018 on the
+protection of natural persons with regard to the processing of personal data by the Union institutions,
+bodies, offices and agencies and on the free movement of such data. This data will be processed by
+EUSPA as indicated in the privacy statement published on the Agency’s website
+(https://www.euspa.europa.eu/system/files/page/privacy_statement_relating_to_euspa_procurem
+ent_procedures_grants_prizes_and_selection_of_experts.pdf). Any request regarding your personal
+data should be addressed to the data controller responsible for the contest, the Head of MDI at
+entrepreneurship@euspa.europa.eu. You may also contact the Agency’s Data Protection officer (DPO)
+at DPO@euspa.europa.eu. If your request has not been responded to adequately by the data
+controller and/or DPO, you can lodge a complaint with the European Data Protection Supervisor at
+edps@edps.europa.eu.
+
+
+
+
+  9    ANNEXES
+
+Annex I – Template Declaration of Honour.
+
+
+
+
+                                           End of Document
+
