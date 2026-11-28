@@ -31,7 +31,9 @@ export class OpenRouteServiceRoutingGateway implements RoutingGateway {
   private readonly fetch: typeof globalThis.fetch;
 
   constructor(private readonly options: OpenRouteServiceOptions) {
-    this.baseUrl = (options.baseUrl ?? "https://api.openrouteservice.org").replace(/\/$/, "");
+    // api.openrouteservice.org was shut down on 24 Nov 2026; same API under the unified HeiGIT host
+    // (https://ask.openrouteservice.org/t/deprecating-api-openrouteservice-org-in-favour-of-api-heigit-org/7912).
+    this.baseUrl = (options.baseUrl ?? "https://api.heigit.org/openrouteservice").replace(/\/$/, "");
     this.profile = options.profile ?? "driving-car";
     this.timeoutMs = options.timeoutMs ?? 10_000;
     this.fetch = options.fetch ?? globalThis.fetch.bind(globalThis);

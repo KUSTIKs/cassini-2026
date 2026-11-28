@@ -34,7 +34,7 @@ describe("OpenRouteServiceRoutingGateway", () => {
     const { calls, gateway } = stubOrs();
     const res = await gateway.route({ from: KRNOV_CREW_START, to: DRY, avoid: null });
     expect(calls).toHaveLength(1);
-    expect(calls[0]!.url).toBe("https://api.openrouteservice.org/v2/directions/driving-car/geojson");
+    expect(calls[0]!.url).toBe("https://api.heigit.org/openrouteservice/v2/directions/driving-car/geojson");
     expect(calls[0]!.headers.Authorization).toBe("test-key");
     expect(calls[0]!.body.options).toBeUndefined();
     expect(res).toMatchObject({ provider: "openrouteservice", durationS: 99, destinationInHazard: false, endPoint: DRY });

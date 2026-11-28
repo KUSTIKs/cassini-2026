@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import type { RouteRequest, RouteResult, RoutingGateway } from "../../../application/ports/out/routing-gateway.js";
 
-/** One recorded answer from a real router, replayable offline. */
-export type RecordedRoute = { key: string; request: RouteRequest; result: RouteResult };
+/** One recorded answer from a real router, replayable offline. The avoid area lives only in `key` (hashed). */
+export type RecordedRoute = { key: string; request: Pick<RouteRequest, "from" | "to">; result: RouteResult };
 export type RecordedRoutes = { recordedAt: string; provider: string; routes: RecordedRoute[] };
 
 /** Stable key for a request: coordinates rounded to ~1 m plus a hash of the avoid area. */
@@ -44,7 +44,7 @@ export class RecordingRoutingGateway implements RoutingGateway {
 
   async route(request: RouteRequest): Promise<RouteResult> {
     const result = await this.inner.route(request);
-    this.recorded.push({ key: routeKey(request), request, result });
+    this.recorded.push({ key: routeKey(request), request: { from: request.from, to: request.to }, result });
     return result;
   }
 }
