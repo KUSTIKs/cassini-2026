@@ -61,7 +61,7 @@ The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
 | `HazardSignal` | id, sourceId (plugin), kind, stage (`forecast` / `observed`), area (polygon), issuedAt, expectedAt, expiresAt, confidence, provenance. The same shape for every signal plugin (`ARCHITECTURE.md` §6) |
 | `Alert` | id, floodEventId, municipality, createdAt, status (`active` / `closed`), substationIds[], personIds[] |
 | `ContactStatus` | alertId, personId, state (`not_contacted` / `reached_ok` / `away` / `needs_help` / `not_reached`), note, by, at |
-| `Task` | id, alertId, personId, crewId, bring[] (generator / oxygen / transport), state (`assigned` / `en_route` / `done`), route geometry |
+| `Task` | id, alertId, personId, crewId, bring[] (generator / oxygen / transport), state (`assigned` / `en_route` / `done`), route: `{ basis (observed / forecast / none), avoidedSignalIds, from, to, endPoint, destinationInHazard, walkRemainingM, line, distanceM, durationS, provider, computedAt, version, rerouteReason }` or null. A reroute replaces `route` and bumps `version` |
 | `AuditLog` | who, role, action (`view_person` / `export` / `status_change`), personId, at |
 
 ### Priority rule (explainable, in one function)
@@ -192,8 +192,8 @@ The demo is **2–3 minutes**: slide → alert → click 2 people → one task w
 7. Report (Flow 7), grid view (Flow 6), SMS mock (Flow 8): only if time allows.
 
 ## 6. Open technical decisions
-- [ ] Map library: **MapLibre GL** (free, no key) or Leaflet (simpler)?
-- [ ] Routing: OpenRouteService API (key, rate limits) or a self-hosted router?
+- [x] Map library: **MapLibre GL** with the keyless OpenFreeMap style (decided 28 Nov, `/crew`)
+- [x] Routing: OpenRouteService behind a `RoutingGateway` port, `ROUTING=ors`; offline fixture router for tests and the replay, `ROUTING=fixture` (decided 28 Nov). ORS key and live limits still [verify]
 - [x] Storage: Postgres + PostGIS (decided 28 Nov)
 - [ ] One app with role switch (`/mayor`, `/crew`, `/grid`) or separate apps? Proposal: one app.
 - [ ] Where the GFM polygon comes from: GFM portal export vs CDSE Sentinel-1 processing (GFM is easier).

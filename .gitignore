@@ -6,3 +6,6 @@ dist/
 .env.local
 *.tsbuildinfo
 next-env.d.ts
+
+# Copied from node_modules by apps/web/scripts/copy-maplibre-worker.mjs
+apps/web/public/maplibre-gl-worker.mjs

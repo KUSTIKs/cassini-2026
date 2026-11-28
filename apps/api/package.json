@@ -16,12 +16,15 @@
   "dependencies": {
     "@hono/node-server": "^2.1.11",
     "@lifeline/contracts": "workspace:*",
+    "@turf/turf": "^7.4.0",
     "drizzle-orm": "^0.45.4",
     "hono": "^4.13.23",
-    "postgres": "^4.1.1"
+    "postgres": "^4.1.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@lifeline/tsconfig": "workspace:*",
+    "@types/geojson": "^7946.0.16",
     "@types/node": "^26.6.11",
     "drizzle-kit": "^0.31.11",
     "tsup": "^9.0.0",
