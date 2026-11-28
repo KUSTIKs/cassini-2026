@@ -10,9 +10,11 @@ import { PostgresMunicipalityRepository } from "../adapters/out/postgres/municip
 import { PostgresRegisterRepository } from "../adapters/out/postgres/register-repository.js";
 import { PostgresSubstationRepository } from "../adapters/out/postgres/substation-repository.js";
 import { PostgresAlertRepository } from "../adapters/out/postgres/alert-repository.js";
+import { PostgresAuditRepository, PostgresContactRepository, PostgresTaskRepository } from "../adapters/out/postgres/flow3-repositories.js";
 import { PostgresSignalRepository } from "../adapters/out/postgres/signal-repository.js";
 import { PostgresUserRepository } from "../adapters/out/postgres/user-repository.js";
 import { CreateMunicipalityUseCase } from "../application/use-cases/create-municipality.js";
+import { GetAlertPersonUseCase, SetContactStatusUseCase } from "../application/use-cases/alert-person.js";
 import { GetAlertUseCase } from "../application/use-cases/get-alert.js";
 import { GetCurrentUserUseCase } from "../application/use-cases/get-current-user.js";
 import { GetMunicipalitySetupUseCase } from "../application/use-cases/get-municipality-setup.js";
@@ -41,6 +43,9 @@ export const buildContainer = (config: Config) => {
   const users = new PostgresUserRepository(db);
   const signals = new PostgresSignalRepository(db);
   const alerts = new PostgresAlertRepository(db);
+  const contacts = new PostgresContactRepository(db);
+  const tasks = new PostgresTaskRepository(db);
+  const audit = new PostgresAuditRepository(db);
   const sources = enabledSignalSources(config);
   const areas = new NominatimAreaGateway({ baseUrl: config.nominatimUrl, countryCodes: "cz" });
   const substationSource = new FallbackSubstationGateway(
@@ -72,7 +77,9 @@ export const buildContainer = (config: Config) => {
       onSourceError: (id, error) => console.warn(`Signal source "${id}" failed:`, (error as Error).message),
     }),
     listAlerts: new ListAlertsUseCase({ alerts }),
-    getAlert: new GetAlertUseCase({ ...repos, alerts, signals }),
+    getAlert: new GetAlertUseCase({ ...repos, alerts, signals, contacts, tasks, audit, clock, newId }),
+    getAlertPerson: new GetAlertPersonUseCase({ ...repos, alerts, contacts, tasks, audit, clock, newId }),
+    setContactStatus: new SetContactStatusUseCase({ ...repos, alerts, contacts, tasks, audit, clock, newId }),
   });
 
   return { http, close };

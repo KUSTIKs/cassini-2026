@@ -6,6 +6,7 @@
   padding: var(--space-6) var(--space-5);
   align-items: start;
 }
+.alert { margin-bottom: var(--space-5); }
 .intro { margin-bottom: var(--space-5); }
 .title { font-size: var(--fs-xl); font-weight: var(--fw-semibold); line-height: 1.25; letter-spacing: -0.015em; }
 .subtitle { margin-top: var(--space-1); color: var(--text-muted); }

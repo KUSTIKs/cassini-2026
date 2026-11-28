@@ -1,0 +1,12 @@
+.callout {
+  display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg);
+  background: var(--danger-soft); border: 1px solid color-mix(in srgb, var(--danger) 25%, transparent); color: var(--danger);
+}
+.callout:hover { border-color: var(--danger); }
+.callout:focus-visible { box-shadow: var(--focus-ring); }
+.icon { width: 20px; height: 20px; }
+.text { display: flex; flex-direction: column; min-width: 0; }
+.title { font-weight: var(--fw-semibold); }
+.meta { font-size: var(--fs-sm); color: var(--text); }
+.open { display: inline-flex; align-items: center; gap: 4px; font-weight: var(--fw-medium); white-space: nowrap; }

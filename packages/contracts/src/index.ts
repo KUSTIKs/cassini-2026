@@ -232,6 +232,29 @@ export const PersonDetails = z.object({
 });
 export type PersonDetails = z.infer<typeof PersonDetails>;
 
+export const ContactState = z.enum(["not_contacted", "reached_ok", "away", "needs_help", "not_reached"]);
+export type ContactState = z.infer<typeof ContactState>;
+export const Bring = z.enum(["generator", "oxygen", "transport", "door_check"]);
+export type Bring = z.infer<typeof Bring>;
+
+export const ContactSummary = z.object({
+  state: ContactState,
+  at: z.iso.datetime().nullable(),
+  bring: z.array(Bring),
+  /** Unanswered calls so far; three open a door check. */
+  attempts: z.number().int(),
+});
+export type ContactSummary = z.infer<typeof ContactSummary>;
+
+export const TaskSummary = z.object({
+  id: z.string(),
+  reason: z.enum(["needs_help", "door_check"]),
+  bring: z.array(Bring),
+  state: z.enum(["open", "en_route", "done"]),
+  createdAt: z.iso.datetime(),
+});
+export type TaskSummary = z.infer<typeof TaskSummary>;
+
 export const AlertPerson = z.object({
   personId: z.string(),
   rank: z.number().int(),
@@ -246,8 +269,42 @@ export const AlertPerson = z.object({
   homeInZone: z.boolean(),
   reason: z.string(),
   details: PersonDetails.nullable(),
+  contact: ContactSummary,
+  task: TaskSummary.nullable(),
 });
 export type AlertPerson = z.infer<typeof AlertPerson>;
+
+export const AlertCounters = z.object({
+  total: z.number().int(),
+  not_contacted: z.number().int(),
+  reached_ok: z.number().int(),
+  away: z.number().int(),
+  needs_help: z.number().int(),
+  not_reached: z.number().int(),
+});
+export type AlertCounters = z.infer<typeof AlertCounters>;
+
+export const ContactRecord = z.object({
+  state: ContactState.exclude(["not_contacted"]),
+  bring: z.array(Bring),
+  note: z.string().nullable(),
+  at: z.iso.datetime(),
+  byMe: z.boolean(),
+});
+
+/** One person, opened from the list (only for unsealed viewers; every open is logged). */
+export const AlertPersonDetail = AlertPerson.extend({ details: PersonDetails, history: z.array(ContactRecord) });
+export type AlertPersonDetail = z.infer<typeof AlertPersonDetail>;
+
+export const SetContactStatusRequest = z.object({
+  state: ContactState.exclude(["not_contacted"]),
+  bring: z.array(Bring.exclude(["door_check"])).optional(),
+  note: z.string().max(500).nullable().optional(),
+});
+export type SetContactStatusRequest = z.infer<typeof SetContactStatusRequest>;
+
+export const ContactUpdateResult = z.object({ contact: ContactSummary, task: TaskSummary.nullable() });
+export type ContactUpdateResult = z.infer<typeof ContactUpdateResult>;
 
 export const AlertDetail = z.object({
   id: z.string(),
@@ -259,8 +316,9 @@ export const AlertDetail = z.object({
   /** True when this viewer sees no names (counts and ranks only). */
   sealed: z.boolean(),
   signals: z.array(SignalSummary),
-  substations: z.array(z.object({ osmRef: z.string(), hoursUntilOutage: z.number() })),
+  substations: z.array(z.object({ osmRef: z.string(), hoursUntilOutage: z.number(), name: z.string().nullable(), location: LngLat })),
   people: z.array(AlertPerson),
+  counters: AlertCounters,
 });
 export type AlertDetail = z.infer<typeof AlertDetail>;
 

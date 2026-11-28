@@ -1,0 +1,24 @@
+.form { display: flex; flex-direction: column; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--border); }
+.outcomes, .bring { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.legend { font-weight: var(--fw-medium); margin-bottom: 4px; padding: 0; }
+.current { font-weight: var(--fw-normal); color: var(--text-muted); font-size: var(--fs-sm); margin-left: var(--space-2); }
+.outcome {
+  display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: var(--space-2); align-items: start;
+  padding: var(--space-2) var(--space-3); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer;
+}
+.outcome:hover { background: var(--surface-hover); }
+.outcome:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.outcome:has(input:focus-visible) { box-shadow: var(--focus-ring); }
+.outcome input { margin: 3px 0 0; accent-color: var(--accent); }
+.outcomeText { display: flex; flex-direction: column; }
+.outcomeLabel { font-weight: var(--fw-medium); }
+.outcome[data-state="needs_help"] .outcomeLabel { color: var(--danger); }
+.outcomeHint { font-size: var(--fs-sm); color: var(--text-muted); }
+.bring { flex-direction: row; flex-wrap: wrap; gap: var(--space-3); }
+.bring .legend { width: 100%; }
+.check { display: inline-flex; align-items: center; gap: 6px; min-height: var(--control); cursor: pointer; }
+.check input { accent-color: var(--accent); width: 16px; height: 16px; }
+.noteField { display: flex; flex-direction: column; }
+.note { font: inherit; padding: 6px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); resize: vertical; }
+.note:focus-visible { border-color: var(--accent); }
+.error { width: 100%; color: var(--danger); font-size: var(--fs-sm); }

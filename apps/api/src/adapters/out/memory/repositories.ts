@@ -1,4 +1,10 @@
 import type { AlertRepository } from "../../../application/ports/out/alert-repository.js";
+import type { AuditRepository } from "../../../application/ports/out/audit-repository.js";
+import type { ContactRepository } from "../../../application/ports/out/contact-repository.js";
+import type { TaskRepository } from "../../../application/ports/out/task-repository.js";
+import type { AuditEntry } from "../../../domain/audit.js";
+import type { ContactRecord } from "../../../domain/contact.js";
+import type { Task } from "../../../domain/task.js";
 import type { SignalRepository } from "../../../application/ports/out/signal-repository.js";
 import type { UserRepository } from "../../../application/ports/out/user-repository.js";
 import type { Alert } from "../../../domain/alert.js";
@@ -110,4 +116,25 @@ export class InMemoryAlertRepository implements AlertRepository {
     return [...this.items.values()].filter((a) => a.municipalityId === municipalityId).sort((a, b) => b.openedAt.getTime() - a.openedAt.getTime());
   }
   async save(alert: Alert) { this.items.set(alert.id, alert); }
+}
+
+export class InMemoryContactRepository implements ContactRepository {
+  readonly items: ContactRecord[] = [];
+  async append(record: ContactRecord) { this.items.push(record); }
+  async listByAlert(alertId: string) { return this.items.filter((r) => r.alertId === alertId); }
+}
+
+export class InMemoryTaskRepository implements TaskRepository {
+  readonly items = new Map<string, Task>();
+  async findOpen(alertId: string, personId: string) {
+    return [...this.items.values()].find((t) => t.alertId === alertId && t.personId === personId && t.state !== "done") ?? null;
+  }
+  async listByAlert(alertId: string) { return [...this.items.values()].filter((t) => t.alertId === alertId); }
+  async save(task: Task) { this.items.set(task.id, task); }
+}
+
+export class InMemoryAuditRepository implements AuditRepository {
+  readonly items: AuditEntry[] = [];
+  async append(entry: AuditEntry) { this.items.push(entry); }
+  async listByAlert(alertId: string) { return this.items.filter((e) => e.alertId === alertId); }
 }

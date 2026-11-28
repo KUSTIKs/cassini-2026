@@ -11,7 +11,7 @@ const navLabel = (user: UserSummary | null) => {
 };
 
 export const Sidebar = ({ user }: { user: UserSummary | null }) => (
-  <aside className={styles.sidebar}>
+  <aside className={styles.sidebar} data-print="hide">
     <div className={styles.brand}>
       <span className={styles.mark} aria-hidden>F</span>
       FirstReach

@@ -22,6 +22,8 @@
   --danger-soft: #fcebea;
   --success: #2e7d4f;
   --success-soft: #e4f2e9;
+  --warning: #a8590b;       /* "soon": under 36 h left */
+  --warning-soft: #fdf1e2;
   --power: #d97706;         /* map only: substations */
   --water: #3d6fb5;         /* map only */
 
@@ -77,6 +79,12 @@ a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: none; box-shadow: var(--focus-ring); }
 ::selection { background: var(--accent-soft); }
+
+/* Printing: anything marked data-print="hide" stays off paper. */
+@media print {
+  [data-print="hide"] { display: none !important; }
+  body { background: #fff; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

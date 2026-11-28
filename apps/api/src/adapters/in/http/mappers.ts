@@ -1,5 +1,6 @@
-import type { AlertDetail, AlertSummaryList, MunicipalitySetup, MunicipalitySummary, SignalRunReport, SignalSummary, UserSummary } from "@firstreach/contracts";
-import type { AlertView, SignalRunReport as RunReport } from "../../../application/ports/in/alerts.js";
+import type { AlertDetail, AlertPersonDetail, AlertSummaryList, ContactSummary as ContactDto, ContactUpdateResult, TaskSummary, MunicipalitySetup, MunicipalitySummary, SignalRunReport, SignalSummary, UserSummary } from "@firstreach/contracts";
+import type { AlertPersonDetail as PersonDetailView, AlertPersonView, AlertView, ContactSummary, SignalRunReport as RunReport } from "../../../application/ports/in/alerts.js";
+import type { Task } from "../../../domain/task.js";
 import type { Alert } from "../../../domain/alert.js";
 import type { HazardSignal } from "../../../domain/hazard-signal.js";
 import type { MunicipalityOverview, MunicipalitySetupView } from "../../../application/ports/in/municipality-setup.js";
@@ -65,6 +66,17 @@ export const toSignalSummary = (s: HazardSignal): SignalSummary => ({
   area: s.area as SignalSummary["area"],
 });
 
+const toContact = (c: ContactSummary): ContactDto => ({ state: c.state, at: iso(c.at), bring: [...c.bring], attempts: c.attempts });
+const toTask = (t: Task | null): TaskSummary | null =>
+  t && { id: t.id, reason: t.reason, bring: [...t.bring], state: t.state, createdAt: t.createdAt.toISOString() };
+
+const toAlertPerson = (p: AlertPersonView) => ({
+  personId: p.personId, rank: p.rank, substationRef: p.substationRef, device: p.device, backupHours: p.backupHours,
+  hoursUntilOutage: p.hoursUntilOutage, hoursLeft: p.hoursLeft, livesAlone: p.livesAlone, mobility: p.mobility,
+  floor: p.floor, homeInZone: p.homeInZone, reason: p.reason, details: p.details,
+  contact: toContact(p.contact), task: toTask(p.task),
+});
+
 export const toAlertDetail = (v: AlertView): AlertDetail => ({
   id: v.alert.id,
   municipalityId: v.alert.municipalityId,
@@ -74,12 +86,20 @@ export const toAlertDetail = (v: AlertView): AlertDetail => ({
   updatedAt: v.alert.updatedAt.toISOString(),
   sealed: v.sealed,
   signals: v.signals.map(toSignalSummary),
-  substations: v.alert.substations.map((s) => ({ osmRef: s.osmRef, hoursUntilOutage: s.hoursUntilOutage })),
-  people: v.people.map((p) => ({
-    personId: p.personId, rank: p.rank, substationRef: p.substationRef, device: p.device, backupHours: p.backupHours,
-    hoursUntilOutage: p.hoursUntilOutage, hoursLeft: p.hoursLeft, livesAlone: p.livesAlone, mobility: p.mobility,
-    floor: p.floor, homeInZone: p.homeInZone, reason: p.reason, details: p.details,
-  })),
+  substations: v.substations.map((s) => ({ osmRef: s.osmRef, hoursUntilOutage: s.hoursUntilOutage, name: s.name, location: s.location })),
+  people: v.people.map(toAlertPerson),
+  counters: v.counters,
+});
+
+export const toAlertPersonDetail = (v: PersonDetailView, viewerId: string): AlertPersonDetail => ({
+  ...toAlertPerson(v),
+  details: v.details,
+  history: v.history.map((r) => ({ state: r.state, bring: [...r.bring], note: r.note, at: r.at.toISOString(), byMe: r.by === viewerId })),
+});
+
+export const toContactUpdate = (r: { contact: ContactSummary; task: Task | null }): ContactUpdateResult => ({
+  contact: toContact(r.contact),
+  task: toTask(r.task),
 });
 
 export const toAlertSummaryList = (alerts: Alert[]): AlertSummaryList => ({

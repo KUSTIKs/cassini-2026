@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { parse } from "csv-parse/sync";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
-  InMemoryAlertRepository, InMemoryMunicipalityRepository, InMemoryRegisterRepository, InMemorySignalRepository,
+  InMemoryAlertRepository, InMemoryAuditRepository, InMemoryContactRepository, InMemoryMunicipalityRepository, InMemoryTaskRepository, InMemoryRegisterRepository, InMemorySignalRepository,
   InMemorySubstationRepository, InMemoryUserRepository,
 } from "../../adapters/out/memory/repositories.js";
 import { parseOverpassSubstations } from "../../adapters/out/osm/overpass-substation-gateway.js";
@@ -13,6 +13,7 @@ import { officerGrant, type User } from "../../domain/access.js";
 import type { Area } from "../../domain/geo.js";
 import type { RawRegisterRow } from "../../domain/register-row.js";
 import { CreateMunicipalityUseCase } from "./create-municipality.js";
+import { GetAlertPersonUseCase, SetContactStatusUseCase } from "./alert-person.js";
 import { GetAlertUseCase } from "./get-alert.js";
 import { ImportRegisterUseCase } from "./import-register.js";
 import { ImportSubstationsUseCase } from "./import-substations.js";
@@ -45,7 +46,11 @@ describe("Flow 2 on the Krnov 2024 data", () => {
     createGfmSource({ files: [data("flood/opava-gfm-2024-09-15.geojson")] }),
   ];
   const run = new RunSignalsUseCase({ ...repos, sources, signals, alerts, newId });
-  const getAlert = new GetAlertUseCase({ ...repos, alerts, signals });
+  const flow3 = { contacts: new InMemoryContactRepository(), tasks: new InMemoryTaskRepository(), audit: new InMemoryAuditRepository() };
+  const realClock = () => new Date("2024-09-12T12:30:00Z");
+  const getAlert = new GetAlertUseCase({ ...repos, ...flow3, alerts, signals, clock: realClock, newId });
+  const getPerson = new GetAlertPersonUseCase({ ...repos, ...flow3, alerts, clock: realClock, newId });
+  const setStatus = new SetContactStatusUseCase({ ...repos, ...flow3, alerts, clock: realClock, newId });
   let krnovId = "";
   let officer: User;
 
@@ -93,6 +98,23 @@ describe("Flow 2 on the Krnov 2024 data", () => {
     }
     const otherTown: User = { ...officer, id: "x", grants: [officerGrant("someone-else")] };
     await expect(getAlert.execute(otherTown, alert.id)).rejects.toThrow();
+  });
+
+  it("lets the officer work the list: opening a person is logged, 'needs help' opens a task", async () => {
+    const alert = (await alerts.findActive(krnovId))!;
+    const first = alert.people[0]!.personId;
+    const opened = await getPerson.execute(officer, { alertId: alert.id, personId: first });
+    expect(opened.details.fullName).toBeTruthy();
+    expect(flow3.audit.items.some((e) => e.action === "view_person" && e.personId === first && e.userId === officer.id)).toBe(true);
+
+    const result = await setStatus.execute(officer, { alertId: alert.id, personId: first, state: "needs_help", bring: ["oxygen"] });
+    expect(result.task).toMatchObject({ reason: "needs_help", bring: ["oxygen"], state: "open" });
+    const view = await getAlert.execute(officer, alert.id);
+    expect(view.counters).toMatchObject({ total: alert.people.length, needs_help: 1 });
+    expect(view.people.find((p) => p.personId === first)?.task?.id).toBe(result.task!.id);
+
+    await expect(getPerson.execute(grid, { alertId: alert.id, personId: first })).rejects.toThrow();
+    await expect(setStatus.execute(admin, { alertId: alert.id, personId: first, state: "reached_ok" })).rejects.toThrow();
   });
 
   it("adds the Sentinel-1 observation on 15 Sept to the same alert", async () => {

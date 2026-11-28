@@ -110,3 +110,49 @@ export const alerts = pgTable(
   },
   (t) => [index("alerts_municipality").on(t.municipalityId)],
 );
+
+/** Every call outcome, append-only (Flow 3). The latest per person is their state. */
+export const contactRecords = pgTable(
+  "contact_records",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    alertId: uuid("alert_id").notNull().references(() => alerts.id, { onDelete: "cascade" }),
+    personId: uuid("person_id").notNull(),
+    state: text("state", { enum: ["reached_ok", "away", "needs_help", "not_reached"] }).notNull(),
+    bring: jsonb("bring").$type<string[]>().notNull(),
+    note: text("note"),
+    by: uuid("by").notNull(),
+    at: timestamp("at", { withTimezone: true }).notNull(),
+  },
+  (t) => [index("contact_records_alert").on(t.alertId)],
+);
+
+export const tasks = pgTable(
+  "tasks",
+  {
+    id: uuid("id").primaryKey(),
+    alertId: uuid("alert_id").notNull().references(() => alerts.id, { onDelete: "cascade" }),
+    municipalityId: uuid("municipality_id").notNull().references(() => municipalities.id, { onDelete: "cascade" }),
+    personId: uuid("person_id").notNull(),
+    reason: text("reason", { enum: ["needs_help", "door_check"] }).notNull(),
+    bring: jsonb("bring").$type<string[]>().notNull(),
+    state: text("state", { enum: ["open", "en_route", "done"] }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+  },
+  (t) => [index("tasks_alert").on(t.alertId)],
+);
+
+/** Who opened which person, and when. Append-only. */
+export const auditLog = pgTable(
+  "audit_log",
+  {
+    id: uuid("id").primaryKey(),
+    at: timestamp("at", { withTimezone: true }).notNull(),
+    userId: uuid("user_id").notNull(),
+    action: text("action", { enum: ["view_list", "view_person", "status_change", "export"] }).notNull(),
+    alertId: uuid("alert_id").notNull(),
+    personId: uuid("person_id"),
+  },
+  (t) => [index("audit_log_alert").on(t.alertId)],
+);

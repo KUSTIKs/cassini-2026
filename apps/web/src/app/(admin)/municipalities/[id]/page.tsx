@@ -2,6 +2,7 @@ import { SetupStepId, type MunicipalitySetup } from "@firstreach/contracts";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Notice } from "@/components/ui/Notice";
+import { AlertCallout } from "@/features/alert/AlertCallout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { MapPreviewProvider } from "@/features/municipality-setup/MapPreviewContext";
 import { SetupMap } from "@/features/municipality-setup/SetupMap";
@@ -35,7 +36,8 @@ const statusLine = (setup: MunicipalitySetup, done: number) => {
 
 const MunicipalitySetupPage = async ({ params, searchParams }: Props) => {
   const [{ id }, { step }] = await Promise.all([params, searchParams]);
-  const result = await api.getMunicipalitySetup(id);
+  const [result, alerts] = await Promise.all([api.getMunicipalitySetup(id), api.listAlerts(id)]);
+  const activeAlert = alerts.ok ? alerts.data.items.find((a) => a.status === "active") : undefined;
   if (!result.ok && result.error.code === "not_found") notFound();
 
   const crumbs = [{ label: "Municipalities", href: "/municipalities" }, { label: result.ok ? result.data.name : "Municipality" }];
@@ -57,6 +59,7 @@ const MunicipalitySetupPage = async ({ params, searchParams }: Props) => {
       <MapPreviewProvider>
         <div className={styles.layout}>
           <section className={styles.steps} aria-labelledby="setup-title">
+            {activeAlert && <div className={styles.alert}><AlertCallout alert={activeAlert} /></div>}
             <header className={styles.intro}>
               <h1 id="setup-title" className={styles.title}>{setup.name}</h1>
               <p className={styles.subtitle}>

@@ -1,0 +1,31 @@
+.panel {
+  display: flex; flex-direction: column; gap: var(--space-4); height: 100%; overflow-y: auto;
+  padding: var(--space-4) var(--space-5) var(--space-5); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  background: var(--surface); box-shadow: var(--shadow-pop);
+}
+.head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-3); }
+.rank { font-size: var(--fs-sm); color: var(--text-muted); }
+.name { font-size: var(--fs-lg); font-weight: var(--fw-semibold); letter-spacing: -0.01em; }
+.close { display: grid; place-items: center; width: var(--control-sm); height: var(--control-sm); border-radius: var(--radius); color: var(--text-muted); }
+.close:hover { background: var(--surface-hover); color: var(--text); }
+.phone { font-size: var(--fs-lg); font-weight: var(--fw-semibold); color: var(--accent); font-variant-numeric: tabular-nums; width: fit-content; }
+.phone:hover { text-decoration: underline; }
+.address { color: var(--text-muted); margin-top: calc(-1 * var(--space-3)); }
+.facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px var(--space-4); margin: 0; }
+.facts dt { color: var(--text-muted); }
+.facts dd { margin: 0; }
+.facts a { color: var(--accent); }
+.left { padding: 1px 7px; border-radius: 999px; font-weight: var(--fw-semibold); font-size: var(--fs-sm); }
+.left[data-urgency="critical"] { background: var(--danger-soft); color: var(--danger); }
+.left[data-urgency="soon"] { background: var(--warning-soft); color: var(--warning); }
+.left[data-urgency="later"] { background: var(--surface-sunken); color: var(--text-muted); }
+.muted { color: var(--text-muted); }
+.script { border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-2) var(--space-3); }
+.script summary { cursor: pointer; font-weight: var(--fw-medium); }
+.script p { margin-top: var(--space-2); color: var(--text-muted); }
+.task { padding: var(--space-2) var(--space-3); border-radius: var(--radius); background: var(--danger-soft); color: var(--danger); font-weight: var(--fw-medium); }
+.history h3 { font-size: var(--fs-base); font-weight: var(--fw-medium); margin: 0 0 var(--space-2); }
+.history ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.history li { display: flex; flex-direction: column; font-size: var(--fs-sm); }
+.note { color: var(--text); font-style: italic; }
+.logged { margin-top: auto; font-size: var(--fs-xs); color: var(--text-faint); }

@@ -20,6 +20,6 @@ export const PageHeader = ({ crumbs, actions }: { crumbs: Crumb[]; actions?: Rea
         </Fragment>
       ))}
     </nav>
-    {actions && <div className={styles.actions}>{actions}</div>}
+    {actions && <div className={styles.actions} data-print="hide">{actions}</div>}
   </header>
 );

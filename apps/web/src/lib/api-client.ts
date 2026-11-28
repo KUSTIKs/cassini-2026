@@ -1,7 +1,8 @@
 import "server-only";
 import {
-  ApiError, AreaCandidateList, CreatedMunicipality, Me, MunicipalityList, MunicipalitySetup,
-  RegisterImportResult, Session, SubstationImportResult, UserList, type CreateMunicipalityRequest,
+  AlertDetail, AlertPersonDetail, AlertSummaryList, ApiError, AreaCandidateList, ContactUpdateResult, CreatedMunicipality, Me,
+  MunicipalityList, MunicipalitySetup, RegisterImportResult, Session, SignalRunReport, SubstationImportResult, UserList,
+  type CreateMunicipalityRequest, type SetContactStatusRequest,
 } from "@firstreach/contracts";
 import type { z } from "zod";
 import { readSessionToken } from "./session";
@@ -62,4 +63,12 @@ export const api = {
       { method: "PUT", headers: { "Content-Type": "text/csv" }, body: csv },
       RegisterImportResult,
     ),
+  runSignals: (at: string) => request("/signals/run", json("POST", { at }), SignalRunReport),
+  listAlerts: (municipalityId: string) => request(`/municipalities/${encodeURIComponent(municipalityId)}/alerts`, {}, AlertSummaryList),
+  getAlert: (id: string) => request(`/alerts/${encodeURIComponent(id)}`, {}, AlertDetail),
+  /** Logged by the API: every call is an access to a named person. */
+  getAlertPerson: (alertId: string, personId: string) =>
+    request(`/alerts/${encodeURIComponent(alertId)}/people/${encodeURIComponent(personId)}`, {}, AlertPersonDetail),
+  setContactStatus: (alertId: string, personId: string, body: SetContactStatusRequest) =>
+    request(`/alerts/${encodeURIComponent(alertId)}/people/${encodeURIComponent(personId)}/status`, json("POST", body), ContactUpdateResult),
 };

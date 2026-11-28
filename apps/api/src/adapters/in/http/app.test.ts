@@ -1,6 +1,7 @@
 import { ApiError, Me, MunicipalityList, MunicipalitySetup, Session, UserList } from "@firstreach/contracts";
 import { describe, expect, it } from "vitest";
 import { CreateMunicipalityUseCase } from "../../../application/use-cases/create-municipality.js";
+import { GetAlertPersonUseCase, SetContactStatusUseCase } from "../../../application/use-cases/alert-person.js";
 import { GetAlertUseCase } from "../../../application/use-cases/get-alert.js";
 import { GetCurrentUserUseCase } from "../../../application/use-cases/get-current-user.js";
 import { GetMunicipalitySetupUseCase } from "../../../application/use-cases/get-municipality-setup.js";
@@ -13,7 +14,7 @@ import { SearchAreasUseCase } from "../../../application/use-cases/search-areas.
 import { RunSignalsUseCase } from "../../../application/use-cases/run-signals.js";
 import { SetMunicipalityAreaUseCase } from "../../../application/use-cases/set-municipality-area.js";
 import {
-  InMemoryAlertRepository, InMemoryMunicipalityRepository, InMemoryRegisterRepository, InMemorySignalRepository,
+  InMemoryAlertRepository, InMemoryAuditRepository, InMemoryContactRepository, InMemoryMunicipalityRepository, InMemoryTaskRepository, InMemoryRegisterRepository, InMemorySignalRepository,
   InMemorySubstationRepository, InMemoryUserRepository,
 } from "../../out/memory/repositories.js";
 import { createHttpApp } from "./app.js";
@@ -36,6 +37,7 @@ const build = ({ demoSignIn = true } = {}) => {
   const areas = { search: async () => [], getByRef: async () => null };
   const signals = new InMemorySignalRepository();
   const alerts = new InMemoryAlertRepository();
+  const flow3 = { contacts: new InMemoryContactRepository(), tasks: new InMemoryTaskRepository(), audit: new InMemoryAuditRepository() };
   return createHttpApp({
     webOrigin: "http://localhost:3000",
     clock,
@@ -52,7 +54,9 @@ const build = ({ demoSignIn = true } = {}) => {
     importRegister: new ImportRegisterUseCase({ ...repos, clock, newId }),
     runSignals: new RunSignalsUseCase({ ...repos, sources: [], signals, alerts, newId }),
     listAlerts: new ListAlertsUseCase({ alerts }),
-    getAlert: new GetAlertUseCase({ ...repos, alerts, signals }),
+    getAlert: new GetAlertUseCase({ ...repos, ...flow3, alerts, signals, clock, newId }),
+    getAlertPerson: new GetAlertPersonUseCase({ ...repos, ...flow3, alerts, clock, newId }),
+    setContactStatus: new SetContactStatusUseCase({ ...repos, ...flow3, alerts, clock, newId }),
   });
 };
 type App = ReturnType<typeof build>;
