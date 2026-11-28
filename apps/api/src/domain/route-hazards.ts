@@ -1,5 +1,5 @@
-import type { MultiPolygon } from "./geo.js";
-import { isActiveAt, type HazardKind, type HazardSignal } from "./hazard-signal.js";
+import type { Area, MultiPolygon } from "./geo.js";
+import { activeAt, type HazardKind, type HazardSignal } from "./hazard-signal.js";
 import type { RouteBasis, TaskRoute } from "./task.js";
 
 /** Hazard kinds that make roads impassable. Power outages and storms don't close roads by themselves. */
@@ -13,12 +13,12 @@ export type RouteHazardSelection = {
 /**
  * Which signals a route must avoid at `now`.
  * Observed water ADDS to the forecast zone; it never removes it. Satellites don't see everywhere:
- * on 15 Sept 2024 Copernicus GFM could not classify 74 % of Krnov (built-up area in its exclusion
- * mask), so "no water observed" there means "unknown", not "dry". Until signals can say exactly
- * where they saw dry ground, the forecast zone stays avoided. `basis` tells which stages are in.
+ * on 15 Sept 2024 Copernicus GFM could not classify ~80 % of Krnov's centre (built-up area in its
+ * exclusion mask, data/flood/README.md), so "no water observed" there means "unknown", not "dry".
+ * Until signals can say where they saw dry ground, the forecast zone stays avoided.
  */
 export function selectRouteHazards(signals: readonly HazardSignal[], now: Date): RouteHazardSelection {
-  const active = signals.filter((s) => ROAD_BLOCKING_KINDS.includes(s.kind) && isActiveAt(s, now));
+  const active = activeAt(signals, now).filter((s) => ROAD_BLOCKING_KINDS.includes(s.kind));
   const observed = active.filter((s) => s.stage === "observed");
   const forecast = active.filter((s) => s.stage === "forecast");
   if (observed.length > 0) return { basis: "observed", signals: byId([...observed, ...forecast]) };
@@ -29,8 +29,10 @@ export function selectRouteHazards(signals: readonly HazardSignal[], now: Date):
 /** All selected areas as one MultiPolygon (parts may overlap; adapters union them). */
 export function combinedArea(selection: RouteHazardSelection): MultiPolygon | null {
   if (selection.signals.length === 0) return null;
-  return { type: "MultiPolygon", coordinates: selection.signals.flatMap((s) => s.area.coordinates) };
+  return { type: "MultiPolygon", coordinates: selection.signals.flatMap((s) => polygonsOf(s.area)) };
 }
+
+const polygonsOf = (area: Area) => (area.type === "Polygon" ? [area.coordinates] : area.coordinates);
 
 /** Why an existing route must be replaced, or null if it already avoids exactly these signals. */
 export function rerouteReason(route: TaskRoute, selection: RouteHazardSelection): string | null {

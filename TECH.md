@@ -13,8 +13,8 @@ The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
 | # | Input | What it gives us | Source / format | Status |
 |---|---|---|---|---|
 | 1 | **EFAS flood notification** (Copernicus) | "River X, flood expected in N hours" | For the demo: hand-entered from the [EFAS Bulletin, Table 1](https://european-flood.emergency.copernicus.eu/sites/default/files/bulletins-documents/2024/EFAS_Bimonthly_Bulletin_Aug_Sep2024.pdf) (Opava, issued 12 Sept 2024, 60 h lead). Live: EFAS partner feed or the CEMS Early Warning Data Store (EWDS), mentioned in the same bulletin | [real] for demo; live access [verify] |
-| 2 | **Flood hazard zones** (Q5/Q20/Q100/Q500) | *Where* the water goes when that river floods | DIBAVOD / VÚV TGM, layer D03 (Q100), free nationwide shapefile in S-JTSK/Krovak (EPSG:5514), reprojected to WGS84 ([download](https://www.dibavod.cz/data/download/dib_D03_ZaplUzemi100Vody.zip), [INSPIRE record](https://inspire-geoportal.ec.europa.eu/srv/api/records/CZ-VUV-MD-FD-APSFR)). DIBAVOD calls the outlines indicative | [real], downloaded 28 Nov; Krnov clip in `apps/api/src/adapters/out/memory/fixtures/krnov-flood-zones.json` (`scripts/fetch-real-flood-zones.ts`) |
-| 3 | **Observed flood extent** (Sentinel-1 via Copernicus GFM) | Where the water actually is, for routing and confirmation | GFM ensemble flood extent, open via the EODC STAC catalogue (no account; [item](https://stac.eodc.eu/api/v1/collections/GFM/items/ENSEMBLE_FLOOD_20240915T050149_VV_EU020M_E051N018T3)). Only the 15 Sept 05:01 UTC pass covers Krnov (13 and 16 Sept miss it) | [real], fetched 28 Nov. **Finding:** 74 % of the Krnov window is in GFM's exclusion mask (built-up area), so it shows only ~0.03 km² of water. Don't claim "Sentinel-1 mapped the Krnov flood" |
+| 2 | **Flood zones** (Q5/Q20/Q100/Q500) | *Where* the water goes when that river floods | VÚV TGM, ISVS-Voda "Záplavová území", ArcGIS REST service, queried directly in WGS84 ([layer Q100](https://ags.vuv.cz/arcgis/rest/services/isvs_voda/isvs_voda/MapServer/13)); CC BY 4.0 | **Downloaded** (`data/flood/krnov-q100.geojson`). Both Krnov substations lie in the Opava's Q100 zone |
+| 3 | **Observed flood extent** (Sentinel-1 via Copernicus GFM) | Where the water actually is, for routing and confirmation | EODC public STAC (collection `GFM`), cloud-optimised GeoTIFFs read and traced into polygons by `apps/api/scripts/fetch-gfm-extent.ts` | **Downloaded** for 15 Sept (`data/flood/opava-gfm-2024-09-15.geojson`): 0.74 km², 6 of 7 areas inside the Q100 zone. **Can't see inside towns** (~80% of Krnov's centre excluded); see `data/flood/README.md` |
 | 4 | **Substations** | Which substation feeds which area | OpenStreetMap via the Overpass API. Krnov 110/22 kV substation, ČEZ Distribuce, [way 55375417](https://www.openstreetmap.org/way/55375417), plus 22 kV and minor ones nearby | [real], confirmed |
 | 5 | **Road network** | Routing | OSM, through the OpenRouteService routing API, which can avoid polygons (`avoid_polygons`, general knowledge) | [verify]: API key and limits |
 | 6 | **Vulnerable-customer register** | Who: name, address, device, backup, contacts | In reality the grid operator holds it. For the demo: ~30 people in Krnov in a CSV/JSON file | [synthetic] |
@@ -32,7 +32,7 @@ The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
 ```
                  ┌──────────── data prep (one-off scripts, Node) ─────────────┐
  EFAS (JSON)     │ reproject flood zones → GeoJSON; clip to Krnov             │
- DIBAVOD (SHP) ──┤ fetch OSM substations; generate synthetic people          │
+ VÚV Q100 (REST)─┤ fetch OSM substations; generate synthetic people          │
  GFM (GeoTIFF/   │ vectorise GFM extent → GeoJSON polygon                     │
  vector)         └──────────────────────┬────────────────────────────────────┘
                                         ▼  static GeoJSON / JSON in /data
@@ -125,7 +125,7 @@ Each flow lists: **actor → trigger → steps → what they see → what's stor
 ### Flow 2: Early warning (automatic, the system is the actor)
 - **Trigger:** any signal plugin returns a new `forecast` signal. Demo: the `efas` plugin, when the replay clock reaches 12 Sept 2024 (Opava, 60 h).
 - **Steps:**
-  1. The plugin has already turned "river Opava" into an area (DIBAVOD Q100 zone); the core only sees the `HazardSignal`.
+  1. The plugin has already turned "river Opava" into an area (the official Q100 zone); the core only sees the `HazardSignal`.
   2. Find the substations inside the signal's area, then the people fed by them.
   3. Compute `hoursLeft` and rank.
   4. Create an `Alert` and **unseal** names for those people only.
@@ -167,9 +167,13 @@ Each flow lists: **actor → trigger → steps → what they see → what's stor
 - **Trigger:** any signal plugin returns an `observed` signal. Demo: the `gfm` plugin, when the replay clock reaches 15 Sept and the Sentinel-1 polygon loads. *This is the same pipeline as Flow 2, only with stage `observed`; there's no GFM-specific code in the core.*
 - **Steps:**
   1. Show the observed area on top of the forecast area (solid vs dashed).
-  2. **Re-check the substations:** confirmed flooded or not, and add any newly hit ones (and their people) to the alert.
-  3. **Re-route open tasks** around the observed water. Changed routes are flagged to the crew. Observed water **adds to** the forecast zone; it never removes it, because the satellite is blind over built-up areas (`ARCHITECTURE.md` §6, `unobserved`).
-  4. Banner: *"Satellite map 15 Sept: 2 more people now in zone; 1 route changed."*
+  2. **Re-check the substations** against the observed area, and add any newly hit ones (and their people) to the alert.
+     *Limit (checked 28 Nov):* Sentinel-1 can't see water inside towns; GFM excludes ~80% of Krnov's centre. So the
+     satellite confirms water in the open floodplain and on roads between towns, **not** the Krnov substation itself.
+     Inside towns the Q100 zone stays the working answer; a grid outage signal (Flow 6) is what would confirm a substation.
+  3. **Re-route open tasks** around the observed water. Changed routes are flagged to the crew. Observed water **adds to**
+     the forecast zone and never removes it, because radar is blind inside towns (`domain/route-hazards.ts`).
+  4. Banner, e.g. *"Satellite map 15 Sept: water confirmed in the Opava floodplain; 1 route changed. Town centres can't be seen by radar; the forecast zone still applies there."*
 - **Stored:** HazardSignal (observed), Alert update, Task routes.
 
 ### Flow 6: Grid operator view (aggregate, no names)
@@ -206,7 +210,7 @@ A timeline slider at the top of the app drives the **simulated clock**, and each
 | **12 Sept 00:00** | EFAS formal notification, Opava, 60 h | 2 |
 | 12 Sept | Mayor works the list; 3 people set to `needs_help` | 3 |
 | 13–14 Sept | Crews dispatched, routes avoid the predicted zone | 4 |
-| **15 Sept** | GFM/Sentinel-1 extent arrives; reroute; substation confirmed flooded | 5 |
+| **15 Sept** | GFM/Sentinel-1 extent arrives (water in the Opava floodplain, agreeing with the Q100 zone); reroute | 5 |
 | 16 Sept | Grid view: Krnov substation, N people behind it | 6 |
 | After | Report: "100 % contacted before the outage, list ready in X min" | 7 |
 
@@ -215,8 +219,12 @@ The demo is **2–3 minutes**: slide → alert → click 2 people → one task w
 ---
 
 ## 5. Build order (fits the Sunday 13:00 freeze)
-1. **Data prep:** Krnov flood zone (DIBAVOD), OSM substations, ~30 synthetic people, GFM polygon. *If DIBAVOD fails, the fallback is a hand-drawn zone along the Opava, labelled as such.*
-2. **Alert engine and ranking** (Flow 2), as a pure function with a unit test.
+1. ~~**Data prep:** Krnov flood zone, OSM substations, ~30 synthetic people, GFM polygon.~~ Done 28 Nov; see `data/flood/README.md`.
+2. ~~**Alert engine and ranking** (Flow 2), as a pure function with a unit test.~~ Done 28 Nov: `efas` and `gfm` plugins
+   (`adapters/out/signals/`), `domain/exposure.ts` (rank), `domain/alert.ts`, unsealing policy `canViewPersonDetails`
+   in `domain/access.ts`. `POST /signals/run {at}` (regional admin) polls the plugins as of a time; the replay slider
+   will drive it. On the Krnov data at 12 Sept 12:00 UTC: both Krnov substations exposed, 36 h to outage, 29 of 30
+   people listed (the nearest-substation simplification puts almost the whole town behind them).
 3. **Mayor screen** (Flow 3): map, list, statuses.
 4. **Replay slider** (section 4).
 5. **Crew view and one route** (Flow 4).
@@ -228,5 +236,5 @@ The demo is **2–3 minutes**: slide → alert → click 2 people → one task w
 - [x] Routing: OpenRouteService behind a `RoutingGateway` port, `ROUTING=ors`; offline fixture router for tests and the replay, `ROUTING=fixture` (decided 28 Nov). ORS key and live limits still [verify]
 - [x] Storage: Postgres + PostGIS (decided 28 Nov)
 - [x] One app, with what each user sees decided by their role (decided 28 Nov; see "Users, roles and sign-in")
-- [ ] Where the GFM polygon comes from: GFM portal export vs CDSE Sentinel-1 processing (GFM is easier).
+- [x] Where the GFM polygon comes from: EODC's public GFM STAC, no account needed (decided 28 Nov).
 - [ ] Hosting for the judges (a live URL is needed on TAIKAI).

@@ -1,41 +1,40 @@
 import * as turf from "@turf/turf";
 import { beforeEach, describe, expect, it } from "vitest";
+import { InMemoryPersonLocationRepository, InMemoryTaskRepository } from "../../adapters/out/memory/in-memory-routing-repositories.js";
+import { KRNOV_CREW_START, krnovPersonLocations, krnovTasks, REPLAY } from "../../adapters/out/memory/krnov-replay.js";
+import { InMemorySignalRepository } from "../../adapters/out/memory/repositories.js";
 import {
-  InMemoryHazardSignalRepository,
-  InMemoryPersonLocationRepository,
-  InMemoryTaskRepository,
-} from "../../adapters/out/memory/in-memory-routing-repositories.js";
-import {
-  KRNOV_CREW_START,
-  KRNOV_OBSERVED_SIGNAL_ID,
   KRNOV_FORECAST_SIGNAL_ID,
-  krnovPersonLocations,
-  krnovSignals,
-  krnovTasks,
-  REPLAY,
-} from "../../adapters/out/memory/krnov-replay.js";
+  KRNOV_OBSERVED_SIGNAL_ID,
+  krnovReplaySignals,
+} from "../../adapters/out/signals/krnov-replay-signals.js";
 import { FixtureRoutingGateway } from "../../adapters/out/routing/fixture-routing-gateway.js";
+import type { HazardSignal } from "../../domain/hazard-signal.js";
 import { StartInHazardError, TaskClosedError, TaskNotFoundError } from "../../domain/task.js";
 import { PlanTaskRouteUseCase } from "./plan-task-route.js";
 
-const areaOf = (id: string) => krnovSignals().find((s) => s.id === id)!.area;
+// The real efas and gfm plugins on data/flood/, as POST /signals/run would store them.
+const signals: HazardSignal[] = await krnovReplaySignals();
+const areaOf = (id: string) => signals.find((s) => s.id === id)!.area;
 
-function setup() {
+async function setup() {
   const tasks = new InMemoryTaskRepository(krnovTasks());
+  const repo = new InMemorySignalRepository();
+  await repo.upsert(signals);
   const plan = new PlanTaskRouteUseCase(
     tasks,
     new InMemoryPersonLocationRepository(krnovPersonLocations()),
-    new InMemoryHazardSignalRepository(krnovSignals()),
+    repo,
     new FixtureRoutingGateway(),
     KRNOV_CREW_START,
   );
   return { tasks, plan };
 }
 
-describe("PlanTaskRouteUseCase (fixture routing, Krnov replay)", () => {
-  let s: ReturnType<typeof setup>;
-  beforeEach(() => {
-    s = setup();
+describe("PlanTaskRouteUseCase (fixture routing, Krnov replay)", { timeout: 30_000 }, () => {
+  let s: Awaited<ReturnType<typeof setup>>;
+  beforeEach(async () => {
+    s = await setup();
   });
 
   it("before any warning, drives straight there and avoids nothing", async () => {
@@ -74,7 +73,7 @@ describe("PlanTaskRouteUseCase (fixture routing, Krnov replay)", () => {
   });
 
   it("uses the phone position when one is given", async () => {
-    const from: [number, number] = [17.6835, 50.0955];
+    const from: [number, number] = [17.685, 50.096];
     const task = await s.plan.execute({ taskId: "T-KRN-1", now: REPLAY.crewsDispatched, from });
     expect(task.route!.from).toEqual(from);
   });

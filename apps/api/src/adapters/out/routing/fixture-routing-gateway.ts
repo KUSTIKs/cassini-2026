@@ -34,7 +34,10 @@ export class FixtureRoutingGateway implements RoutingGateway {
       walkRemainingM = dry.walkRemainingM;
     }
 
-    const path = clear([from, endPoint], avoid) ? [from, endPoint] : this.findPath(from, endPoint, avoid);
+    // Only water near the trip matters; clipping keeps detailed official outlines (10k+ vertices) fast.
+    const local = clipToTrip(avoid, from, endPoint, this.opts.padM + 500);
+    if (!local) return this.result([from, endPoint], endPoint, walkRemainingM !== null, walkRemainingM);
+    const path = clear([from, endPoint], local) ? [from, endPoint] : this.findPath(from, endPoint, local);
     if (!path) throw new RouteNotFoundError("Every way to the destination is blocked by the flood area");
     return this.result(path, endPoint, walkRemainingM !== null, walkRemainingM);
   }
@@ -62,6 +65,18 @@ export class FixtureRoutingGateway implements RoutingGateway {
       provider: "fixture",
     };
   }
+}
+
+function clipToTrip(avoid: MultiPolygon, from: LonLat, to: LonLat, padM: number): MultiPolygon | null {
+  const [w, s, e, n] = turf.bbox(turf.lineString([from, to]));
+  const dLat = padM / 110_540;
+  const dLon = padM / (111_320 * Math.cos((((s + n) / 2) * Math.PI) / 180));
+  const box = turf.bboxPolygon([w - dLon, s - dLat, e + dLon, n + dLat]);
+  const parts = avoid.coordinates
+    .map((rings) => turf.intersect(turf.featureCollection([turf.polygon(rings), box])))
+    .filter((p) => p !== null);
+  const coordinates = parts.flatMap((p) => (p.geometry.type === "Polygon" ? [p.geometry.coordinates] : p.geometry.coordinates));
+  return coordinates.length > 0 ? { type: "MultiPolygon", coordinates } : null;
 }
 
 function clear(segment: [LonLat, LonLat], avoid: MultiPolygon): boolean {

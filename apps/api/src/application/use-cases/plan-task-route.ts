@@ -2,7 +2,7 @@ import type { LonLat } from "../../domain/geo.js";
 import { combinedArea, selectRouteHazards } from "../../domain/route-hazards.js";
 import { isOpen, PersonLocationMissingError, TaskClosedError, TaskNotFoundError, type Task } from "../../domain/task.js";
 import type { PlanTaskRoute, PlanTaskRouteInput } from "../ports/in/plan-task-route.js";
-import type { HazardSignalRepository } from "../ports/out/hazard-signal-repository.js";
+import type { SignalRepository } from "../ports/out/signal-repository.js";
 import type { PersonLocationRepository } from "../ports/out/person-location-repository.js";
 import type { RoutingGateway } from "../ports/out/routing-gateway.js";
 import type { TaskRepository } from "../ports/out/task-repository.js";
@@ -15,7 +15,7 @@ export class PlanTaskRouteUseCase implements PlanTaskRoute {
   constructor(
     private readonly tasks: TaskRepository,
     private readonly people: PersonLocationRepository,
-    private readonly signals: HazardSignalRepository,
+    private readonly signals: SignalRepository,
     private readonly routing: RoutingGateway,
     /** Used when the caller has no phone position (replay: the fixed Krnov crew start). */
     private readonly defaultStart: LonLat,
@@ -29,7 +29,7 @@ export class PlanTaskRouteUseCase implements PlanTaskRoute {
     const to = await this.people.findLocation(task.personId);
     if (!to) throw new PersonLocationMissingError(task.personId);
 
-    const selection = selectRouteHazards(await this.signals.findAll(), now);
+    const selection = selectRouteHazards(await this.signals.list(), now);
     const start = from ?? this.defaultStart;
     const result = await this.routing.route({ from: start, to, avoid: combinedArea(selection) });
 

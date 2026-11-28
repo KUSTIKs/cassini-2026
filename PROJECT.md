@@ -150,8 +150,8 @@ A and B are built properly; C is one route on the map (decided 28 Nov).
 |---|---|
 | **EFAS notification for the Opava** (formal, forecast 11 Sept 12 UTC, issued 12 Sept, lead time 60 h); Oder CZ 78 h; Morava 144 h | **Confirmed**, [EFAS Bulletin Table 1](https://european-flood.emergency.copernicus.eu/sites/default/files/bulletins-documents/2024/EFAS_Bimonthly_Bulletin_Aug_Sep2024.pdf) |
 | **CEMS Rapid Mapping for Czechia** | **Doesn't exist.** The five activations (13–14 Sept) covered Germany (EMSR755), Poland (EMSR756), Slovakia (EMSR757), and Romania, Hungary and Austria (EMSR759); *same bulletin*. So we must **not** claim a CEMS map for Krnov. |
-| **GFM / Sentinel-1 flood extent near Opava, 15 Sept 2024** | **Downloaded 28 Nov** (open EODC STAC, no account). Only the 15 Sept 05:01 UTC pass covers Krnov. **74 % of the Krnov window is in GFM's exclusion mask** (built-up area, radar can't classify water), so GFM shows only ~0.03 km² of water there. **Pitch implication:** don't say "Sentinel-1 mapped the Krnov flood". Say radar is blind inside towns, which is why Lifeline keeps the EFAS/Q100 forecast zone there. |
-| **DIBAVOD Q100 flood zone, Krnov** | **Downloaded 28 Nov** (layer D03, free). 5.0 km² inside the Krnov window; the Krnov substation is inside it. The town centre is a dry island fully enclosed by the Q100 zone. DIBAVOD calls the outlines indicative. |
+| **GFM / Sentinel-1 flood extent near Opava, 15 Sept 2024** | **Downloaded** from EODC's public GFM catalogue: 0.74 km² flooded between Krnov and Opava, 6 of 7 areas inside the official Q100 zone. **Radar can't see water inside towns** (~80% of Krnov's centre is excluded), so it doesn't confirm the Krnov substation flooded. See `data/flood/README.md`. |
+| **Official Q100 flood zones (Opava, Opavice)** | **Downloaded** from VÚV TGM (CC BY 4.0). **Both Krnov substations lie inside the Opava's Q100 zone**, matching the 2024 reports. |
 | **Krnov substation** | **Confirmed in OSM:** "Krnov" 110/22 kV, ČEZ Distribuce, way [55375417](https://www.openstreetmap.org/way/55375417), ~50.0821 N, 17.6811 E. A 22 kV substation sits next to it (way 55375414). |
 | **Vulnerable customers** | **Made up** (rules §8.8). Real registry numbers aren't published. *Unverified: ERÚ may hold a count.* |
 
@@ -205,7 +205,7 @@ Sources: `context/08-case-empower.md`, `context/09-case-france.md`.
 Login with roles, HTTPS, encrypted storage, an audit log of who viewed which person, EU hosting, data deleted after the event, and names shared only during an alert and only for the affected area.
 
 ## 10. Open questions
-- [x] Download the GFM / Sentinel-1 flood extent covering Krnov (14–16 Sept 2024): done 28 Nov, mostly masked over the town (see §5)
+- [x] Download the GFM / Sentinel-1 flood extent covering Krnov (only 15 Sept covers it; town centre excluded)
 - [ ] Ask a mentor or civil-protection person: *"In the first hour of a flood warning, would you use this list?"*
 - [ ] Legal basis for the grid operator to share the register with the mayor in an alert
 - [ ] Size of the Czech vulnerable-customer register (ERÚ?)

@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { requireUser, type AppEnv } from "./auth.js";
 import { handleError } from "./errors.js";
+import { alertRoutes, type AlertRouteDeps } from "./routes/alerts.js";
 import { areaRoutes } from "./routes/areas.js";
 import { authRoutes, type AuthRouteDeps } from "./routes/auth.js";
 import { municipalityRoutes, type MunicipalityRouteDeps } from "./routes/municipalities.js";
@@ -9,7 +10,8 @@ import { taskRoutes, type CrewRoutingDeps } from "./routes/tasks.js";
 
 export type HttpDeps = MunicipalityRouteDeps &
   Parameters<typeof areaRoutes>[0] &
-  AuthRouteDeps & {
+  AuthRouteDeps &
+  AlertRouteDeps & {
     webOrigin: string;
     /** Crew routing (Flow 4/5). Optional so tests of other routes needn't build it. */
     crew?: CrewRoutingDeps;
@@ -30,6 +32,9 @@ export const createHttpApp = (deps: HttpDeps) => {
     .use("/municipalities/*", signedIn)
     .use("/municipalities", signedIn)
     .use("/areas/*", signedIn)
+    .use("/signals/*", signedIn)
+    .use("/alerts/*", signedIn)
+    .route("/", alertRoutes(deps))
     .route("/municipalities", municipalityRoutes(deps))
     .route("/areas", areaRoutes(deps));
   if (deps.crew) app.use("/tasks/*", signedIn).use("/route-hazards", signedIn).route("/", taskRoutes(deps.crew));

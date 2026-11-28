@@ -1,31 +1,29 @@
-import type { MultiPolygon } from "./geo.js";
+import type { Area } from "./geo.js";
 
 /**
- * DOMAIN: what every signal plugin produces (ARCHITECTURE.md §6).
- * The core never branches on `sourceId`; it uses kind, stage, area, expectedAt and confidence.
+ * What every signal plugin produces (ARCHITECTURE.md §6). The core reads only kind, stage, area,
+ * expectedAt, expiresAt and confidence: it never branches on which source a signal came from.
  */
 export type HazardKind = "flood" | "power_outage" | "storm" | "fire";
 export type SignalStage = "forecast" | "observed";
+export type EuSpace = "copernicus" | "galileo" | null;
 
 export type HazardSignal = {
-  id: string; // `${sourceId}:${externalId}`, stable across polls
-  sourceId: string;
-  kind: HazardKind;
-  stage: SignalStage;
-  area: MultiPolygon; // GeoJSON, WGS84. Always an area.
-  issuedAt: Date;
-  expectedAt: Date | null; // when it hits (forecast); null = already happening
-  expiresAt: Date | null;
-  confidence: "low" | "medium" | "high";
-  provenance: { label: string; url?: string; euSpace: "copernicus" | "galileo" | null };
-  /**
-   * Optional, observed signals only: where the sensor could NOT see inside its footprint
-   * (e.g. the GFM exclusion mask over built-up areas). Absent or null = it saw everything.
-   */
-  unobserved?: MultiPolygon | null;
+  /** `${sourceId}:${externalId}`, stable across polls: the same id again means an update. */
+  readonly id: string;
+  readonly sourceId: string;
+  readonly kind: HazardKind;
+  readonly stage: SignalStage;
+  /** Always an area, WGS84. The plugin turns "river Opava" or a raster into polygons. */
+  readonly area: Area;
+  readonly issuedAt: Date;
+  /** When it hits (forecast). Null: already happening. */
+  readonly expectedAt: Date | null;
+  readonly expiresAt: Date | null;
+  readonly confidence: "low" | "medium" | "high";
+  readonly provenance: { readonly label: string; readonly url?: string; readonly euSpace: EuSpace };
 };
 
-/** Known at `now` (issued) and not yet expired. Uses the injected clock, never Date.now(). */
-export function isActiveAt(signal: HazardSignal, now: Date): boolean {
-  return signal.issuedAt <= now && (signal.expiresAt === null || signal.expiresAt > now);
-}
+/** Signals that are in force at `now`: already issued and not yet expired. */
+export const activeAt = (signals: readonly HazardSignal[], now: Date) =>
+  signals.filter((s) => s.issuedAt <= now && (s.expiresAt === null || s.expiresAt > now));

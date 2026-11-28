@@ -1,11 +1,11 @@
 import { selectRouteHazards } from "../../domain/route-hazards.js";
 import type { GetRouteHazards } from "../ports/in/get-route-hazards.js";
-import type { HazardSignalRepository } from "../ports/out/hazard-signal-repository.js";
+import type { SignalRepository } from "../ports/out/signal-repository.js";
 
 export class GetRouteHazardsUseCase implements GetRouteHazards {
-  constructor(private readonly signals: HazardSignalRepository) {}
+  constructor(private readonly signals: SignalRepository) {}
 
   async execute({ now }: { now: Date }) {
-    return selectRouteHazards(await this.signals.findAll(), now);
+    return selectRouteHazards(await this.signals.list(), now);
   }
 }

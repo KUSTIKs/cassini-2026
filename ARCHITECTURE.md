@@ -139,7 +139,6 @@ export type HazardSignal = {
   expiresAt: Date | null;
   confidence: "low" | "medium" | "high";
   provenance: { label: string; url?: string; euSpace: "copernicus" | "galileo" | null };
-  unobserved?: MultiPolygon | null; // optional, observed signals: where the sensor could NOT see (added 28 Nov, see below)
 };
 
 // application/ports/out/signal-source.ts: what every plugin must implement
@@ -157,17 +156,18 @@ export interface SignalSource {
 
 ### Rules
 1. **The core never branches on `sourceId`.** The exposure engine (signal area ∩ substations → people → ranking) uses only `kind`, `stage`, `area`, `expectedAt` and `confidence`. If you're tempted to write `if (signal.sourceId === "efas")`, the contract is missing a field: extend the contract, not the core.
-2. **The plugin owns translation to an area.** EFAS says "river Opava"; the `efas` plugin turns that into the DIBAVOD Q100 zone. GFM gives a raster; the `gfm` plugin vectorises it. The core only ever sees polygons.
+2. **The plugin owns translation to an area.** EFAS says "river Opava"; the `efas` plugin turns that into the official Q100 zone (VÚV TGM). GFM gives a raster; the `gfm` plugin vectorises it. The core only ever sees polygons.
 3. **Time is injected.** Plugins use the `now` they're given, never `Date.now()`. That makes **replay free**: the demo runs the same plugins against recorded data with a simulated clock.
 4. **Idempotent.** Returning the same `id` again means *update*, not *duplicate*; the core upserts by `id`.
 5. **Failure is isolated.** If one plugin throws or times out, it's logged and skipped, and the other signals still work.
 6. **Push sources use the same shape.** A webhook, or the mayor drawing a zone in the UI, comes in through a driving adapter (`adapters/in/http`) and calls the same `IngestSignals` use case with `HazardSignal`s.
 7. **The UI is generic.** The web app renders any signal from its `descriptor` (label, EU-space badge) and `kind`/`stage` (colour, solid vs dashed). There's no per-source UI code.
 
-### `unobserved` and "observed adds to forecast" (added 28 Nov)
-Real data showed why: on 15 Sept 2024 Copernicus GFM covered Krnov, but 74 % of the town was in GFM's exclusion mask (built-up area, where radar can't classify water), so it found only ~0.03 km² of water. "No water observed" there means *unknown*, not *dry*.
-- An observed plugin **may** set `unobserved` to the area it couldn't see (GFM: the exclusion mask). Optional; existing plugins don't need to change. The UI draws it grey.
-- Crew routing (`domain/route-hazards.ts`) therefore lets observed water **add to** the forecast zone and never remove it. If a future plugin can prove dry ground, use `unobserved` to subtract forecast areas only where the sensor really saw.
+### Crew routing: observed water adds to the forecast (28 Nov)
+Sentinel-1 can't see water inside towns: GFM excludes ~80 % of Krnov's centre on 15 Sept 2024 (`data/flood/README.md`), so
+"no water observed" there means *unknown*, not *dry*. Crew routing (`domain/route-hazards.ts`) therefore lets observed
+water **add to** the forecast zone and never remove it. If a plugin can one day report where its sensor really saw dry
+ground (e.g. an optional `unobserved` area from GFM's exclusion mask), routing could subtract forecast areas there.
 
 ### Plugin folder
 ```

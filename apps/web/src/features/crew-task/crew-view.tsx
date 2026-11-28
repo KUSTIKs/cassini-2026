@@ -102,12 +102,7 @@ export function CrewView({ now, crewId, initialTasks, hazards }: Props) {
               {s.euSpace === "copernicus" ? " · Copernicus" : ""}
             </div>
           ))}
-          {hazards.signals.some((s) => s.unobserved) && (
-            <div>
-              <span className={`${styles.swatch} ${styles.swBlind}`} />
-              Satellite couldn&apos;t see here (built-up area); forecast zone still avoided
-            </div>
-          )}
+
         </div>
       </div>
 

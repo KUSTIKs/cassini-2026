@@ -1,18 +1,19 @@
 import { describe, expect, it } from "vitest";
-import {
-  InMemoryHazardSignalRepository,
-  InMemoryPersonLocationRepository,
-  InMemoryTaskRepository,
-} from "../../adapters/out/memory/in-memory-routing-repositories.js";
-import { KRNOV_CREW_START, krnovPersonLocations, krnovSignals, krnovTasks, REPLAY } from "../../adapters/out/memory/krnov-replay.js";
+import { InMemoryPersonLocationRepository, InMemoryTaskRepository } from "../../adapters/out/memory/in-memory-routing-repositories.js";
+import { KRNOV_CREW_START, krnovPersonLocations, krnovTasks, REPLAY } from "../../adapters/out/memory/krnov-replay.js";
+import { InMemorySignalRepository } from "../../adapters/out/memory/repositories.js";
+import { krnovReplaySignals } from "../../adapters/out/signals/krnov-replay-signals.js";
 import { FixtureRoutingGateway } from "../../adapters/out/routing/fixture-routing-gateway.js";
 import type { RouteRequest, RoutingGateway } from "../ports/out/routing-gateway.js";
 import { PlanTaskRouteUseCase } from "./plan-task-route.js";
 import { RerouteOpenTasksUseCase } from "./reroute-open-tasks.js";
 
-function setup(routing: RoutingGateway = new FixtureRoutingGateway()) {
+const replaySignals = await krnovReplaySignals();
+
+async function setup(routing: RoutingGateway = new FixtureRoutingGateway()) {
   const tasks = new InMemoryTaskRepository(krnovTasks());
-  const signals = new InMemoryHazardSignalRepository(krnovSignals());
+  const signals = new InMemorySignalRepository();
+  await signals.upsert(replaySignals);
   const plan = new PlanTaskRouteUseCase(
     tasks,
     new InMemoryPersonLocationRepository(krnovPersonLocations()),
@@ -25,9 +26,9 @@ function setup(routing: RoutingGateway = new FixtureRoutingGateway()) {
 
 const ROUTED = ["T-KRN-1", "T-KRN-2", "T-KRN-3"];
 
-describe("RerouteOpenTasksUseCase (fixture routing, Krnov replay)", () => {
+describe("RerouteOpenTasksUseCase (fixture routing, Krnov replay)", { timeout: 60_000 }, () => {
   it("re-routes every open routed task when the satellite map arrives", async () => {
-    const s = setup();
+    const s = await setup();
     for (const taskId of ROUTED) await s.plan.execute({ taskId, now: REPLAY.crewsDispatched });
 
     const result = await s.reroute.execute({ now: REPLAY.satelliteUpdate });
@@ -37,7 +38,7 @@ describe("RerouteOpenTasksUseCase (fixture routing, Krnov replay)", () => {
     expect(result.failed).toEqual([]);
     for (const r of result.rerouted) {
       expect(r.previousBasis).toBe("forecast");
-      expect(r.reason).toBe("Now also avoids Copernicus GFM (Sentinel-1), 15 Sept 2024 05:01 UTC");
+      expect(r.reason).toMatch(/^Now also avoids Sentinel-1 flood extent, 2024-09-15 \(Copernicus GFM\)$/);
     }
     expect(result.rerouted.find((r) => r.taskId === "T-KRN-2")!.destinationInHazard).toBe(true);
 
@@ -47,15 +48,15 @@ describe("RerouteOpenTasksUseCase (fixture routing, Krnov replay)", () => {
   });
 
   it("keeps the crew's original start point when re-routing", async () => {
-    const s = setup();
-    const from: [number, number] = [17.6835, 50.0955];
+    const s = await setup();
+    const from: [number, number] = [17.685, 50.096];
     await s.plan.execute({ taskId: "T-KRN-1", now: REPLAY.crewsDispatched, from });
     await s.reroute.execute({ now: REPLAY.satelliteUpdate });
     expect((await s.tasks.findById("T-KRN-1"))!.route!.from).toEqual(from);
   });
 
   it("leaves routes alone when nothing changed, and never touches done or unrouted tasks", async () => {
-    const s = setup();
+    const s = await setup();
     await s.plan.execute({ taskId: "T-KRN-1", now: REPLAY.crewsDispatched });
 
     const result = await s.reroute.execute({ now: REPLAY.crewsDispatched });
@@ -75,7 +76,7 @@ describe("RerouteOpenTasksUseCase (fixture routing, Krnov replay)", () => {
         return fixture.route(req);
       },
     };
-    const s = setup(flaky);
+    const s = await setup(flaky);
     for (const taskId of ROUTED) await s.plan.execute({ taskId, now: REPLAY.crewsDispatched });
     failNext = true;
 

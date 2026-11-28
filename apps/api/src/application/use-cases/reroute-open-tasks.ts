@@ -1,7 +1,7 @@
 import { rerouteReason, selectRouteHazards } from "../../domain/route-hazards.js";
 import type { PlanTaskRoute } from "../ports/in/plan-task-route.js";
 import type { RerouteOpenTasks, RerouteOpenTasksResult } from "../ports/in/reroute-open-tasks.js";
-import type { HazardSignalRepository } from "../ports/out/hazard-signal-repository.js";
+import type { SignalRepository } from "../ports/out/signal-repository.js";
 import type { TaskRepository } from "../ports/out/task-repository.js";
 
 /**
@@ -12,12 +12,12 @@ import type { TaskRepository } from "../ports/out/task-repository.js";
 export class RerouteOpenTasksUseCase implements RerouteOpenTasks {
   constructor(
     private readonly tasks: TaskRepository,
-    private readonly signals: HazardSignalRepository,
+    private readonly signals: SignalRepository,
     private readonly planTaskRoute: PlanTaskRoute,
   ) {}
 
   async execute({ now }: { now: Date }): Promise<RerouteOpenTasksResult> {
-    const selection = selectRouteHazards(await this.signals.findAll(), now);
+    const selection = selectRouteHazards(await this.signals.list(), now);
     const result: RerouteOpenTasksResult = { basis: selection.basis, rerouted: [], unchanged: [], failed: [] };
 
     for (const task of await this.tasks.findOpen()) {

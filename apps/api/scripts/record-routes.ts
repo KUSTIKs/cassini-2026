@@ -9,12 +9,10 @@
  *   pnpm routes:record
  */
 import { writeFileSync } from "node:fs";
-import {
-  InMemoryHazardSignalRepository,
-  InMemoryPersonLocationRepository,
-  InMemoryTaskRepository,
-} from "../src/adapters/out/memory/in-memory-routing-repositories.js";
-import { krnovPersonLocations, krnovSignals, krnovTasks, REPLAY } from "../src/adapters/out/memory/krnov-replay.js";
+import { InMemoryPersonLocationRepository, InMemoryTaskRepository } from "../src/adapters/out/memory/in-memory-routing-repositories.js";
+import { krnovPersonLocations, krnovTasks, REPLAY } from "../src/adapters/out/memory/krnov-replay.js";
+import { InMemorySignalRepository } from "../src/adapters/out/memory/repositories.js";
+import { krnovReplaySignals } from "../src/adapters/out/signals/krnov-replay-signals.js";
 import { OpenRouteServiceRoutingGateway } from "../src/adapters/out/routing/openrouteservice-routing-gateway.js";
 import { RecordingRoutingGateway, type RecordedRoutes } from "../src/adapters/out/routing/recorded-routes.js";
 import { PlanTaskRouteUseCase } from "../src/application/use-cases/plan-task-route.js";
@@ -26,6 +24,9 @@ if (routing.kind !== "ors") throw new Error("unreachable");
 const { crewStart } = loadConfig();
 
 const recorder = new RecordingRoutingGateway(new OpenRouteServiceRoutingGateway(routing));
+// The same signals POST /signals/run stores: the real efas and gfm plugins on data/flood/.
+const signals = new InMemorySignalRepository();
+await signals.upsert(await krnovReplaySignals());
 let failures = 0;
 
 for (const [stage, now] of [["forecast", REPLAY.crewsDispatched], ["observed", REPLAY.satelliteUpdate]] as const) {
@@ -33,7 +34,7 @@ for (const [stage, now] of [["forecast", REPLAY.crewsDispatched], ["observed", R
   const plan = new PlanTaskRouteUseCase(
     tasks,
     new InMemoryPersonLocationRepository(krnovPersonLocations()),
-    new InMemoryHazardSignalRepository(krnovSignals()),
+    signals,
     recorder,
     crewStart,
   );

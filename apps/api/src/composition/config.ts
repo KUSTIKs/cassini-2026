@@ -3,13 +3,13 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { BBox, LonLat } from "../domain/geo.js";
 
-/** Repo-level data/osm, found by walking up so it works from src/ (tsx) and dist/ (bundled). */
-const findOsmDataDir = (): string => {
-  if (process.env.OSM_DATA_DIR) return resolve(process.env.OSM_DATA_DIR);
+/** Repo-level data/, found by walking up so it works from src/ (tsx) and dist/ (bundled). */
+const findDataDir = (): string => {
+  if (process.env.DATA_DIR) return resolve(process.env.DATA_DIR);
   for (let dir = dirname(fileURLToPath(import.meta.url)); ; dir = dirname(dir)) {
-    const candidate = join(dir, "data", "osm");
-    if (existsSync(candidate)) return candidate;
-    if (dirname(dir) === dir) throw new Error("data/osm not found; set OSM_DATA_DIR");
+    const candidate = join(dir, "data");
+    if (existsSync(join(candidate, "osm"))) return candidate;
+    if (dirname(dir) === dir) throw new Error("data/ not found; set DATA_DIR");
   }
 };
 
@@ -28,6 +28,10 @@ export type Config = {
   sessionSecret: string;
   /** Lets anyone sign in as any user, without credentials. For the hackathon demo only. */
   demoSignIn: boolean;
+  /** Repo-level data/ folder (OSM snapshots, flood zones, satellite extents). */
+  dataDir: string;
+  /** Enabled signal plugins, by id (composition/signals.ts). */
+  signals: string[];
   /** Saved Overpass responses used when live OSM is unavailable. */
   substationSnapshots: Array<{ file: string; coverage: BBox }>;
   /**
@@ -50,7 +54,10 @@ export const loadConfig = (): Config => {
   const production = process.env.NODE_ENV === "production";
   const sessionSecret = process.env.SESSION_SECRET ?? (production ? "" : "dev-only-session-secret-change-me");
   if (sessionSecret.length < 16) throw new Error("SESSION_SECRET must be set to at least 16 characters");
+  const dataDir = findDataDir();
   return {
+    dataDir,
+    signals: (process.env.SIGNALS ?? "efas,gfm").split(",").map((s) => s.trim()).filter(Boolean),
     databaseUrl,
     sessionSecret,
     demoSignIn: (process.env.DEMO_SIGN_IN ?? "true") === "true",
@@ -63,11 +70,11 @@ export const loadConfig = (): Config => {
     ).split(",").map((u) => u.trim()).filter(Boolean),
     substationSnapshots: [
       {
-        file: join(findOsmDataDir(), "krnov-substations.overpass.json"),
+        file: join(dataDir, "osm", "krnov-substations.overpass.json"),
         coverage: { south: 50.04, west: 17.58, north: 50.15, east: 17.78 },
       },
       {
-        file: join(findOsmDataDir(), "jesenik-substations.overpass.json"),
+        file: join(dataDir, "osm", "jesenik-substations.overpass.json"),
         coverage: { south: 50.15, west: 17.14, north: 50.27, east: 17.31 },
       },
     ],

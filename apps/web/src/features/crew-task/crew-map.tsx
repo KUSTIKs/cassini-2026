@@ -79,16 +79,7 @@ export function CrewMap({ hazards, tasks, selectedId, onSelect }: Props) {
 
 function addLayers(map: MapLibreMap) {
   const empty = { type: "FeatureCollection", features: [] } as FeatureCollection;
-  for (const id of ["blind", "hazards", "routes", "walk", "people", "start"]) map.addSource(id, { type: "geojson", data: empty });
-
-  // Where the satellite couldn't see (e.g. GFM exclusion mask over built-up areas): grey, dotted edge.
-  map.addLayer({ id: "blind-fill", type: "fill", source: "blind", paint: { "fill-color": "#64748b", "fill-opacity": 0.16 } });
-  map.addLayer({
-    id: "blind-line",
-    type: "line",
-    source: "blind",
-    paint: { "line-color": "#475569", "line-width": 1, "line-dasharray": [0.5, 2] },
-  });
+  for (const id of ["hazards", "routes", "walk", "people", "start"]) map.addSource(id, { type: "geojson", data: empty });
 
   map.addLayer({
     id: "hazards-fill",
@@ -169,10 +160,6 @@ function render(map: MapLibreMap, { hazards, tasks, selectedId }: Omit<Props, "o
   const set = (id: string, features: Feature[]) =>
     (map.getSource(id) as GeoJSONSource | undefined)?.setData({ type: "FeatureCollection", features });
 
-  set(
-    "blind",
-    hazards.signals.flatMap((s) => (s.unobserved ? [{ type: "Feature" as const, geometry: s.unobserved, properties: {} }] : [])),
-  );
   set(
     "hazards",
     hazards.signals.map((s) => ({ type: "Feature", geometry: s.area, properties: { stage: s.stage, label: s.label } })),

@@ -2,7 +2,9 @@ import * as turf from "@turf/turf";
 import { describe, expect, it } from "vitest";
 import type { LonLat, MultiPolygon } from "../../../domain/geo.js";
 import { RouteNotFoundError, RoutingUnavailableError, StartInHazardError } from "../../../domain/task.js";
-import { krnovSignals, KRNOV_CREW_START } from "../memory/krnov-replay.js";
+import { combinedArea } from "../../../domain/route-hazards.js";
+import { KRNOV_CREW_START, krnovPersonLocations } from "../memory/krnov-replay.js";
+import { KRNOV_FORECAST_SIGNAL_ID, krnovReplaySignals } from "../signals/krnov-replay-signals.js";
 import { extentKm, ORS_AVOID_LIMITS } from "./avoid-area.js";
 import { OpenRouteServiceRoutingGateway } from "./openrouteservice-routing-gateway.js";
 
@@ -25,9 +27,11 @@ function stubOrs(respond?: (call: Call) => Response | undefined) {
   return { calls, gateway: new OpenRouteServiceRoutingGateway({ apiKey: "test-key", fetch }) };
 }
 
-const q100 = krnovSignals()[0]!.area; // real DIBAVOD Q100 zone
-const DRY: LonLat = [17.696, 50.096];
-const UNDER_WATER: LonLat = [17.676, 50.084];
+// The real Opava Q100 zone, as the efas plugin produces it.
+const forecast = (await krnovReplaySignals()).find((s) => s.id === KRNOV_FORECAST_SIGNAL_ID)!;
+const q100 = combinedArea({ basis: "forecast", signals: [forecast] })!;
+const DRY: LonLat = krnovPersonLocations()["P-101"]!;
+const UNDER_WATER: LonLat = krnovPersonLocations()["P-102"]!;
 
 describe("OpenRouteServiceRoutingGateway", () => {
   it("posts to the directions endpoint with the key and no avoid area when there is none", async () => {

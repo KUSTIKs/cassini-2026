@@ -1,4 +1,4 @@
-import { and, count, eq, isNull, max } from "drizzle-orm";
+import { and, count, eq, inArray, isNull, max } from "drizzle-orm";
 import type { RegisterRepository, RegisterStats } from "../../../application/ports/out/register-repository.js";
 import type { RegisteredPerson } from "../../../domain/registered-person.js";
 import type { SubstationLink } from "../../../domain/substation-assignment.js";
@@ -81,5 +81,30 @@ export class PostgresRegisterRepository implements RegisterRepository {
       .from(registeredPeople)
       .groupBy(registeredPeople.municipalityId);
     return Object.fromEntries(rows.map((r) => [r.id, r.n]));
+  }
+
+  async listForExposure(municipalityId: string) {
+    const rows = await this.db
+      .select({
+        id: registeredPeople.id, lng: registeredPeople.lng, lat: registeredPeople.lat, device: registeredPeople.device,
+        backupHours: registeredPeople.backupHours, livesAlone: registeredPeople.livesAlone, floor: registeredPeople.floor,
+        mobility: registeredPeople.mobility, substationRef: registeredPeople.substationRef,
+      })
+      .from(registeredPeople)
+      .where(eq(registeredPeople.municipalityId, municipalityId));
+    return rows.map(({ lng, lat, ...rest }) => ({ ...rest, location: { lng, lat } }));
+  }
+
+  async getPeople(municipalityId: string, ids: readonly string[]) {
+    if (ids.length === 0) return [];
+    const rows = await this.db
+      .select()
+      .from(registeredPeople)
+      .where(and(eq(registeredPeople.municipalityId, municipalityId), inArray(registeredPeople.id, [...ids])));
+    return rows.map((r): RegisteredPerson => ({
+      id: r.id, externalRef: r.externalRef, fullName: r.fullName, address: r.address, location: { lng: r.lng, lat: r.lat },
+      device: r.device, backupHours: r.backupHours, livesAlone: r.livesAlone, floor: r.floor, mobility: r.mobility,
+      phone: r.phone, carerName: r.carerName, carerPhone: r.carerPhone, substationRef: r.substationRef,
+    }));
   }
 }

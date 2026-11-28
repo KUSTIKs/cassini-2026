@@ -70,7 +70,6 @@ const toHazardsDto = (selection: RouteHazardSelection): RouteHazardsResponse => 
     confidence: s.confidence,
     label: s.provenance.label,
     euSpace: s.provenance.euSpace,
-    unobserved: s.unobserved ?? null,
   })),
 });
 

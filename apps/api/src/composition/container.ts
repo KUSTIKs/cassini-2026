@@ -2,12 +2,8 @@ import { randomUUID } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { createHttpApp } from "../adapters/in/http/app.js";
 import { createSessionCodec } from "../adapters/in/http/session.js";
-import {
-  InMemoryHazardSignalRepository,
-  InMemoryPersonLocationRepository,
-  InMemoryTaskRepository,
-} from "../adapters/out/memory/in-memory-routing-repositories.js";
-import { krnovPersonLocations, krnovSignals, krnovTasks } from "../adapters/out/memory/krnov-replay.js";
+import { InMemoryPersonLocationRepository, InMemoryTaskRepository } from "../adapters/out/memory/in-memory-routing-repositories.js";
+import { krnovPersonLocations, krnovTasks } from "../adapters/out/memory/krnov-replay.js";
 import { FallbackSubstationGateway } from "../adapters/out/osm/fallback-substation-gateway.js";
 import { NominatimAreaGateway } from "../adapters/out/osm/nominatim-area-gateway.js";
 import { OverpassSubstationGateway } from "../adapters/out/osm/overpass-substation-gateway.js";
@@ -16,25 +12,31 @@ import { createDb } from "../adapters/out/postgres/client.js";
 import { PostgresMunicipalityRepository } from "../adapters/out/postgres/municipality-repository.js";
 import { PostgresRegisterRepository } from "../adapters/out/postgres/register-repository.js";
 import { PostgresSubstationRepository } from "../adapters/out/postgres/substation-repository.js";
+import { PostgresAlertRepository } from "../adapters/out/postgres/alert-repository.js";
+import { PostgresSignalRepository } from "../adapters/out/postgres/signal-repository.js";
 import { PostgresUserRepository } from "../adapters/out/postgres/user-repository.js";
 import { FixtureRoutingGateway } from "../adapters/out/routing/fixture-routing-gateway.js";
 import { OpenRouteServiceRoutingGateway } from "../adapters/out/routing/openrouteservice-routing-gateway.js";
 import { RecordedRoutingGateway, type RecordedRoutes } from "../adapters/out/routing/recorded-routes.js";
 import type { RoutingGateway } from "../application/ports/out/routing-gateway.js";
 import { CreateMunicipalityUseCase } from "../application/use-cases/create-municipality.js";
+import { GetAlertUseCase } from "../application/use-cases/get-alert.js";
 import { GetCurrentUserUseCase } from "../application/use-cases/get-current-user.js";
 import { GetMunicipalitySetupUseCase } from "../application/use-cases/get-municipality-setup.js";
 import { GetRouteHazardsUseCase } from "../application/use-cases/get-route-hazards.js";
 import { ImportRegisterUseCase } from "../application/use-cases/import-register.js";
 import { ImportSubstationsUseCase } from "../application/use-cases/import-substations.js";
+import { ListAlertsUseCase } from "../application/use-cases/list-alerts.js";
 import { ListMunicipalitiesUseCase } from "../application/use-cases/list-municipalities.js";
 import { ListOpenTasksUseCase } from "../application/use-cases/list-open-tasks.js";
 import { ListUsersUseCase } from "../application/use-cases/list-users.js";
 import { PlanTaskRouteUseCase } from "../application/use-cases/plan-task-route.js";
 import { RerouteOpenTasksUseCase } from "../application/use-cases/reroute-open-tasks.js";
 import { SearchAreasUseCase } from "../application/use-cases/search-areas.js";
+import { RunSignalsUseCase } from "../application/use-cases/run-signals.js";
 import { SetMunicipalityAreaUseCase } from "../application/use-cases/set-municipality-area.js";
 import type { Config, RoutingConfig } from "./config.js";
+import { enabledSignalSources } from "./signals.js";
 
 /**
  * COMPOSITION ROOT: the only place that knows every concrete class.
@@ -48,6 +50,9 @@ export const buildContainer = (config: Config) => {
   const substations = new PostgresSubstationRepository(db);
   const register = new PostgresRegisterRepository(db);
   const users = new PostgresUserRepository(db);
+  const signals = new PostgresSignalRepository(db);
+  const alerts = new PostgresAlertRepository(db);
+  const sources = enabledSignalSources(config);
   const areas = new NominatimAreaGateway({ baseUrl: config.nominatimUrl, countryCodes: "cz" });
   const substationSource = new FallbackSubstationGateway(
     new OverpassSubstationGateway({ urls: config.overpassUrls }),
@@ -57,10 +62,10 @@ export const buildContainer = (config: Config) => {
   const clock = () => new Date();
   const newId = () => randomUUID();
 
-  // Crew routing (Flow 4/5) runs on the Krnov replay data in memory until tasks, people and signals are in Postgres.
+  // Crew routing (Flow 4/5): routes avoid the stored hazard signals (filled by POST /signals/run, Flow 2/5).
+  // Tasks and person locations are Krnov replay data in memory until Flow 3 stores tasks in Postgres.
   const tasks = new InMemoryTaskRepository(krnovTasks());
   const people = new InMemoryPersonLocationRepository(krnovPersonLocations());
-  const signals = new InMemoryHazardSignalRepository(krnovSignals());
   const planTaskRoute = new PlanTaskRouteUseCase(tasks, people, signals, createRoutingGateway(config.routing), config.crewStart);
 
   // use cases
@@ -79,6 +84,12 @@ export const buildContainer = (config: Config) => {
     setMunicipalityArea: new SetMunicipalityAreaUseCase({ ...repos, areas }),
     importSubstations: new ImportSubstationsUseCase({ ...repos, substationSource }),
     importRegister: new ImportRegisterUseCase({ ...repos, clock, newId }),
+    runSignals: new RunSignalsUseCase({
+      ...repos, sources, signals, alerts, newId,
+      onSourceError: (id, error) => console.warn(`Signal source "${id}" failed:`, (error as Error).message),
+    }),
+    listAlerts: new ListAlertsUseCase({ alerts }),
+    getAlert: new GetAlertUseCase({ ...repos, alerts, signals }),
     crew: {
       planTaskRoute,
       rerouteOpenTasks: new RerouteOpenTasksUseCase(tasks, signals, planTaskRoute),

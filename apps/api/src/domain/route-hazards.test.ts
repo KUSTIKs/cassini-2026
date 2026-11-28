@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { MultiPolygon } from "./geo.js";
+import type { Area } from "./geo.js";
 import type { HazardSignal } from "./hazard-signal.js";
 import { combinedArea, rerouteReason, selectRouteHazards } from "./route-hazards.js";
 import type { TaskRoute } from "./task.js";
 
-const square = (x: number, y: number, d = 0.01): MultiPolygon => ({
+const square = (x: number, y: number, d = 0.01): Area => ({
   type: "MultiPolygon",
   coordinates: [[[[x, y], [x + d, y], [x + d, y + d], [x, y + d], [x, y]]]],
 });

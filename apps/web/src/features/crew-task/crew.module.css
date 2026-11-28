@@ -58,7 +58,6 @@
 .swatch { display: inline-block; width: 12px; height: 8px; margin-right: 6px; vertical-align: middle; border-radius: 2px; }
 .swObserved { background: var(--observed); opacity: 0.6; }
 .swForecast { border: 1.5px dashed var(--forecast); background: rgba(96, 165, 250, 0.2); }
-.swBlind { border: 1px dotted #475569; background: rgba(100, 116, 139, 0.25); }
 
 .banner {
   margin: 0;

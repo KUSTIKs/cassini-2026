@@ -1,16 +1,20 @@
 import { ApiError, Me, MunicipalityList, MunicipalitySetup, Session, UserList } from "@firstreach/contracts";
 import { describe, expect, it } from "vitest";
 import { CreateMunicipalityUseCase } from "../../../application/use-cases/create-municipality.js";
+import { GetAlertUseCase } from "../../../application/use-cases/get-alert.js";
 import { GetCurrentUserUseCase } from "../../../application/use-cases/get-current-user.js";
 import { GetMunicipalitySetupUseCase } from "../../../application/use-cases/get-municipality-setup.js";
 import { ImportRegisterUseCase } from "../../../application/use-cases/import-register.js";
 import { ImportSubstationsUseCase } from "../../../application/use-cases/import-substations.js";
+import { ListAlertsUseCase } from "../../../application/use-cases/list-alerts.js";
 import { ListMunicipalitiesUseCase } from "../../../application/use-cases/list-municipalities.js";
 import { ListUsersUseCase } from "../../../application/use-cases/list-users.js";
 import { SearchAreasUseCase } from "../../../application/use-cases/search-areas.js";
+import { RunSignalsUseCase } from "../../../application/use-cases/run-signals.js";
 import { SetMunicipalityAreaUseCase } from "../../../application/use-cases/set-municipality-area.js";
 import {
-  InMemoryMunicipalityRepository, InMemoryRegisterRepository, InMemorySubstationRepository, InMemoryUserRepository,
+  InMemoryAlertRepository, InMemoryMunicipalityRepository, InMemoryRegisterRepository, InMemorySignalRepository,
+  InMemorySubstationRepository, InMemoryUserRepository,
 } from "../../out/memory/repositories.js";
 import { createHttpApp } from "./app.js";
 import { createSessionCodec } from "./session.js";
@@ -30,6 +34,8 @@ const build = ({ demoSignIn = true } = {}) => {
   const clock = () => new Date("2024-09-11T08:00:00Z");
   const newId = () => crypto.randomUUID();
   const areas = { search: async () => [], getByRef: async () => null };
+  const signals = new InMemorySignalRepository();
+  const alerts = new InMemoryAlertRepository();
   return createHttpApp({
     webOrigin: "http://localhost:3000",
     clock,
@@ -44,6 +50,9 @@ const build = ({ demoSignIn = true } = {}) => {
     setMunicipalityArea: new SetMunicipalityAreaUseCase({ ...repos, areas }),
     importSubstations: new ImportSubstationsUseCase({ ...repos, substationSource: { findInBBox: async () => [] } }),
     importRegister: new ImportRegisterUseCase({ ...repos, clock, newId }),
+    runSignals: new RunSignalsUseCase({ ...repos, sources: [], signals, alerts, newId }),
+    listAlerts: new ListAlertsUseCase({ alerts }),
+    getAlert: new GetAlertUseCase({ ...repos, alerts, signals }),
   });
 };
 type App = ReturnType<typeof build>;
@@ -128,3 +137,20 @@ describe("HTTP: access", () => {
     expect((await app.request("/auth/demo-sign-in", post({ userId: ADMIN_ID }))).status).toBe(404);
   });
 });
+
+describe("HTTP: signals and alerts", () => {
+  it("lets only the regional admin run the signal sources", async () => {
+    const app = build();
+    const body = { at: "2024-09-12T12:00:00.000Z" };
+    expect((await app.request("/signals/run", post(body, await signIn(app, GRID_ID)))).status).toBe(403);
+    const ok = await app.request("/signals/run", post(body, await signIn(app, ADMIN_ID)));
+    expect(ok.status).toBe(200);
+    expect(await ok.json()).toEqual({ at: body.at, sources: [], alerts: [] });
+  });
+
+  it("answers 404 for an unknown alert", async () => {
+    const app = build();
+    expect((await app.request(`/alerts/${crypto.randomUUID()}`, auth(await signIn(app, ADMIN_ID)))).status).toBe(404);
+  });
+});
+
