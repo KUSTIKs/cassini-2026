@@ -50,3 +50,10 @@ export const distanceMeters = (a: LngLat, b: LngLat): number => {
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
   return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(h));
 };
+
+// ---------- crew routing (Flow 4/5) ----------
+// Routes and hazard areas use plain GeoJSON types; their geometry maths lives in the routing adapters (turf).
+export type { LineString, MultiPolygon } from "geojson";
+
+/** [longitude, latitude] in WGS84, GeoJSON order. Same as `Position`; named for routing code. */
+export type LonLat = Position;

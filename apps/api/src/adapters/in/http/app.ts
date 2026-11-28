@@ -6,8 +6,16 @@ import { alertRoutes, type AlertRouteDeps } from "./routes/alerts.js";
 import { areaRoutes } from "./routes/areas.js";
 import { authRoutes, type AuthRouteDeps } from "./routes/auth.js";
 import { municipalityRoutes, type MunicipalityRouteDeps } from "./routes/municipalities.js";
+import { taskRoutes, type CrewRoutingDeps } from "./routes/tasks.js";
 
-export type HttpDeps = MunicipalityRouteDeps & Parameters<typeof areaRoutes>[0] & AuthRouteDeps & AlertRouteDeps & { webOrigin: string };
+export type HttpDeps = MunicipalityRouteDeps &
+  Parameters<typeof areaRoutes>[0] &
+  AuthRouteDeps &
+  AlertRouteDeps & {
+    webOrigin: string;
+    /** Crew routing (Flow 4/5). Optional so tests of other routes needn't build it. */
+    crew?: CrewRoutingDeps;
+  };
 
 /**
  * DRIVING ADAPTER: translates HTTP <-> inbound ports.
@@ -16,7 +24,7 @@ export type HttpDeps = MunicipalityRouteDeps & Parameters<typeof areaRoutes>[0] 
  */
 export const createHttpApp = (deps: HttpDeps) => {
   const signedIn = requireUser(deps);
-  return new Hono<AppEnv>()
+  const app = new Hono<AppEnv>()
     .use("*", cors({ origin: deps.webOrigin }))
     .onError(handleError)
     .get("/health", (c) => c.json({ ok: true }))
@@ -29,4 +37,6 @@ export const createHttpApp = (deps: HttpDeps) => {
     .route("/", alertRoutes(deps))
     .route("/municipalities", municipalityRoutes(deps))
     .route("/areas", areaRoutes(deps));
+  if (deps.crew) app.use("/tasks/*", signedIn).use("/route-hazards", signedIn).route("/", taskRoutes(deps.crew));
+  return app;
 };

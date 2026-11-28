@@ -163,6 +163,12 @@ export interface SignalSource {
 6. **Push sources use the same shape.** A webhook, or the mayor drawing a zone in the UI, comes in through a driving adapter (`adapters/in/http`) and calls the same `IngestSignals` use case with `HazardSignal`s.
 7. **The UI is generic.** The web app renders any signal from its `descriptor` (label, EU-space badge) and `kind`/`stage` (colour, solid vs dashed). There's no per-source UI code.
 
+### Crew routing: observed water adds to the forecast (28 Nov)
+Sentinel-1 can't see water inside towns: GFM excludes ~80 % of Krnov's centre on 15 Sept 2024 (`data/flood/README.md`), so
+"no water observed" there means *unknown*, not *dry*. Crew routing (`domain/route-hazards.ts`) therefore lets observed
+water **add to** the forecast zone and never remove it. If a plugin can one day report where its sensor really saw dry
+ground (e.g. an optional `unobserved` area from GFM's exclusion mask), routing could subtract forecast areas there.
+
 ### Plugin folder
 ```
 adapters/out/signals/

@@ -61,7 +61,7 @@ The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
 | `HazardSignal` | id, sourceId (plugin), kind, stage (`forecast` / `observed`), area (polygon), issuedAt, expectedAt, expiresAt, confidence, provenance. The same shape for every signal plugin (`ARCHITECTURE.md` §6) |
 | `Alert` | id, floodEventId, municipality, createdAt, status (`active` / `closed`), substationIds[], personIds[] |
 | `ContactStatus` | alertId, personId, state (`not_contacted` / `reached_ok` / `away` / `needs_help` / `not_reached`), note, by, at |
-| `Task` | id, alertId, personId, crewId, bring[] (generator / oxygen / transport), state (`assigned` / `en_route` / `done`), route geometry |
+| `Task` | id, alertId, personId, crewId, bring[] (generator / oxygen / transport), state (`assigned` / `en_route` / `done`), route: `{ basis (observed / forecast / none), avoidedSignalIds, from, to, endPoint, destinationInHazard, walkRemainingM, line, distanceM, durationS, provider, computedAt, version, rerouteReason }` or null. A reroute replaces `route` and bumps `version` |
 | `AuditLog` | who, role, action (`view_person` / `export` / `status_change`), personId, at |
 
 ### Priority rule (explainable, in one function)
@@ -171,7 +171,8 @@ Each flow lists: **actor → trigger → steps → what they see → what's stor
      *Limit (checked 28 Nov):* Sentinel-1 can't see water inside towns; GFM excludes ~80% of Krnov's centre. So the
      satellite confirms water in the open floodplain and on roads between towns, **not** the Krnov substation itself.
      Inside towns the Q100 zone stays the working answer; a grid outage signal (Flow 6) is what would confirm a substation.
-  3. **Re-route open tasks** around the observed water. Changed routes are flagged to the crew.
+  3. **Re-route open tasks** around the observed water. Changed routes are flagged to the crew. Observed water **adds to**
+     the forecast zone and never removes it, because radar is blind inside towns (`domain/route-hazards.ts`).
   4. Banner, e.g. *"Satellite map 15 Sept: water confirmed in the Opava floodplain; 1 route changed. Town centres can't be seen by radar; the forecast zone still applies there."*
 - **Stored:** HazardSignal (observed), Alert update, Task routes.
 
@@ -231,8 +232,8 @@ The demo is **2–3 minutes**: slide → alert → click 2 people → one task w
 7. Report (Flow 7), grid view (Flow 6), SMS mock (Flow 8): only if time allows.
 
 ## 6. Open technical decisions
-- [ ] Map library: **MapLibre GL** (free, no key) or Leaflet (simpler)?
-- [ ] Routing: OpenRouteService API (key, rate limits) or a self-hosted router?
+- [x] Map library: **MapLibre GL** with the keyless OpenFreeMap style (decided 28 Nov, `/crew`)
+- [x] Routing: OpenRouteService behind a `RoutingGateway` port, `ROUTING=ors`; offline fixture router for tests and the replay, `ROUTING=fixture` (decided 28 Nov). ORS key and live limits still [verify]
 - [x] Storage: Postgres + PostGIS (decided 28 Nov)
 - [x] One app, with what each user sees decided by their role (decided 28 Nov; see "Users, roles and sign-in")
 - [x] Where the GFM polygon comes from: EODC's public GFM STAC, no account needed (decided 28 Nov).

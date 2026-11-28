@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { BBox } from "../domain/geo.js";
+import type { BBox, LonLat } from "../domain/geo.js";
 
 /** Repo-level data/, found by walking up so it works from src/ (tsx) and dist/ (bundled). */
 const findDataDir = (): string => {
@@ -12,6 +12,11 @@ const findDataDir = (): string => {
     if (dirname(dir) === dir) throw new Error("data/ not found; set DATA_DIR");
   }
 };
+
+export type RoutingConfig =
+  | { kind: "fixture" }
+  | { kind: "recorded"; path: string }
+  | { kind: "ors"; apiKey: string; baseUrl?: string; profile?: string };
 
 export type Config = {
   databaseUrl: string;
@@ -29,7 +34,17 @@ export type Config = {
   signals: string[];
   /** Saved Overpass responses used when live OSM is unavailable. */
   substationSnapshots: Array<{ file: string; coverage: BBox }>;
+  /**
+   * Crew routing: ROUTING=fixture (offline schematic, default), ROUTING=recorded (real ORS routes replayed
+   * offline, fixture for anything not recorded) or ROUTING=ors (live, needs ORS_API_KEY).
+   */
+  routing: RoutingConfig;
+  /** Where crews start when the phone sends no position (replay). Default: Krnov fire station. */
+  crewStart: LonLat;
 };
+
+/** [real] fire station, OSM node 13992959691 (JPO 811804), Krnov. See krnov-replay.ts for why not the central one. */
+const KRNOV_FIRE_STATION: LonLat = [17.6807149, 50.0944742];
 
 /** The only place that reads process.env. */
 export const loadConfig = (): Config => {
@@ -63,5 +78,33 @@ export const loadConfig = (): Config => {
         coverage: { south: 50.15, west: 17.14, north: 50.27, east: 17.31 },
       },
     ],
+    routing: routingFromEnv(process.env),
+    crewStart: process.env.CREW_START ? parseLonLat(process.env.CREW_START) : KRNOV_FIRE_STATION,
   };
 };
+
+export const routingFromEnv = (env: NodeJS.ProcessEnv): RoutingConfig => {
+  const kind = env.ROUTING ?? "fixture";
+  if (kind === "fixture") return { kind };
+  if (kind === "recorded") return { kind, path: recordedRoutesPath(env) };
+  if (kind === "ors") {
+    if (!env.ORS_API_KEY) throw new Error("ROUTING=ors needs ORS_API_KEY (see apps/api/.env.example)");
+    return {
+      kind,
+      apiKey: env.ORS_API_KEY,
+      ...(env.ORS_BASE_URL ? { baseUrl: env.ORS_BASE_URL } : {}),
+      ...(env.ORS_PROFILE ? { profile: env.ORS_PROFILE } : {}),
+    };
+  }
+  throw new Error(`ROUTING must be "fixture", "recorded" or "ors", got "${kind}"`);
+};
+
+const parseLonLat = (value: string): LonLat => {
+  const [lon, lat] = value.split(",").map(Number);
+  if (!Number.isFinite(lon) || !Number.isFinite(lat)) throw new Error(`CREW_START must be "lon,lat", got "${value}"`);
+  return [lon!, lat!];
+};
+
+/** Where `pnpm routes:record` writes and ROUTING=recorded reads (relative to apps/api by default). */
+export const recordedRoutesPath = (env: NodeJS.ProcessEnv): string =>
+  resolve(env.RECORDED_ROUTES_PATH ?? "src/adapters/out/routing/fixtures/recorded-routes.json");

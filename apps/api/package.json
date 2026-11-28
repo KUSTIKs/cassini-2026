@@ -14,11 +14,13 @@
     "demo:register": "tsx scripts/generate-demo-register.ts",
     "users:bootstrap": "tsx scripts/bootstrap-users.ts",
     "data:flood-zones": "tsx scripts/fetch-flood-zones.ts",
-    "data:gfm": "tsx scripts/fetch-gfm-extent.ts"
+    "data:gfm": "tsx scripts/fetch-gfm-extent.ts",
+    "routes:record": "tsx scripts/record-routes.ts"
   },
   "dependencies": {
     "@firstreach/contracts": "workspace:*",
     "@hono/node-server": "^2.1.11",
+    "@turf/turf": "^7.4.0",
     "csv-parse": "^7.0.3",
     "drizzle-orm": "^0.45.4",
     "hono": "^4.13.23",
@@ -28,6 +30,7 @@
   "devDependencies": {
     "@firstreach/tsconfig": "workspace:*",
     "@types/d3-contour": "^3.0.6",
+    "@types/geojson": "^7946.0.16",
     "@types/node": "^26.6.11",
     "d3-contour": "^4.0.3",
     "drizzle-kit": "^0.31.11",
