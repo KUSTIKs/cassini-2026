@@ -1,8 +1,8 @@
-# Lifeline (working name)
+# FirstReach (working name)
 
 > **Short version.** The final, fully sourced definition with personas, KPIs and the demo data check is in `PROJECT.md`. If the two disagree, `PROJECT.md` wins.
 
-**One line:** Lifeline warns a mayor **before the power goes** which people on home ventilators and oxygen will lose power, ranks them by **hours of battery left**, and gives firefighters a **route around the flooded roads** to reach them.
+**One line:** FirstReach warns a mayor **before the power goes** which people on home ventilators and oxygen will lose power, ranks them by **hours of battery left**, and gives firefighters a **route around the flooded roads** to reach them.
 
 **Challenge:** #2, Space-enabled crisis response and civil resilience. **Market:** Czech Republic first. **Demo:** Krnov, September 2024 floods (replay).
 
@@ -31,18 +31,18 @@ Decisions behind this (28 Nov grilling session): Czech market only; **electricit
 
 | When | What happens | EU space data |
 |---|---|---|
-| **Days to hours before** | The Copernicus flood forecast shows water heading for a substation. Lifeline lists every registered vulnerable customer fed by that substation. | **EFAS** (Copernicus flood forecast, up to 5 days ahead) |
+| **Days to hours before** | The Copernicus flood forecast shows water heading for a substation. FirstReach lists every registered vulnerable customer fed by that substation. | **EFAS** (Copernicus flood forecast, up to 5 days ahead) |
 | **First hour** | The mayor gets: *"In ~12 h, 14 people on ventilators or oxygen will likely lose power. First: Ms N., ventilator, ~3 h battery, 2nd floor, lives alone."* They call, send help, or evacuate before the outage. | EFAS + flood-zone maps |
 | **Power is out** | Firefighters get each address, what to bring (generator, spare oxygen bottle, ambulance) and a route that avoids flooded roads. | **Sentinel-1 flood map (Copernicus GFM)**; **Galileo** positioning |
 | **After** | Report: who was reached, when, and who was missed. | n/a |
 
-**Lifeline doesn't detect floods and doesn't replace the register.** It joins three things that already exist.
+**FirstReach doesn't detect floods and doesn't replace the register.** It joins three things that already exist.
 
 ---
 
 ## What each party gets
 
-| Party | Today | With Lifeline |
+| Party | Today | With FirstReach |
 |---|---|---|
 | **Person on a ventilator or oxygen** | A letter about *planned* outages. In a flood: nothing, unless a neighbour remembers them. | Called **before** the power goes; help arrives before the battery runs out. |
 | **Family or carer** | Finds out from the news. | Notified together with the person; can confirm "she's with us" so rescuers skip that address. |
@@ -56,9 +56,9 @@ Decisions behind this (28 Nov grilling session): Czech market only; **electricit
 
 ## KPIs for government
 
-What a mayor or region can measure, today versus with Lifeline. The targets are our proposal; we still have to validate them with real users.
+What a mayor or region can measure, today versus with FirstReach. The targets are our proposal; we still have to validate them with real users.
 
-| KPI | Today | Lifeline target |
+| KPI | Today | FirstReach target |
 |---|---|---|
 | Time from flood warning to a named, ranked list | No list. In the US, 3–4 h (emPOWER) | **Under 5 minutes** |
 | Registered vulnerable people contacted **before** losing power | Not measured | **100 % attempted**, all results logged |
@@ -70,7 +70,7 @@ What a mayor or region can measure, today versus with Lifeline. The targets are 
 
 ## Non-technical requirements
 
-1. **Legal access to the list.** The grid operator keeps the register. Lifeline only receives the names for the affected area, only once a flood alert is declared, and only the minimum needed: address, device, contact, carer. *Legal basis is unverified:* our guess is GDPR "vital interests" plus the Czech crisis laws, and it needs checking.
+1. **Legal access to the list.** The grid operator keeps the register. FirstReach only receives the names for the affected area, only once a flood alert is declared, and only the minimum needed: address, device, contact, carer. *Legal basis is unverified:* our guess is GDPR "vital interests" plus the Czech crisis laws, and it needs checking.
 2. **Works for a mayor of a 500-person village.** No training needed; one screen, in Czech; the first useful answer within 2 minutes of opening it.
 3. **Works when the power and mobile network are down.** The list can be printed or exported, and it's ready **before** the outage.
 4. **Every rank is explainable.** "First because: ventilator, ~3 h battery, lives alone." No black-box scoring.
@@ -92,7 +92,7 @@ What a mayor or region can measure, today versus with Lifeline. The targets are 
 | **France: PHRV list** | Yes (~4,000) | No | No | No | Unplanned cuts: no warning |
 | **France: town-hall register** | Yes (1–5 % of eligible) | No | No | No | Sent to the prefect by post or secure email |
 | **Czech vulnerable-customer register** | Yes | No | No | No | Used for letters only |
-| **Lifeline** | Uses the existing register | **Yes (EFAS + Sentinel-1)** | **Yes (hours of battery)** | **Yes** | **Minutes** |
+| **FirstReach** | Uses the existing register | **Yes (EFAS + Sentinel-1)** | **Yes (hours of battery)** | **Yes** | **Minutes** |
 
 ---
 

@@ -1,0 +1,342 @@
+{
+ "version": 0.6,
+ "generator": "Overpass API 0.7.62.4 2390de5a",
+ "osm3s": {
+  "timestamp_osm_base": "2026-11-28T13:17:17Z",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+ },
+ "elements": [
+  {
+   "type": "way",
+   "id": 55375414,
+   "center": {
+    "lat": 50.0821251,
+    "lon": 17.6796186
+   },
+   "tags": {
+    "building": "warehouse",
+    "building:flats": "3",
+    "building:levels": "1",
+    "building:ruian:type": "12",
+    "location": "indoor",
+    "operator": "ČEZ Distribuce",
+    "operator:wikidata": "Q11089971",
+    "power": "substation",
+    "ref:ruian:building": "13972049",
+    "source": "cuzk:ruian",
+    "start_date": "1936-06-18",
+    "substation": "distribution",
+    "voltage": "22000"
+   }
+  },
+  {
+   "type": "way",
+   "id": 55375417,
+   "center": {
+    "lat": 50.082089,
+    "lon": 17.681147
+   },
+   "tags": {
+    "frequency": "50",
+    "location": "outdoor",
+    "name": "Krnov",
+    "operator": "ČEZ Distribuce",
+    "operator:wikidata": "Q11089971",
+    "power": "substation",
+    "source": "cuzk:km",
+    "substation": "distribution",
+    "voltage": "110000;22000"
+   }
+  },
+  {
+   "type": "way",
+   "id": 67871005,
+   "center": {
+    "lat": 50.0423402,
+    "lon": 17.6468633
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "location": "indoor",
+    "power": "substation",
+    "source": "cuzk:km",
+    "substation": "minor_distribution",
+    "voltage": "22000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 67883745,
+   "center": {
+    "lat": 50.0492342,
+    "lon": 17.598088
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "frequency": "50",
+    "location": "indoor",
+    "power": "substation",
+    "source": "cuzk:km",
+    "substation": "minor_distribution",
+    "voltage": "22000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 67883746,
+   "center": {
+    "lat": 50.0457858,
+    "lon": 17.5911454
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "building:ruian:type": "16",
+    "frequency": "50",
+    "location": "indoor",
+    "power": "substation",
+    "ref:ruian:building": "96744952",
+    "source": "cuzk:ruian",
+    "substation": "minor_distribution",
+    "voltage": "22000"
+   }
+  },
+  {
+   "type": "way",
+   "id": 172846649,
+   "center": {
+    "lat": 50.1148232,
+    "lon": 17.5936992
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "building:ruian:type": "16",
+    "location": "indoor",
+    "power": "substation",
+    "ref:ruian:building": "49661833",
+    "source": "cuzk:ruian",
+    "substation": "minor_distribution",
+    "voltage": "22000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 215300241,
+   "center": {
+    "lat": 50.0557688,
+    "lon": 17.6626242
+   },
+   "tags": {
+    "frequency": "50",
+    "location": "indoor",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "22000"
+   }
+  },
+  {
+   "type": "way",
+   "id": 253831415,
+   "center": {
+    "lat": 50.0770767,
+    "lon": 17.6005126
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "frequency": "50",
+    "location": "indoor",
+    "power": "substation",
+    "source": "cuzk:km",
+    "substation": "minor_distribution",
+    "voltage": "22000"
+   }
+  },
+  {
+   "type": "way",
+   "id": 400294311,
+   "center": {
+    "lat": 50.1258012,
+    "lon": 17.6458624
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "location": "indoor",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 427581581,
+   "center": {
+    "lat": 50.0534436,
+    "lon": 17.7747346
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 800727970,
+   "center": {
+    "lat": 50.1091192,
+    "lon": 17.656928
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "building:ruian:type": "16",
+    "location": "indoor",
+    "power": "substation",
+    "ref:ruian:building": "45633444",
+    "source": "cuzk:ruian",
+    "substation": "minor_distribution",
+    "voltage": "22000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1194484050,
+   "center": {
+    "lat": 50.0503894,
+    "lon": 17.7723802
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1326331149,
+   "center": {
+    "lat": 50.1352204,
+    "lon": 17.6269567
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1326331161,
+   "center": {
+    "lat": 50.0800387,
+    "lon": 17.7579524
+   },
+   "tags": {
+    "building": "service",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "utility": "power",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1326331173,
+   "center": {
+    "lat": 50.1098698,
+    "lon": 17.6612894
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1326331176,
+   "center": {
+    "lat": 50.149405,
+    "lon": 17.6075037
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1326331177,
+   "center": {
+    "lat": 50.0828508,
+    "lon": 17.7537146
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1326331179,
+   "center": {
+    "lat": 50.1214568,
+    "lon": 17.7421727
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1326331181,
+   "center": {
+    "lat": 50.1160441,
+    "lon": 17.716824
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1326331183,
+   "center": {
+    "lat": 50.1233468,
+    "lon": 17.7163981
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1326331184,
+   "center": {
+    "lat": 50.1351116,
+    "lon": 17.7209752
+   },
+   "tags": {
+    "building": "transformer_tower",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "15000;400"
+   }
+  }
+ ]
+}

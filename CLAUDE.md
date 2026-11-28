@@ -18,8 +18,8 @@ Team background: full-stack web (React, Node.js).
 - `context/sources/`: the original rules PDF and text, and a CSV of registered projects
 
 ## Chosen project
-- `PROJECT.md`: **we're building Lifeline**. Decision, scope, demo event, research, open questions. Read it before any build work.
-- `IDEA.md`: the full Lifeline idea write-up (problem, users, data, risks).
+- `PROJECT.md`: **we're building FirstReach**. Decision, scope, demo event, research, open questions. Read it before any build work.
+- `IDEA.md`: the full FirstReach idea write-up (problem, users, data, risks).
 - `ARCHITECTURE.md`: code structure (Turborepo, Next.js web, Hono API in hexagonal ports and adapters, Postgres). **Follow it when writing code.**
 - `README.md`: quick start (`pnpm db:up`, `pnpm db:migrate`, `pnpm dev`).
 - `TECH.md`: technical definition: inputs (real vs synthetic), architecture, data model, priority rule, and each user flow separately, plus the replay demo.

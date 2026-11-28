@@ -131,12 +131,12 @@ Removal:       on request, if the person moves away, or if they die
 
 ---
 
-## What it means for Lifeline
+## What it means for FirstReach
 - **The lists exist but are fragmented:** PHRV goes ARS → grid operator; the town register goes mayor → prefect. Neither is linked to the other or to a hazard map.
 - **Both cover the wrong hazards for a flood:** PHRV is about power cuts only, the town register about heat, cold and health crises. A fast flood falls between them.
 - **Both are slow and on paper:** posted forms, renewal every year, registered letters to the prefect.
-- **Neither system ranks people or knows whether they're home right now.** PHRV has the medical need but no age or living situation; the town register has age, disability and sometimes "lives alone" but no medical need. Lifeline's priority rule combines both, and a status check (home or away, battery or oxygen time) at the start of an event would fill a real gap.
-- **Built-in privacy rules to respect:** one purpose only, the prefect decides who receives data, staff named by the mayor, no open network access. Lifeline's design should mirror these (roles, audit log, sharing only once an emergency is declared).
+- **Neither system ranks people or knows whether they're home right now.** PHRV has the medical need but no age or living situation; the town register has age, disability and sometimes "lives alone" but no medical need. FirstReach's priority rule combines both, and a status check (home or away, battery or oxygen time) at the start of an event would fill a real gap.
+- **Built-in privacy rules to respect:** one purpose only, the prefect decides who receives data, staff named by the mayor, no open network access. FirstReach's design should mirror these (roles, audit log, sharing only once an emergency is declared).
 
 ## Sources
 - [ARS PACA: PHRV scheme](https://www.paca.ars.sante.fr/dispositif-phrv-patient-haut-risque-vital)

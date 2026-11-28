@@ -1,4 +1,4 @@
-# PROJECT.md: Lifeline (working name)
+# PROJECT.md: FirstReach (working name)
 
 Source of truth for **what we're building and why**. Background (rules, judging, tools, competition) is in `context/`; case studies in `context/08-case-empower.md` and `context/09-case-france.md`.
 
@@ -7,7 +7,7 @@ Every fact below has a source link. **Unverified** means we haven't checked it, 
 ---
 
 ## 1. The product in one line
-**Lifeline tells a Czech mayor, before the power goes, which people on home ventilators and oxygen will lose it when a flood hits their substation. It ranks them by hours of battery left and sends firefighters a route around the flooded roads.**
+**FirstReach tells a Czech mayor, before the power goes, which people on home ventilators and oxygen will lose it when a flood hits their substation. It ranks them by hours of battery left and sends firefighters a route around the flooded roads.**
 
 - **Challenge:** #2, Space-enabled crisis response and civil resilience.
 - **Market:** Czech Republic first.
@@ -70,11 +70,11 @@ We don't detect floods, and we don't build a new register.
 
 12. About **500 Czech families care for someone on home ventilation** (patient group Dech života, via [CNN Prima](https://cnn.iprima.cz/nestiham-zit-pecuji-24-7-aneb-podpora-pecujicich-o-pacienty-na-domaci-umele-plicni-ventilaci-472657)). Add home-oxygen users, and a flooded town has **tens of people to reach, not thousands**. That's a list a mayor can finish in the first hour.
 
-> **The pitch in one sentence:** *Copernicus warned about the Opava river 60 hours ahead, the grid operator had the names, and the mayor had the legal duty. Nobody connected them. Lifeline does, in minutes.*
+> **The pitch in one sentence:** *Copernicus warned about the Opava river 60 hours ahead, the grid operator had the names, and the mayor had the legal duty. Nobody connected them. FirstReach does, in minutes.*
 
 ---
 
-## 3. Personas: what each one is measured on, and how Lifeline helps them hit it
+## 3. Personas: what each one is measured on, and how FirstReach helps them hit it
 
 Governments act on **duties, KPIs and liability**, not on goodwill, so each row starts from what that party is **measured on or legally liable for**.
 
@@ -83,7 +83,7 @@ Governments act on **duties, KPIs and liability**, not on goodwill, so each row 
 |---|---|
 | **Measured on / liable for** | Warning, evacuation and **medical care during a flood** (§78(3)(f), (j), (k) Water Act; §21 Crisis Act). After a disaster, the question is always *"did the town do what the law says?"* |
 | **Today** | One checklist line, "pay increased attention to people with specific needs", and no names. |
-| **Lifeline gives them** | When EFAS raises a warning for their river: a **named, ranked list** of who will lose power, a phone script, and a print/export option for when the network is down. |
+| **FirstReach gives them** | When EFAS raises a warning for their river: a **named, ranked list** of who will lose power, a phone script, and a print/export option for when the network is down. |
 | **KPI they can report** | **100 % of registered vulnerable people in the zone contacted before the outage**, with time and outcome logged, as **proof the §78 duty was met**. |
 
 ### 3.2 Fire and Rescue Service (HZS ČR) and regional operations centre (receives the list)
@@ -91,7 +91,7 @@ Governments act on **duties, KPIs and liability**, not on goodwill, so each row 
 |---|---|
 | **Measured on** | People rescued and evacuated. 2024 floods: 1,516 rescued (147 by helicopter), 21,488 evacuated (sources in §2). |
 | **Today** | Learn about a ventilator patient when someone calls 112, often after the roads are under water. |
-| **Lifeline gives them** | Each address, what to bring (generator, spare oxygen bottle, transport), and **a route avoiding flooded roads** from the Sentinel-1 flood map. Visits are planned during the 60-hour forecast window instead of done as emergencies during the flood. |
+| **FirstReach gives them** | Each address, what to bring (generator, spare oxygen bottle, transport), and **a route avoiding flooded roads** from the Sentinel-1 flood map. Visits are planned during the 60-hour forecast window instead of done as emergencies during the flood. |
 | **KPI they can report** | Fewer emergency rescues of dependent people **after** the outage (especially by helicopter); more **planned** moves made before the outage. |
 
 ### 3.3 Emergency medical service (ZZS) and region (kraj)
@@ -99,7 +99,7 @@ Governments act on **duties, KPIs and liability**, not on goodwill, so each row 
 |---|---|
 | **Measured on** | By law, every location must be reachable **within 20 minutes**, and the standard "must be met". The only exception is **"unforeseen adverse traffic or weather conditions"** (§5 [Act 374/2011](https://www.zakonyprolidi.cz/cs/2011-374)). The region must ensure **continuous availability** of the service (§24). |
 | **Today** | In a flood, the 20-minute standard breaks down, and a ventilator patient on a dying battery becomes an emergency the ambulance can't reach. |
-| **Lifeline gives them** | Patients identified and moved or supplied **before** the roads close, turning an impossible emergency into a planned transfer. |
+| **FirstReach gives them** | Patients identified and moved or supplied **before** the roads close, turning an impossible emergency into a planned transfer. |
 | **KPI they can report** | Fewer emergencies from electricity-dependent patients during an outage; transfers done while the 20-minute standard still holds. |
 
 ### 3.4 Grid operator (ČEZ Distribuce, EG.D, PREdistribuce): data holder
@@ -108,7 +108,7 @@ Governments act on **duties, KPIs and liability**, not on goodwill, so each row 
 | **Measured on** | SAIDI/SAIFI quality bonus or penalty of up to ±4 % of profit, **with weather outages excluded** (ERÚ, §2 fact 10). Czech SAIDI in 2025 was **214 min/customer/year** ([ERÚ](https://eru.gov.cz/sites/default/files/obsah/prilohy/erv032026.pdf)). |
 | **Pressure that's coming** | The **EU Critical Entities Resilience Directive (2022/2557)**: member states had to name their critical entities, energy included, **by 17 July 2026**. Those entities must assess risks and take resilience measures ([IEA summary](https://www.iea.org/policies/26916-directive-20222557-on-the-resilience-of-critical-entities), [DLA Piper](https://www.dlapiper.com/en/insights/publications/2026/07/cer-directive-enters-a-new-phase-as-critical-entity)). *Unverified: whether each Czech distributor has been designated.* |
 | **Today** | It keeps a register by law and uses it only to send letters about planned work. During a flood, it fields calls from desperate patients it can't help. |
-| **Lifeline gives them** | A legally clean way to make the register **useful in an emergency**: names go out only for the affected area, only when an alert is declared, with every access logged. It also shows **which substation has the most dependent people behind it**, which can inform restoration order (US precedent: Broome County, NY used emPOWER this way, per [HHS](https://empowerprogram.hhs.gov/Program-Executive-Summary.pdf)). |
+| **FirstReach gives them** | A legally clean way to make the register **useful in an emergency**: names go out only for the affected area, only when an alert is declared, with every access logged. It also shows **which substation has the most dependent people behind it**, which can inform restoration order (US precedent: Broome County, NY used emPOWER this way, per [HHS](https://empowerprogram.hhs.gov/Program-Executive-Summary.pdf)). |
 | **KPI they can report** | A documented resilience measure for vulnerable customers, which counts under CER (our argument, not a legal opinion). Fewer complaints and media stories about "the patient nobody warned". |
 
 ### 3.5 Ministry of the Interior / HZS headquarters, and the EU
@@ -116,13 +116,13 @@ Governments act on **duties, KPIs and liability**, not on goodwill, so each row 
 |---|---|
 | **Measured on** | **EU Disaster Resilience Goals (2023):**<br>• **"Alert": warnings must "reach the right people on time"**<br>• **"Anticipate": "identify vulnerabilities in critical sectors"**<br>• **"Secure": "information sharing … with critical infrastructure providers"**<br>([European Commission](https://civil-protection-humanitarian-aid.ec.europa.eu/what/civil-protection/european-disaster-risk-management/european-disaster-resilience-goals_en))<br>**Sendai Framework 2030:** Target A "substantially reduce global disaster mortality", and the early-warning target ([PreventionWeb](https://www.preventionweb.net/sendai-framework/sendai-framework-at-a-glance)). |
 | **Today** | The national population-protection concept ([HZS](https://hzscr.gov.cz/soubor/uv-560-2021-koob-pdf.aspx)) covers warning and evacuation. *Unverified: whether it names vulnerable groups.* |
-| **Lifeline gives them** | A measurable, Copernicus-based answer to "Alert" and "Anticipate", reportable per event: **minutes from EFAS notification to a named list**, and **% of vulnerable people reached before the outage**. |
+| **FirstReach gives them** | A measurable, Copernicus-based answer to "Alert" and "Anticipate", reportable per event: **minutes from EFAS notification to a named list**, and **% of vulnerable people reached before the outage**. |
 
 ### 3.6 The person on a ventilator or oxygen, and their family
 | | |
 |---|---|
 | **Today** | A letter about planned work. In a flood, nobody calls unless a neighbour remembers them. |
-| **Lifeline gives them** | A call **before** the power goes. A spare battery, oxygen or a transfer arranges itself. The family can confirm "she's with us", so rescuers skip the address. |
+| **FirstReach gives them** | A call **before** the power goes. A spare battery, oxygen or a transfer arranges itself. The family can confirm "she's with us", so rescuers skip the address. |
 | **What it means** | The difference between the French Storm Ciarán case (5 days without power) and a planned visit on day one. |
 
 ### 3.7 Oxygen and medical equipment suppliers, and health insurers (secondary, roadmap)
@@ -134,7 +134,7 @@ They'd know in advance who needs a spare bottle or battery delivered. *Unverifie
 
 | Step | What happens | EU space data |
 |---|---|---|
-| **A. Forecast (days–hours before)** | An EFAS flood notification for a river turns the substations in its flood zone red. Lifeline lists every registered vulnerable customer fed by those substations. | **Copernicus EFAS** |
+| **A. Forecast (days–hours before)** | An EFAS flood notification for a river turns the substations in its flood zone red. FirstReach lists every registered vulnerable customer fed by those substations. | **Copernicus EFAS** |
 | **B. Rank (first hour)** | *"14 people will likely lose power in ~X h. First: ventilator, ~3 h battery, lives alone, 2nd floor."* Every rank has a one-line reason. | n/a |
 | **C. Route (once power is out)** | Firefighters get the address, what to bring, and a route avoiding flooded roads. | **Sentinel-1 flood extent (Copernicus GFM)**; **Galileo** positioning |
 | **After** | Report: contacted / confirmed away / not reached, with timestamps. This is the mayor's §78 evidence. | n/a |
@@ -180,7 +180,7 @@ A and B are built properly; C is one route on the map (decided 28 Nov).
 | France PHRV list | ~4,000 people | No | No | No | No warning for unplanned cuts |
 | France town-hall register | 1–5 % of eligible people | No | No | No | Sent to the prefect by post or secure email |
 | Czech vulnerable-customer register | Yes | No | No | No | Used for letters only |
-| **Lifeline** | Uses the existing register | **EFAS + Sentinel-1** | **Hours of battery** | **Yes** | **Minutes, before the outage** |
+| **FirstReach** | Uses the existing register | **EFAS + Sentinel-1** | **Hours of battery** | **Yes** | **Minutes, before the outage** |
 
 Sources: `context/08-case-empower.md`, `context/09-case-france.md`.
 
@@ -214,7 +214,7 @@ Login with roles, HTTPS, encrypted storage, an audit log of who viewed which per
 - [ ] Who owns the business model and the pitch
 
 ## 11. Decision log
-- **27 Nov:** Lifeline chosen (Challenge #2). Runner-up was the Baltic combo, dropped over the switch of challenge and unconfirmed AIS/Sentinel-1 replay data.
+- **27 Nov:** FirstReach chosen (Challenge #2). Runner-up was the Baltic combo, dropped over the switch of challenge and unconfirmed AIS/Sentinel-1 replay data.
 - **28 Nov (grilling session):**
   - Czech market.
   - **Electricity-dependent people only.** Czech flood deaths don't show "nobody knew they were there", and the Valencia victims weren't on any register; a Czech named register does exist.

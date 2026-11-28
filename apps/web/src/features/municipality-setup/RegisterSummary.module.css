@@ -1,0 +1,8 @@
+.summary { padding: var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.head { display: flex; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; }
+.total { font-size: var(--fs-xl); font-weight: var(--fw-semibold); line-height: 1; letter-spacing: -0.015em; font-variant-numeric: tabular-nums; }
+.caption { color: var(--text-muted); }
+.sealed { margin-left: auto; }
+.breakdown { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin: var(--space-4) 0 0; padding: 0; color: var(--text-muted); }
+.count { margin-right: 6px; color: var(--text); font-weight: var(--fw-semibold); font-variant-numeric: tabular-nums; }
+.foot { margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--border); font-size: var(--fs-sm); color: var(--text-muted); }

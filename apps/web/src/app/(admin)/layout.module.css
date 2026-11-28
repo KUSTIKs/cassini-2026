@@ -1,0 +1,14 @@
+/* Linear-style frame: a gray app background, the sidebar on it, and the page as an inset white panel that scrolls. */
+.shell { display: grid; grid-template-columns: var(--sidebar-width) minmax(0, 1fr); height: 100dvh; background: var(--bg); }
+.main {
+  min-width: 0;
+  margin: var(--inset) var(--inset) var(--inset) 0;
+  overflow: auto;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-panel);
+}
+@media (max-width: 720px) {
+  .shell { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+  .main { margin: 0; border-radius: 0; box-shadow: none; border-top: 1px solid var(--border); }
+}

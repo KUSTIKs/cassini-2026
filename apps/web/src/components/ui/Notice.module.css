@@ -1,0 +1,13 @@
+.notice {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding: 10px var(--space-3);
+  border-radius: var(--radius);
+  font-size: var(--fs-base);
+}
+.notice > svg { flex: none; margin-top: 2px; }
+.body { min-width: 0; }
+.error { background: var(--danger-soft); color: var(--danger); }
+.success { background: var(--success-soft); color: var(--success); }
+.info { background: var(--surface-sunken); color: var(--text-muted); }

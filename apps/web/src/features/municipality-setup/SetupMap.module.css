@@ -1,0 +1,19 @@
+.frame { position: relative; height: 100%; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); }
+.legend, .hint {
+  position: absolute;
+  left: var(--space-3);
+  top: var(--space-3);
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  box-shadow: var(--shadow-pop);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+.legend { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.legend li { display: flex; align-items: center; gap: var(--space-2); }
+.keyArea, .keyPreview, .keySubstation { display: inline-block; flex: none; }
+.keyArea { width: 14px; height: 10px; border: 1.5px solid var(--text); background: rgb(26 28 33 / 4%); border-radius: 2px; }
+.keyPreview { width: 14px; height: 10px; border: 1.5px dashed var(--accent); border-radius: 2px; }
+.keySubstation { width: 10px; height: 10px; border-radius: 50%; background: var(--power); box-shadow: 0 0 0 2px var(--surface); margin: 0 2px; }

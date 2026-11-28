@@ -1,0 +1,31 @@
+external_ref,full_name,address,lat,lon,device,backup_hours,lives_alone,floor,mobility,phone,carer_name,carer_phone
+CEZ-VZ-001,Jan Dvořák,"SPC B 33, 794 01 Krnov",50.087867,17.715561,ventilator,6.5,yes,0,limited,+420 000 000 001,Karel Kučera,+420 000 100 001
+CEZ-VZ-002,Jaroslava Veselá,"Dlouhá 21, 794 01 Krnov",50.081031,17.666429,ventilator,3.5,yes,0,independent,+420 000 000 002,Věra Nováková,+420 000 100 002
+CEZ-VZ-003,Marie Procházková,"K. Čapka 2, 794 01 Krnov",50.089745,17.685897,ventilator,2.5,no,1,independent,+420 000 000 003,,
+CEZ-VZ-004,Miroslav Pokorný,"Úzká 34, 794 01 Krnov",50.080889,17.668067,ventilator,5.5,yes,0,independent,+420 000 000 004,,
+CEZ-VZ-005,Milan Svoboda,"Revoluční 22, 794 01 Krnov",50.088413,17.691304,ventilator,2.5,no,2,bedridden,+420 000 000 005,,
+CEZ-VZ-006,Karel Dvořák,"Revoluční 56, 794 01 Krnov",50.088791,17.695768,ventilator,8,yes,1,limited,+420 000 000 006,,
+CEZ-VZ-007,Zdeňka Veselá,"Mikulášská 55, 794 01 Krnov",50.089912,17.688827,ventilator,7.5,yes,2,limited,+420 000 000 007,Anna Veselá,+420 000 100 007
+CEZ-VZ-008,Jiří Marek,"Jungmannova 3, 794 01 Krnov",50.085856,17.716511,ventilator,6,no,1,limited,+420 000 000 008,,
+CEZ-VZ-009,Libuše Pokorná,"SPC M 50, 794 01 Krnov",50.086939,17.719052,oxygen_concentrator,9,no,3,bedridden,+420 000 000 009,,
+CEZ-VZ-010,Jaroslava Černá,"U Ovčárny 14, 794 01 Krnov",50.071832,17.720897,oxygen_concentrator,6.5,yes,1,limited,+420 000 000 010,Alena Dvořáková,+420 000 100 010
+CEZ-VZ-011,Alena Nováková,"Hlubčická 16, 794 01 Krnov",50.096701,17.713068,oxygen_concentrator,7.5,no,0,limited,+420 000 000 011,Eva Pospíšilová,+420 000 100 011
+CEZ-VZ-012,Stanislav Černý,"Papírový mlýn 30, 794 01 Krnov",50.081648,17.737863,oxygen_concentrator,7.5,yes,2,limited,+420 000 000 012,Zdeňka Procházková,+420 000 100 012
+CEZ-VZ-013,Anna Kučerová,"Brantická 59, 794 01 Krnov",50.082053,17.678603,oxygen_concentrator,5.5,yes,1,limited,+420 000 000 013,,
+CEZ-VZ-014,Stanislav Procházka,"Albrechtická 6, 794 01 Krnov",50.095817,17.683309,oxygen_concentrator,3,yes,1,limited,+420 000 000 014,Jana Nováková,+420 000 100 014
+CEZ-VZ-015,Jana Černá,"Hájová 52, 794 01 Krnov",50.089225,17.674352,oxygen_concentrator,3.5,yes,0,limited,+420 000 000 015,Milan Veselý,+420 000 100 015
+CEZ-VZ-016,Jiří Horák,"Pod Kopcem 21, 794 01 Krnov",50.095277,17.678012,oxygen_concentrator,10,no,4,independent,+420 000 000 016,Libuše Horáková,+420 000 100 016
+CEZ-VZ-017,Libuše Pokorná,"Sokolovská 31, 794 01 Krnov",50.086787,17.706220,oxygen_concentrator,5,no,3,independent,+420 000 000 017,,
+CEZ-VZ-018,Miroslav Horák,"Šmeralova 49, 794 01 Krnov",50.087929,17.700033,oxygen_concentrator,4,yes,2,independent,+420 000 000 018,Stanislav Pokorný,+420 000 100 018
+CEZ-VZ-019,Anna Černá,"Úvoz 33, 794 01 Krnov",50.086473,17.672175,oxygen_concentrator,0.5,yes,0,limited,+420 000 000 019,,
+CEZ-VZ-020,Anna Veselá,"V Zálesí 24, 794 01 Krnov",50.076595,17.730784,oxygen_concentrator,3,no,1,independent,+420 000 000 020,Zdeňka Pospíšilová,+420 000 100 020
+CEZ-VZ-021,Karel Kučera,"Smetanův okruh 12, 794 01 Krnov",50.093046,17.703211,oxygen_concentrator,8.5,no,3,limited,+420 000 000 021,Václav Veselý,+420 000 100 021
+CEZ-VZ-022,Jaroslava Pospíšilová,"Janáčkovo náměstí 32, 794 01 Krnov",50.093945,17.689260,oxygen_concentrator,8,no,1,bedridden,+420 000 000 022,Jaroslava Černá,+420 000 100 022
+CEZ-VZ-023,Marie Svobodová,"Nádražní 50, 794 01 Krnov",50.088823,17.683872,oxygen_concentrator,2,no,3,bedridden,+420 000 000 023,Marie Kučerová,+420 000 100 023
+CEZ-VZ-024,Anna Procházková,"Albrechtická 22, 794 01 Krnov",50.093457,17.685343,oxygen_concentrator,9.5,no,2,bedridden,+420 000 000 024,,
+CEZ-VZ-025,Hana Horáková,"Šafaříkova 21, 794 01 Krnov",50.097657,17.676880,other,10.5,no,0,bedridden,+420 000 000 025,Anna Marková,+420 000 100 025
+CEZ-VZ-026,Miroslav Novák,"K Ostrůvku 55, 794 01 Krnov",50.114917,17.646995,other,8,no,1,limited,+420 000 000 026,Stanislav Dvořák,+420 000 100 026
+CEZ-VZ-027,Anna Nováková,"Na Nivě 42, 794 01 Krnov",50.094481,17.680926,other,4,no,1,bedridden,+420 000 000 027,Josef Pokorný,+420 000 100 027
+CEZ-VZ-028,Marie Horáková,"V Zálesí 25, 794 01 Krnov",50.076649,17.731011,other,1.5,yes,4,bedridden,+420 000 000 028,Josef Veselý,+420 000 100 028
+CEZ-VZ-029,Věra Marková,"Říční okruh 34, 794 01 Krnov",50.087903,17.704184,other,5,yes,3,independent,+420 000 000 029,Jan Novák,+420 000 100 029
+CEZ-VZ-030,Alena Nováková,"Nádražní 17, 794 01 Krnov",50.089183,17.684669,other,4.5,no,0,independent,+420 000 000 030,,

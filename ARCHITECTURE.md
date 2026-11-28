@@ -47,8 +47,8 @@ Imports may only point **inwards**:
 | Layer | May import | Must NOT import |
 |---|---|---|
 | `domain/` | nothing (only other domain files) | application, adapters, hono, drizzle, zod, `process.env`, I/O |
-| `application/` | `domain/` | adapters, hono, drizzle, `@lifeline/contracts` |
-| `adapters/in/*` | `application/ports/in`, `domain` types, `@lifeline/contracts`, framework (Hono) | `adapters/out/*`, concrete use-case classes |
+| `application/` | `domain/` | adapters, hono, drizzle, `@firstreach/contracts` |
+| `adapters/in/*` | `application/ports/in`, `domain` types, `@firstreach/contracts`, framework (Hono) | `adapters/out/*`, concrete use-case classes |
 | `adapters/out/*` | `application/ports/out`, `domain`, infra libs (Drizzle, fetch) | `adapters/in/*`, use cases |
 | `composition/` | everything | — (it is the only place that knows concrete classes) |
 
@@ -76,15 +76,22 @@ apps/api/src/
 - Use the `.js` extension in relative imports (NodeNext ESM).
 - Files are kebab-case and classes are PascalCase. Name an adapter class `<Tech><Port>`, e.g. `PostgresGreetingRepository`.
 
+### Access is a domain rule
+- Who may do what is one pure function, `can(user, permission, municipalityId?)` in `domain/access.ts`. A user holds
+  several role grants and `can` allows an action if any grant does; never branch on "the" role of a user.
+- Every use case takes the signed-in `User` as its first argument and calls `authorize(...)` before doing anything.
+- Sessions are the HTTP adapter's business (`adapters/in/http/session.ts`, `auth.ts`); use cases never see tokens.
+- Read models carry `permissions` so the web can hide what won't work, but the API is what enforces it.
+
 ### Data crosses boundaries by mapping, never by leaking
 - **Drizzle rows stay in `adapters/out/postgres`.** Repositories map rows to domain objects.
-- **Wire DTOs (`@lifeline/contracts`) stay in `adapters/in/http`** and in the web app. The HTTP adapter maps domain to DTO and validates with zod (`GreetingResponse.parse(...)`).
+- **Wire DTOs (`@firstreach/contracts`) stay in `adapters/in/http`** and in the web app. The HTTP adapter maps domain to DTO and validates with zod (`GreetingResponse.parse(...)`).
 - The domain never sees HTTP, SQL, or JSON shapes.
 
 ## 3. `apps/web` (Next.js)
 The web app is a **driving client of the API**, not part of the hexagon. Its rules:
 - **No business rules in the UI.** Ranking, "who is in the zone" and similar live in the API domain.
-- **All API calls go through `src/lib/api-client.ts`** (server-only), which validates every response with `@lifeline/contracts`. Components never call `fetch` directly.
+- **All API calls go through `src/lib/api-client.ts`** (server-only), which validates every response with `@firstreach/contracts`. Components never call `fetch` directly.
 - Server Components fetch data; Client Components (`"use client"`) are only for interactivity (map, buttons).
 - `API_URL` is server-side env. If the browser ever needs to call the API directly, add `NEXT_PUBLIC_API_URL` and keep `WEB_ORIGIN` in the API's CORS config in sync.
 - As screens grow: `src/app/<route>/` for pages, `src/components/` for shared UI, and `src/features/<flow>/` for flow-specific UI (e.g. `features/mayor-list/`, `features/crew-task/`, matching the flows in `TECH.md`).
@@ -203,7 +210,7 @@ Example: "list the people affected by an alert" (Flow 2 in `TECH.md`).
 2. **Outbound port:** `application/ports/out/person-repository.ts` (`findBySubstations(ids)`).
 3. **Inbound port and use case:** `ports/in/list-affected-people.ts` + `use-cases/list-affected-people.ts`, tested with an in-memory repository.
 4. **Adapters:**
-   - Drizzle table + `PostgresPersonRepository`; run `pnpm --filter @lifeline/api db:generate`, then `pnpm db:migrate`.
+   - Drizzle table + `PostgresPersonRepository`; run `pnpm --filter @firstreach/api db:generate`, then `pnpm db:migrate`.
    - HTTP route in `adapters/in/http`.
 5. **Contract:** add `AffectedPeopleResponse` to `packages/contracts`.
 6. **Wire it** in `composition/container.ts`.
@@ -216,6 +223,6 @@ pnpm db:up                                    # Postgres + PostGIS in Docker (lo
 pnpm db:migrate && pnpm db:seed               # apply migrations, insert demo data
 pnpm dev                                      # api :4000 + web :3000
 pnpm typecheck | pnpm test | pnpm build
-pnpm --filter @lifeline/api db:generate       # new migration after changing schema.ts
+pnpm --filter @firstreach/api db:generate       # new migration after changing schema.ts
 ```
 Env files: `apps/api/.env` and `apps/web/.env`; copy them from the `.env.example` next to each.

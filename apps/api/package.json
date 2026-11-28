@@ -1,5 +1,5 @@
 {
-  "name": "@lifeline/api",
+  "name": "@firstreach/api",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,17 +11,20 @@
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/adapters/out/postgres/migrate.ts",
-    "db:seed": "tsx src/adapters/out/postgres/seed.ts"
+    "demo:register": "tsx scripts/generate-demo-register.ts",
+    "users:bootstrap": "tsx scripts/bootstrap-users.ts"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.11",
-    "@lifeline/contracts": "workspace:*",
+    "@firstreach/contracts": "workspace:*",
+    "csv-parse": "^7.0.3",
     "drizzle-orm": "^0.45.4",
     "hono": "^4.13.23",
-    "postgres": "^4.1.1"
+    "postgres": "^4.1.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@lifeline/tsconfig": "workspace:*",
+    "@firstreach/tsconfig": "workspace:*",
     "@types/node": "^26.6.11",
     "drizzle-kit": "^0.31.11",
     "tsup": "^9.0.0",
