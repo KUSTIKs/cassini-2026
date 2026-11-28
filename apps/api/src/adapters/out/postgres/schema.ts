@@ -1,5 +1,7 @@
 import { boolean, index, integer, jsonb, pgTable, real, text, timestamp, unique, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import type { ExposedPerson, ExposedSubstation } from "../../../domain/exposure.js";
 import type { Area } from "../../../domain/geo.js";
+import type { HazardSignal } from "../../../domain/hazard-signal.js";
 
 /** Persistence model. Belongs to the Postgres adapter, NOT the domain. */
 
@@ -74,4 +76,37 @@ export const userRoles = pgTable(
     municipalityId: uuid("municipality_id").references(() => municipalities.id, { onDelete: "cascade" }),
   },
   (t) => [unique("user_roles_unique").on(t.userId, t.role, t.municipalityId).nullsNotDistinct()],
+);
+
+/** Signals from every plugin, one shape (ARCHITECTURE.md §6). Upserted by id. */
+export const hazardSignals = pgTable("hazard_signals", {
+  id: text("id").primaryKey(),
+  sourceId: text("source_id").notNull(),
+  kind: text("kind", { enum: ["flood", "power_outage", "storm", "fire"] }).notNull(),
+  stage: text("stage", { enum: ["forecast", "observed"] }).notNull(),
+  area: jsonb("area").$type<Area>().notNull(),
+  issuedAt: timestamp("issued_at", { withTimezone: true }).notNull(),
+  expectedAt: timestamp("expected_at", { withTimezone: true }),
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
+  confidence: text("confidence", { enum: ["low", "medium", "high"] }).notNull(),
+  provenance: jsonb("provenance").$type<HazardSignal["provenance"]>().notNull(),
+});
+
+/**
+ * Alerts keep the ranked list as a snapshot (no names: those stay in registered_people and are
+ * joined only for unsealed viewers).
+ */
+export const alerts = pgTable(
+  "alerts",
+  {
+    id: uuid("id").primaryKey(),
+    municipalityId: uuid("municipality_id").notNull().references(() => municipalities.id, { onDelete: "cascade" }),
+    status: text("status", { enum: ["active", "closed"] }).notNull(),
+    openedAt: timestamp("opened_at", { withTimezone: true }).notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+    signalIds: jsonb("signal_ids").$type<string[]>().notNull(),
+    substations: jsonb("substations").$type<ExposedSubstation[]>().notNull(),
+    people: jsonb("people").$type<ExposedPerson[]>().notNull(),
+  },
+  (t) => [index("alerts_municipality").on(t.municipalityId)],
 );

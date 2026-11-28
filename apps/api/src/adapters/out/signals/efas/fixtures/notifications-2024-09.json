@@ -1,0 +1,15 @@
+{
+  "source": "EFAS Bimonthly Bulletin Aug-Sep 2024, Table 1 (formal flood notifications)",
+  "url": "https://european-flood.emergency.copernicus.eu/sites/default/files/bulletins-documents/2024/EFAS_Bimonthly_Bulletin_Aug_Sep2024.pdf",
+  "notifications": [
+    {
+      "id": "2024-09-opava",
+      "river": "Opava",
+      "type": "formal",
+      "forecastRun": "2024-09-11T12:00:00Z",
+      "issued": "2024-09-12T06:00:00Z",
+      "issuedNote": "The bulletin gives the date (12 Sept), not the hour; 06:00 UTC is assumed.",
+      "leadTimeHours": 60
+    }
+  ]
+}

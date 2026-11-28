@@ -219,7 +219,11 @@ The demo is **2–3 minutes**: slide → alert → click 2 people → one task w
 
 ## 5. Build order (fits the Sunday 13:00 freeze)
 1. ~~**Data prep:** Krnov flood zone, OSM substations, ~30 synthetic people, GFM polygon.~~ Done 28 Nov; see `data/flood/README.md`.
-2. **Alert engine and ranking** (Flow 2), as a pure function with a unit test.
+2. ~~**Alert engine and ranking** (Flow 2), as a pure function with a unit test.~~ Done 28 Nov: `efas` and `gfm` plugins
+   (`adapters/out/signals/`), `domain/exposure.ts` (rank), `domain/alert.ts`, unsealing policy `canViewPersonDetails`
+   in `domain/access.ts`. `POST /signals/run {at}` (regional admin) polls the plugins as of a time; the replay slider
+   will drive it. On the Krnov data at 12 Sept 12:00 UTC: both Krnov substations exposed, 36 h to outage, 29 of 30
+   people listed (the nearest-substation simplification puts almost the whole town behind them).
 3. **Mayor screen** (Flow 3): map, list, statuses.
 4. **Replay slider** (section 4).
 5. **Crew view and one route** (Flow 4).

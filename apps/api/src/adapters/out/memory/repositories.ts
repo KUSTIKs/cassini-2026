@@ -1,4 +1,8 @@
+import type { AlertRepository } from "../../../application/ports/out/alert-repository.js";
+import type { SignalRepository } from "../../../application/ports/out/signal-repository.js";
 import type { UserRepository } from "../../../application/ports/out/user-repository.js";
+import type { Alert } from "../../../domain/alert.js";
+import type { HazardSignal } from "../../../domain/hazard-signal.js";
 import { sameGrant, type RoleGrant, type User } from "../../../domain/access.js";
 import type { MunicipalityRepository } from "../../../application/ports/out/municipality-repository.js";
 import type { RegisterRepository } from "../../../application/ports/out/register-repository.js";
@@ -67,6 +71,13 @@ export class InMemoryRegisterRepository implements RegisterRepository {
   async countByMunicipality() {
     return Object.fromEntries([...this.items].map(([id, e]) => [id, e.people.length]));
   }
+  async listForExposure(id: string) {
+    return (this.items.get(id)?.people ?? []).map(({ id: personId, location, device, backupHours, livesAlone, floor, mobility, substationRef }) =>
+      ({ id: personId, location, device, backupHours, livesAlone, floor, mobility, substationRef }));
+  }
+  async getPeople(id: string, ids: readonly string[]) {
+    return (this.items.get(id)?.people ?? []).filter((p) => ids.includes(p.id));
+  }
 }
 
 export class InMemoryUserRepository implements UserRepository {
@@ -81,4 +92,22 @@ export class InMemoryUserRepository implements UserRepository {
     const user = this.items.get(userId);
     if (user && !user.grants.some((g) => sameGrant(g, grant))) this.items.set(userId, { ...user, grants: [...user.grants, grant] });
   }
+}
+
+export class InMemorySignalRepository implements SignalRepository {
+  readonly items = new Map<string, HazardSignal>();
+  async upsert(signals: readonly HazardSignal[]) { for (const s of signals) this.items.set(s.id, s); }
+  async list() { return [...this.items.values()]; }
+}
+
+export class InMemoryAlertRepository implements AlertRepository {
+  readonly items = new Map<string, Alert>();
+  async findActive(municipalityId: string) {
+    return [...this.items.values()].find((a) => a.municipalityId === municipalityId && a.status === "active") ?? null;
+  }
+  async get(id: string) { return this.items.get(id) ?? null; }
+  async listByMunicipality(municipalityId: string) {
+    return [...this.items.values()].filter((a) => a.municipalityId === municipalityId).sort((a, b) => b.openedAt.getTime() - a.openedAt.getTime());
+  }
+  async save(alert: Alert) { this.items.set(alert.id, alert); }
 }
