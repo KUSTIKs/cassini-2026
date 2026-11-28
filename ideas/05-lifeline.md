@@ -2,13 +2,13 @@
 
 **One-liner:** when Copernicus detects a flood, fire or blackout zone, instantly show which vulnerable people (home oxygen, dialysis, limited mobility, care homes) are inside it, with a prioritised rescue list.
 **Challenge:** #2, wording "enhance the safety and resilience of civilian infrastructure", "support routes for goods and people using Galileo"
-**Status:** shortlisted (the evidence comes from research, not X)
+**Status:** **chosen** (see `../PROJECT.md`)
 
 ## Why (evidence)
 - **Valencia floods 2024:** about half of the ~224 dead were **70+**; many were older people or people with reduced mobility who **drowned in their own homes**, including care-home residents ([Euronews](https://www.euronews.com/my-europe/2024/11/15/almost-half-of-spains-flood-victims-were-aged-70-or-over-data-shows), [PreventionWeb](https://www.preventionweb.net/news/valencia-floods-one-year-what-have-we-learned-and-how-can-we-prevent-similar-tragedies-future), [Guardian via inkl](https://inkl.com/news/almost-half-of-spain-s-flood-victims-were-over-70-figures-show)).
 - **Ukraine:** home ventilator and oxygen patients rationed oxygen during blackouts; authorities gave no official comment on patients who depend on electricity ([Kyiv Post](https://www.kyivpost.com/post/11474)); hospitals hit by outages ([PHR report](https://phr.org/wp-content/uploads/2024/12/REPORT-PHR-TRUTHHOUNDS-UKRAINE-Health-Care-in-the-Dark-2024_Updated-12-20-24.pdf), [Ukraine Ministry of Health 2026](https://moz.gov.ua/en/minister-of-health-inspects-how-kyiv-medical-facilities-operate-amid-power-outages)).
 - **US precedent:** the HHS **emPOWER Map** tracks 3M+ Medicare patients who depend on electricity-powered medical equipment, combined with live hazards ([about](https://empowerprogram.hhs.gov/about-empowermap.html), [job aid](https://empowerprogram.hhs.gov/Map-Job-Aid.pdf)). Plus a dialysis emergency app in 13 US states ([ASPR](https://www.aspr.gov/readiness-response/healthcare-readiness/healthcare-readiness-action/stories-field/hpp-supported-app-now-provides-lifesaving)).
-- **EU equivalent: none found.**
+- **EU equivalent: none found.** Correction (27 Nov research): scattered national lists exist (UK/Ireland utility registers, France's patient and town-hall registers, Czech "vulnerable customer" status), but none is linked to live hazard maps. See `../PROJECT.md`.
 
 ## Who uses it
 | User | Who exactly | What they need |

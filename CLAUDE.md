@@ -15,6 +15,9 @@ Team background: full-stack web (React, Node.js).
 - `context/07-news-signals.md`: live news leads from X (Baltic GPS jamming from a dark ship this week, cable incidents, competitors)
 - `context/sources/`: the original rules PDF and text, and a CSV of registered projects
 
+## Chosen project
+- `PROJECT.md`: **we're building Lifeline (idea 05)**. Decision, scope, demo event, research, open questions. Read it before any build work.
+
 ## Ideas
 - `ideas/README.md`: list of candidate ideas and their status
 - `ideas/_template.md`: template for writing up an idea
