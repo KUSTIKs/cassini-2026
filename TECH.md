@@ -21,6 +21,8 @@ The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
 | 7 | **Supply point → substation link** | Which person loses power when a substation floods | In reality the grid operator knows it exactly. For the demo: each person is assigned to the nearest substation (a stated simplification) | [synthetic] |
 | 8 | **Galileo** | The position of rescue crews: their phones' satellite positioning, which includes Galileo | Browser Geolocation API on the crew's phone | [real], general knowledge |
 
+**Inputs 1 and 3 are *signal plugins*.** EFAS and GFM, and later ČHMÚ warnings, the grid operator's outage map, or a zone the mayor draws, all implement one contract and produce the same `HazardSignal` (an area, kind, stage, expected time and confidence). Adding or removing a signal is one folder plus one registry line; see `ARCHITECTURE.md` §6. Inputs 2 and 4–8 are reference data, not signals.
+
 **What we don't have, and say so in the pitch:** live register access (it needs a legal agreement), the real supply-point → substation map, and live EFAS partner access.
 
 ---
@@ -35,7 +37,7 @@ The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
  vector)         └──────────────────────┬────────────────────────────────────┘
                                         ▼  static GeoJSON / JSON in /data
  ┌──────────────────────── Node API (Express or Fastify) ────────────────────┐
- │ alert engine: EFAS event → flood zone → substations hit → people → rank   │
+ │ signal plugins (efas, gfm, manual…) → HazardSignal → exposure → rank      │
  │ routing proxy: OpenRouteService with avoid_polygons = flood extent         │
  │ state: alerts, tasks, contact statuses, audit log  (Postgres + PostGIS)   │
  │ auth: role per user (mayor, crew, grid, admin) — simple, demo-grade       │
@@ -56,7 +58,7 @@ The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
 |---|---|
 | `Person` [synthetic] | id, name, address, lat/lon, device (`ventilator` / `oxygen_concentrator` / other), backupHours, livesAlone, floor, mobility, phone, carerName, carerPhone, substationId |
 | `Substation` [real] | id (OSM), name, voltage, lat/lon, operator |
-| `FloodEvent` | id, source (`EFAS` / `GFM`), river, issuedAt, leadTimeH, geometry (zone or extent) |
+| `HazardSignal` | id, sourceId (plugin), kind, stage (`forecast` / `observed`), area (polygon), issuedAt, expectedAt, expiresAt, confidence, provenance. The same shape for every signal plugin (`ARCHITECTURE.md` §6) |
 | `Alert` | id, floodEventId, municipality, createdAt, status (`active` / `closed`), substationIds[], personIds[] |
 | `ContactStatus` | alertId, personId, state (`not_contacted` / `reached_ok` / `away` / `needs_help` / `not_reached`), note, by, at |
 | `Task` | id, alertId, personId, crewId, bring[] (generator / oxygen / transport), state (`assigned` / `en_route` / `done`), route geometry |
@@ -89,10 +91,10 @@ Each flow lists: **actor → trigger → steps → what they see → what's stor
 - **Demo:** pre-seeded; shown in the pitch only as one slide or 10 seconds of the demo.
 
 ### Flow 2: Early warning (automatic, the system is the actor)
-- **Trigger:** an EFAS flood notification for a river. Demo: the replay clock reaches 12 Sept 2024 (Opava, 60 h).
+- **Trigger:** any signal plugin returns a new `forecast` signal. Demo: the `efas` plugin, when the replay clock reaches 12 Sept 2024 (Opava, 60 h).
 - **Steps:**
-  1. Match the river to its precomputed flood zone (Q100, or Q500 for a wider margin).
-  2. Find the substations inside the zone, then the people fed by them.
+  1. The plugin has already turned "river Opava" into an area (DIBAVOD Q100 zone); the core only sees the `HazardSignal`.
+  2. Find the substations inside the signal's area, then the people fed by them.
   3. Compute `hoursLeft` and rank.
   4. Create an `Alert` and **unseal** names for those people only.
   5. Notify the mayor: SMS or email with a link (demo: a toast or banner).
@@ -130,13 +132,13 @@ Each flow lists: **actor → trigger → steps → what they see → what's stor
 - **Demo vs real:** before 15 Sept the route avoids the *predicted* zone (Q100). After Flow 5 it avoids the *observed* GFM extent.
 
 ### Flow 5: Satellite update (automatic)
-- **Trigger:** a new observed flood extent. Demo: the replay clock reaches 15 Sept and the GFM/Sentinel-1 polygon loads.
+- **Trigger:** any signal plugin returns an `observed` signal. Demo: the `gfm` plugin, when the replay clock reaches 15 Sept and the Sentinel-1 polygon loads. *This is the same pipeline as Flow 2, only with stage `observed`; there's no GFM-specific code in the core.*
 - **Steps:**
-  1. Replace the predicted zone with the observed extent on the map.
+  1. Show the observed area on top of the forecast area (solid vs dashed).
   2. **Re-check the substations:** confirmed flooded or not, and add any newly hit ones (and their people) to the alert.
   3. **Re-route open tasks** around the observed water. Changed routes are flagged to the crew.
   4. Banner: *"Satellite map 15 Sept: 2 more people now in zone; 1 route changed."*
-- **Stored:** FloodEvent (GFM), Alert update, Task routes.
+- **Stored:** HazardSignal (observed), Alert update, Task routes.
 
 ### Flow 6: Grid operator view (aggregate, no names)
 - **Actor:** grid operator dispatcher.

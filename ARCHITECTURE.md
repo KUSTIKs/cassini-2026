@@ -66,6 +66,8 @@ apps/api/src/
   adapters/out/postgres/schema.ts             Drizzle tables (persistence model)
   adapters/out/postgres/<noun>-repository.ts  PostgresGreetingRepository
   adapters/out/memory/…                       in-memory versions for tests and demo
+  adapters/out/signals/<source-id>/           one folder per signal plugin (section 6)
+  composition/signals.ts                      signal plugin registry (the only list of plugins)
   composition/config.ts                       reads env, the only place that touches process.env
   composition/container.ts                    builds the object graph
   main.ts                                     starts the HTTP server
@@ -101,7 +103,101 @@ The web app is a **driving client of the API**, not part of the hexagon. Its rul
 | Postgres adapters | Integration test against the docker DB (add when the first real query lands) | — |
 | End to end | `pnpm dev`, then open http://localhost:3000 | hello-world page |
 
-## 6. Recipe: adding a feature
+## 6. Signals are plugins (hard rule)
+
+A **signal** is any source that says *where a hazard is or will be*. Every signal is a plugin behind **one contract**.
+**Adding or removing a signal = one folder + one line in the registry. Nothing else changes:** no domain, use case, HTTP route or web component is touched.
+
+| Plugin id | What it says | Stage | EU space |
+|---|---|---|---|
+| `efas` | Copernicus flood forecast for a river reach | forecast | Copernicus |
+| `gfm` | Sentinel-1 observed flood extent (Copernicus GFM) | observed | Copernicus |
+| `manual` | Zone drawn by the mayor or duty officer | observed | — |
+| later: `chmu`, `grid-outage`, `effis` | National warning, the grid operator's outage map, fires | either | depends |
+
+### The contract
+```ts
+// domain/hazard-signal.ts: what every plugin must produce
+export type HazardKind = "flood" | "power_outage" | "storm" | "fire";
+export type SignalStage = "forecast" | "observed";
+
+export type HazardSignal = {
+  id: string;                 // `${sourceId}:${externalId}`, stable across polls
+  sourceId: string;           // "efas", "gfm", ...
+  kind: HazardKind;
+  stage: SignalStage;
+  area: MultiPolygon;         // GeoJSON, WGS84. ALWAYS an area (see rule 2)
+  issuedAt: Date;
+  expectedAt: Date | null;    // when it hits (forecast); null = already happening
+  expiresAt: Date | null;
+  confidence: "low" | "medium" | "high";
+  provenance: { label: string; url?: string; euSpace: "copernicus" | "galileo" | null };
+};
+
+// application/ports/out/signal-source.ts: what every plugin must implement
+export interface SignalSource {
+  readonly descriptor: {
+    id: string;               // must equal HazardSignal.sourceId
+    label: string;            // shown in the UI, e.g. "Copernicus EFAS flood forecast"
+    kinds: HazardKind[];
+    stages: SignalStage[];
+    euSpace: "copernicus" | "galileo" | null;
+  };
+  poll(query: { bbox: BBox; since: Date; now: Date }): Promise<HazardSignal[]>;
+}
+```
+
+### Rules
+1. **The core never branches on `sourceId`.** The exposure engine (signal area ∩ substations → people → ranking) uses only `kind`, `stage`, `area`, `expectedAt` and `confidence`. If you're tempted to write `if (signal.sourceId === "efas")`, the contract is missing a field: extend the contract, not the core.
+2. **The plugin owns translation to an area.** EFAS says "river Opava"; the `efas` plugin turns that into the DIBAVOD Q100 zone. GFM gives a raster; the `gfm` plugin vectorises it. The core only ever sees polygons.
+3. **Time is injected.** Plugins use the `now` they're given, never `Date.now()`. That makes **replay free**: the demo runs the same plugins against recorded data with a simulated clock.
+4. **Idempotent.** Returning the same `id` again means *update*, not *duplicate*; the core upserts by `id`.
+5. **Failure is isolated.** If one plugin throws or times out, it's logged and skipped, and the other signals still work.
+6. **Push sources use the same shape.** A webhook, or the mayor drawing a zone in the UI, comes in through a driving adapter (`adapters/in/http`) and calls the same `IngestSignals` use case with `HazardSignal`s.
+7. **The UI is generic.** The web app renders any signal from its `descriptor` (label, EU-space badge) and `kind`/`stage` (colour, solid vs dashed). There's no per-source UI code.
+
+### Plugin folder
+```
+adapters/out/signals/
+  contract.test-kit.ts        testSignalSourceContract(factory): shared conformance suite
+  efas/
+    index.ts                  export const createEfasSource = (cfg) => ({ descriptor, poll })
+    fixtures/                 recorded data for replay and tests (e.g. Opava, 12 Sept 2024)
+    efas.test.ts              runs testSignalSourceContract(createEfasSource) + its own cases
+  gfm/ …   manual/ …
+```
+The conformance suite checks:
+- areas are valid WGS84 polygons
+- every `id` is prefixed with the source id
+- `issuedAt <= now`, and `since`/`now` are respected
+- the descriptor matches the signals it produces
+
+### Registry and wiring
+```ts
+// composition/signals.ts: the ONLY place that lists plugins
+export const signalPlugins = {
+  efas: createEfasSource,
+  gfm: createGfmSource,
+  manual: createManualSource,
+} satisfies Record<string, (cfg: Config) => SignalSource>;
+```
+Enabled plugins come from env: `SIGNALS=efas,gfm,manual`. To turn one off, change env, not code.
+
+```
+scheduler / replay clock ──▶ IngestSignals ──▶ each enabled SignalSource.poll()
+   (driving adapter)          (use case)        └▶ upsert HazardSignal
+                                     └──▶ EvaluateExposure (signals ∩ substations → people → rank) ──▶ Alert
+```
+
+### Adding a signal (checklist)
+1. Create `adapters/out/signals/<id>/index.ts` implementing `SignalSource`.
+2. Add fixtures and `<id>.test.ts` that runs `testSignalSourceContract`.
+3. Add one line to `composition/signals.ts`, plus any config keys it needs in `composition/config.ts`.
+4. Add `<id>` to `SIGNALS` in `.env`.
+
+If step 1 forces a change anywhere else, stop: the contract needs extending. Change it deliberately, in `domain/hazard-signal.ts`, and update every plugin plus the test kit.
+
+## 7. Recipe: adding a feature
 Example: "list the people affected by an alert" (Flow 2 in `TECH.md`).
 1. **Domain:** `domain/person.ts`, `domain/priority.ts` (pure `rank(people, outageEtaH)`, unit-tested).
 2. **Outbound port:** `application/ports/out/person-repository.ts` (`findBySubstations(ids)`).
@@ -113,7 +209,7 @@ Example: "list the people affected by an alert" (Flow 2 in `TECH.md`).
 6. **Wire it** in `composition/container.ts`.
 7. **Web:** add `getAffectedPeople()` to `api-client.ts`, then the page or component.
 
-## 7. Commands
+## 8. Commands
 ```
 pnpm install
 pnpm db:up                                    # Postgres + PostGIS in Docker (localhost:5433)
