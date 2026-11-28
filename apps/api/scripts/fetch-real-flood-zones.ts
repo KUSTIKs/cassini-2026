@@ -33,7 +33,7 @@ async function forecastFromDibavod(shpPath: string): Promise<{ area: MultiPolygo
   const toWgs = proj4("KROVAK", "WGS84");
   const corners = [[WINDOW[0], WINDOW[1]], [WINDOW[2], WINDOW[1]], [WINDOW[2], WINDOW[3]], [WINDOW[0], WINDOW[3]]].map((c) => toWgs.inverse(c));
   const pad = 500; // metres, covers the window's curvature in Krovak
-  const native = [
+  const native: [number, number, number, number] = [
     Math.min(...corners.map((c) => c[0]!)) - pad, Math.min(...corners.map((c) => c[1]!)) - pad,
     Math.max(...corners.map((c) => c[0]!)) + pad, Math.max(...corners.map((c) => c[1]!)) + pad,
   ];

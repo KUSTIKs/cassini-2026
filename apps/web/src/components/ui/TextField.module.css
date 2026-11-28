@@ -1,0 +1,17 @@
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.label { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--text); }
+.input {
+  height: var(--control);
+  padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: var(--fs-base);
+  transition: border-color 120ms ease;
+}
+.input::placeholder { color: var(--text-faint); }
+.input:hover { border-color: color-mix(in srgb, var(--border-strong) 60%, var(--text-muted)); }
+.input:focus-visible { border-color: var(--accent); }
+.input[aria-invalid="true"] { border-color: var(--danger); }
+.message { font-size: var(--fs-sm); color: var(--text-muted); }
+.error { color: var(--danger); }

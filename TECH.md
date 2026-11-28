@@ -1,4 +1,4 @@
-# TECH.md: how Lifeline works technically
+# TECH.md: how FirstReach works technically
 
 What we have, what we build, and how each user interacts with it, **one flow per section**.
 The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
@@ -40,7 +40,7 @@ The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
  │ signal plugins (efas, gfm, manual…) → HazardSignal → exposure → rank      │
  │ routing proxy: OpenRouteService with avoid_polygons = flood extent         │
  │ state: alerts, tasks, contact statuses, audit log  (Postgres + PostGIS)   │
- │ auth: role per user (mayor, crew, grid, admin) — simple, demo-grade       │
+ │ auth: role per user, checked in every use case (see "Users and roles")    │
  │ replay clock: simulated time, so events fire as on 12–16 Sept 2024        │
  └───────────────▲──────────────────────────────────────▲─────────────────────┘
                  │ REST + Server-Sent Events (live updates)
@@ -74,6 +74,38 @@ reason string     = "ventilator · ~3 h battery · lives alone · ground floor"
 *Backup hours per device are general knowledge; we need a medical source [verify]. They're shown as an editable value, not a hidden constant.*
 
 ---
+
+### Users, roles and sign-in
+**One app for everyone.** The admin portal, the mayor's screen and later the crew view are the same Next.js app and the
+same API. The signed-in user's role decides which pages and actions exist for them. The API enforces it in every
+use case (`apps/api/src/domain/access.ts`), and the web only hides what the API would refuse anyway.
+
+**A person holds one or more role grants** (a role, plus the municipality for officers), stored in `user_roles`.
+Permissions add up across grants. Real cases: one duty officer covering several municipalities (in Czechia, crisis staff
+of an extended-powers municipality cover the villages around it; *from general knowledge, unverified for Krnov*), or a
+regional crisis manager who is also a town's officer.
+
+| Role | Who in reality | Can |
+|---|---|---|
+| `regional_admin` | Regional crisis management (or whoever runs FirstReach for a region) | Create municipalities, set area, find substations, upload a register |
+| `grid_operator` | The distribution company's register team (ČEZ Distribuce, EG.D, PREdistribuce) | See every municipality's setup, upload the register |
+| `municipality_officer` | Mayor or flood duty officer | See their own municipality only (Flow 3 will add the alert list) |
+| `crew` *(not built)* | Fire brigade unit | Their assigned tasks (Flow 4) |
+
+**How people get accounts (no self sign-up):**
+1. The first regional admin is created at deployment by a command (`pnpm --filter @firstreach/api users:bootstrap`), never in the portal.
+2. When an admin creates a municipality, its alert contact becomes the municipality's officer. If that email already has
+   an account, the person gets one more officer grant instead of a second account.
+   *Production:* they get an email with a one-time invitation link. *Demo:* they appear on the sign-in screen.
+3. Grid operator accounts are created by the regional admin for the operator's register team (*demo:* by the bootstrap command).
+
+**Signing in:**
+- *Production:* officials sign in through the state identity service **NIA (Identita občana)** with an eID card or bank
+  identity, so FirstReach stores no passwords. *Unverified: that NIA offers OpenID Connect to a regional system like this;
+  check the NIA onboarding terms.*
+- *Demo:* a sign-in screen lists the users by role; picking one signs in with no password (`DEMO_SIGN_IN=true`, on by
+  default; turn it off for anything real). The session is a signed token (12 h) in an httpOnly cookie, sent to the API
+  as a bearer token.
 
 ## 3. Flows (one per section)
 
@@ -195,6 +227,6 @@ The demo is **2–3 minutes**: slide → alert → click 2 people → one task w
 - [x] Map library: **MapLibre GL** with the keyless OpenFreeMap style (decided 28 Nov, `/crew`)
 - [x] Routing: OpenRouteService behind a `RoutingGateway` port, `ROUTING=ors`; offline fixture router for tests and the replay, `ROUTING=fixture` (decided 28 Nov). ORS key and live limits still [verify]
 - [x] Storage: Postgres + PostGIS (decided 28 Nov)
-- [ ] One app with role switch (`/mayor`, `/crew`, `/grid`) or separate apps? Proposal: one app.
+- [x] One app, with what each user sees decided by their role (decided 28 Nov; see "Users, roles and sign-in")
 - [ ] Where the GFM polygon comes from: GFM portal export vs CDSE Sentinel-1 processing (GFM is easier).
 - [ ] Hosting for the judges (a live URL is needed on TAIKAI).

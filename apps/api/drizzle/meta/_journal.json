@@ -5,8 +5,22 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1795869793086,
-      "tag": "0000_red_greymalkin",
+      "when": 1795871503356,
+      "tag": "0000_yellow_thanos",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795875995382,
+      "tag": "0001_yielding_catseye",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795876485715,
+      "tag": "0002_real_roland_deschain",
       "breakpoints": true
     }
   ]

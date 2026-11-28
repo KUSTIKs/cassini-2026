@@ -1,1 +1,1 @@
-{ "extends": "@lifeline/tsconfig/base.json", "include": ["src"] }
+{ "extends": "@firstreach/tsconfig/base.json", "include": ["src"] }

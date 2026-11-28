@@ -1,0 +1,6 @@
+.meter { display: inline-flex; align-items: center; gap: var(--space-2); }
+.segments { display: inline-flex; gap: 2px; }
+.segment { width: 10px; height: 4px; border-radius: 2px; background: var(--border-strong); }
+.filled { background: var(--accent); }
+.label { font-size: var(--fs-sm); color: var(--text-muted); white-space: nowrap; }
+.complete { color: var(--success); }

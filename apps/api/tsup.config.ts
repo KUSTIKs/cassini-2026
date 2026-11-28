@@ -6,5 +6,5 @@ export default defineConfig({
   target: "node22",
   clean: true,
   // Workspace packages ship TypeScript source, so bundle them in.
-  noExternal: [/^@lifeline\//],
+  noExternal: [/^@firstreach\//],
 });

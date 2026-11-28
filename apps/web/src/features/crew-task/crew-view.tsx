@@ -1,6 +1,6 @@
 "use client";
 
-import type { OpenTasksResponse, RouteHazardsResponse, TaskResponse } from "@lifeline/contracts";
+import type { OpenTasksResponse, RouteHazardsResponse, TaskResponse } from "@firstreach/contracts";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { routeTaskAction, satelliteUpdateAction } from "@/app/crew/actions";
@@ -41,7 +41,7 @@ export function CrewView({ now, crewId, initialTasks, hazards }: Props) {
     setError(null);
     startTransition(async () => {
       const res = await routeTaskAction(selected.task.id, now);
-      if (!res.ok) return setError(res.error);
+      if (!res.ok) return setError(res.error.message);
       setTasks((ts) => ts.map((t) => (t.task.id === res.data.id ? { ...t, task: res.data } : t)));
     });
   };
@@ -51,7 +51,7 @@ export function CrewView({ now, crewId, initialTasks, hazards }: Props) {
     startTransition(async () => {
       if (stopNow > now) {
         const res = await satelliteUpdateAction(stopNow);
-        if (!res.ok) return setError(res.error);
+        if (!res.ok) return setError(res.error.message);
         const n = res.data.rerouted.length;
         setBanner(
           res.data.basis === "observed"

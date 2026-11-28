@@ -1,5 +1,5 @@
 {
-  "name": "lifeline",
+  "name": "firstreach",
   "private": true,
   "packageManager": "pnpm@11.18.0",
   "scripts": {
@@ -9,8 +9,7 @@
     "test": "turbo run test",
     "db:up": "docker compose up -d db",
     "db:down": "docker compose down",
-    "db:migrate": "turbo run db:migrate --filter=@lifeline/api",
-    "db:seed": "turbo run db:seed --filter=@lifeline/api"
+    "db:migrate": "turbo run db:migrate --filter=@firstreach/api"
   },
   "devDependencies": {
     "turbo": "^2.11.13"

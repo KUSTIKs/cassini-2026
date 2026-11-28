@@ -1,6 +1,6 @@
 import * as turf from "@turf/turf";
-import type { Feature, MultiPolygon as GeoMultiPolygon, Polygon } from "geojson";
-import type { BBox, LonLat, MultiPolygon } from "../../../domain/geo.js";
+import type { BBox, Feature, MultiPolygon as GeoMultiPolygon, Polygon } from "geojson";
+import type { LonLat, MultiPolygon } from "../../../domain/geo.js";
 
 /** OpenRouteService refuses avoid_polygons larger than this (area, and bounding-box extent). */
 export const ORS_AVOID_LIMITS = { maxAreaKm2: 200, maxExtentKm: 20 } as const;

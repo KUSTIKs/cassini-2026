@@ -1,0 +1,35 @@
+.step { border-bottom: 1px solid var(--border); }
+.step:first-child { border-top: 1px solid var(--border); }
+.header {
+  display: grid;
+  grid-template-columns: 20px auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+  height: 48px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius);
+}
+a.header:hover { background: var(--surface-hover); }
+a.header:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+div.header[aria-disabled] { cursor: not-allowed; }
+
+.marker {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.done { background: var(--accent); color: #fff; }
+.ready { border: 1.5px solid var(--accent); color: var(--accent); }
+.blocked { border: 1px solid var(--border-strong); color: var(--text-faint); }
+
+.title { font-size: var(--fs-md); font-weight: var(--fw-medium); }
+.blocked + .title { color: var(--text-faint); }
+.meta { justify-self: end; max-width: 100%; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.blocked ~ .meta { color: var(--text-faint); }
+
+.body { padding: var(--space-1) var(--space-2) var(--space-6) calc(20px + var(--space-3) + var(--space-2)); }

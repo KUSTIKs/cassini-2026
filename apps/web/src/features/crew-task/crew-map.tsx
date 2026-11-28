@@ -1,7 +1,6 @@
 "use client";
 
-import type { LonLat, RouteHazardsResponse, TaskResponse } from "@lifeline/contracts";
-import type { Feature, FeatureCollection } from "geojson";
+import type { LonLat, RouteHazardsResponse, TaskResponse } from "@firstreach/contracts";
 import type { FitBoundsOptions, GeoJSONSource, LngLatBoundsLike, Map as MapLibreMap, MapLayerMouseEvent } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef } from "react";
@@ -16,9 +15,13 @@ type Props = {
   onSelect: (taskId: string) => void;
 };
 
-const STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
-/** Copied into public/ by scripts/copy-maplibre-worker.mjs (predev/prebuild). */
-const WORKER_URL = "/maplibre-gl-worker.mjs";
+// Minimal GeoJSON shapes for the map sources (the web app doesn't depend on @types/geojson).
+type Feature = { type: "Feature"; geometry: { type: string; coordinates: unknown }; properties: Record<string, unknown> };
+type FeatureCollection = { type: "FeatureCollection"; features: Feature[] };
+
+const STYLE_URL = "https://tiles.openfreemap.org/styles/positron";
+/** Copied from the package by scripts/copy-maplibre-worker.mjs (predev/prebuild), same as components/map/MapView. */
+const WORKER_URL = "/vendor/maplibre-gl-worker.mjs";
 const KRNOV_CENTER: LonLat = [17.695, 50.09];
 // Bottom padding clears the attribution box; top clears the legend.
 const FIT: FitBoundsOptions = { padding: { top: 80, bottom: 90, left: 40, right: 50 }, maxZoom: 16 };
