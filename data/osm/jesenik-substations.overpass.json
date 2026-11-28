@@ -1,0 +1,91 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.4 2390de5a",
+  "osm3s": {
+    "timestamp_osm_base": "2026-11-28T13:41:38Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 2378569045,
+  "lat": 50.2545886,
+  "lon": 17.2215388,
+  "tags": {
+    "power": "substation"
+  }
+},
+{
+  "type": "way",
+  "id": 55441028,
+  "center": {
+    "lat": 50.2588356,
+    "lon": 17.2284928
+  },
+  "tags": {
+    "location": "outdoor",
+    "name": "Česká Ves",
+    "operator": "ČEZ Distribuce",
+    "operator:wikidata": "Q11089971",
+    "power": "substation",
+    "substation": "distribution",
+    "voltage": "110000;22000"
+  }
+},
+{
+  "type": "way",
+  "id": 374935601,
+  "center": {
+    "lat": 50.2012656,
+    "lon": 17.1958617
+  },
+  "tags": {
+    "building": "industrial",
+    "building:ruian:type": "16",
+    "fixme": "add ref",
+    "frequency": "50",
+    "location": "indoor",
+    "power": "substation",
+    "ref:ruian:building": "38524899",
+    "source": "cuzk:ruian",
+    "substation": "industrial",
+    "voltage": "22000"
+  }
+},
+{
+  "type": "way",
+  "id": 1524779699,
+  "center": {
+    "lat": 50.2243617,
+    "lon": 17.1965151
+  },
+  "tags": {
+    "man_made": "street_cabinet",
+    "operator": "ČEZ Distribuce",
+    "operator:wikidata": "Q11089971",
+    "power": "substation",
+    "street_cabinet": "power",
+    "transformer": "distribution"
+  }
+},
+{
+  "type": "way",
+  "id": 1553122784,
+  "center": {
+    "lat": 50.2184798,
+    "lon": 17.2129118
+  },
+  "tags": {
+    "building": "transformer_tower",
+    "fixme": "add ref",
+    "frequency": "50",
+    "location": "indoor",
+    "power": "substation",
+    "substation": "minor_distribution",
+    "voltage": "22000"
+  }
+}
+
+  ]
+}

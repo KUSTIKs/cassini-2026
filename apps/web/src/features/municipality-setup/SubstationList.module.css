@@ -1,0 +1,12 @@
+.row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, auto) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 40px;
+  padding: 6px var(--space-3);
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--power); }
+.name { font-weight: var(--fw-medium); white-space: nowrap; }
+.detail { color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.people { font-variant-numeric: tabular-nums; color: var(--text-muted); white-space: nowrap; }

@@ -123,12 +123,12 @@ Disaster hits
 - Whether electricity companies may receive the named data.
 - A script for the outreach calls, or what happens when a person doesn't answer.
 
-## What it means for Lifeline
+## What it means for FirstReach
 - emPOWER proves the model works at scale: a named list during a disaster leads to tens of thousands of people contacted.
-- It stops at the list. Deciding who to reach first and how to get there (passable routes) is left to each state, and that's the gap Lifeline fills.
-- Its public map shows hazards next to **counts**, never next to **people**. Lifeline puts the Copernicus hazard extent over individual (authorised) records.
-- **Nobody checks the list before the event, and it has no phone numbers.** A status check (home or away, battery or oxygen time) before or at the start of an event is a gap Lifeline could fill, and it would improve the priority list.
-- **It works because the US has one central payer.** Europe has no equivalent, so Lifeline shouldn't try to be the central database: each holder keeps its own list, and Lifeline matches them against the hazard zone only once an emergency is declared.
+- It stops at the list. Deciding who to reach first and how to get there (passable routes) is left to each state, and that's the gap FirstReach fills.
+- Its public map shows hazards next to **counts**, never next to **people**. FirstReach puts the Copernicus hazard extent over individual (authorised) records.
+- **Nobody checks the list before the event, and it has no phone numbers.** A status check (home or away, battery or oxygen time) before or at the start of an event is a gap FirstReach could fill, and it would improve the priority list.
+- **It works because the US has one central payer.** Europe has no equivalent, so FirstReach shouldn't try to be the central database: each holder keeps its own list, and FirstReach matches them against the hazard zone only once an emergency is declared.
 
 ## Sources
 - [emPOWER executive summary (PDF)](https://empowerprogram.hhs.gov/Program-Executive-Summary.pdf)

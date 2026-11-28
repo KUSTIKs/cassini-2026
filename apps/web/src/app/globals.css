@@ -1,0 +1,83 @@
+/*
+ * FirstReach design tokens. Light theme only.
+ * Linear's structure and restraint: cool neutral greys, a gray app frame with the page inset as a white panel,
+ * 13px base, 32px controls. One accent, a clinical teal, for actions and progress. Amber is reserved for power
+ * (substations); blue for water. Neither is used for UI chrome.
+ */
+:root {
+  /* colour */
+  --bg: #f4f5f7;            /* app frame and sidebar */
+  --surface: #ffffff;       /* the page panel, cards */
+  --surface-hover: #f3f4f6;
+  --surface-sunken: #f0f1f4;
+  --text: #1a1c21;
+  --text-muted: #686d78;
+  --text-faint: #a1a5ae;
+  --border: #e5e6ea;
+  --border-strong: #d2d4da;
+  --accent: #0e7c74;        /* clinical teal: primary action, focus, progress */
+  --accent-hover: #0a6660;
+  --accent-soft: #e2f3f1;
+  --danger: #c0352b;
+  --danger-soft: #fcebea;
+  --success: #2e7d4f;
+  --success-soft: #e4f2e9;
+  --power: #d97706;         /* map only: substations */
+  --water: #3d6fb5;         /* map only */
+
+  /* type */
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-base: 13px;
+  --fs-md: 15px;
+  --fs-lg: 18px;
+  --fs-xl: 22px;
+  --fw-normal: 400;
+  --fw-medium: 510;
+  --fw-semibold: 590;
+
+  /* shape and space */
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 8px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --control-sm: 28px;
+  --control: 32px;
+  --sidebar-width: 224px;
+  --header-height: 44px;
+  --inset: 8px;            /* gap between the app frame and the page panel */
+
+  --focus-ring: 0 0 0 2px var(--surface), 0 0 0 4px color-mix(in srgb, var(--accent) 55%, transparent);
+  --shadow-pop: 0 1px 2px rgb(16 18 24 / 6%), 0 4px 12px rgb(16 18 24 / 8%);
+  --shadow-panel: 0 0 0 1px var(--border), 0 1px 2px rgb(16 18 24 / 4%);
+
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+::selection { background: var(--accent-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

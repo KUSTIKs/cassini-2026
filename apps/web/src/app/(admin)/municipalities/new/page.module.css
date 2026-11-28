@@ -1,0 +1,3 @@
+.page { padding: var(--space-6) var(--space-5) var(--space-7); }
+.title { font-size: var(--fs-xl); font-weight: var(--fw-semibold); line-height: 1.25; letter-spacing: -0.015em; }
+.lead { margin: var(--space-2) 0 var(--space-6); color: var(--text-muted); }
