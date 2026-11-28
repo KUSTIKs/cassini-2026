@@ -20,6 +20,7 @@ Team background: full-stack web (React, Node.js).
 ## Chosen project
 - `PROJECT.md`: **we're building Lifeline**. Decision, scope, demo event, research, open questions. Read it before any build work.
 - `IDEA.md`: the full Lifeline idea write-up (problem, users, data, risks).
+- `TECH.md`: technical definition: inputs (real vs synthetic), architecture, data model, priority rule, and each user flow separately, plus the replay demo.
 - Other candidate ideas were dropped; they're only in git history.
 
 ## Working principles
