@@ -1,0 +1,18 @@
+name: lifeline
+services:
+  db:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_USER: lifeline
+      POSTGRES_PASSWORD: lifeline
+      POSTGRES_DB: lifeline
+    ports:
+      - "5433:5432" # host 5433 to avoid clashing with a local Postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lifeline"]
+      interval: 2s
+      retries: 20
+volumes:
+  db-data:

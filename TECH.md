@@ -37,7 +37,7 @@ The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
  ┌──────────────────────── Node API (Express or Fastify) ────────────────────┐
  │ alert engine: EFAS event → flood zone → substations hit → people → rank   │
  │ routing proxy: OpenRouteService with avoid_polygons = flood extent         │
- │ state: alerts, tasks, contact statuses, audit log  (SQLite)               │
+ │ state: alerts, tasks, contact statuses, audit log  (Postgres + PostGIS)   │
  │ auth: role per user (mayor, crew, grid, admin) — simple, demo-grade       │
  │ replay clock: simulated time, so events fire as on 12–16 Sept 2024        │
  └───────────────▲──────────────────────────────────────▲─────────────────────┘
@@ -49,7 +49,7 @@ The why (facts, personas, KPIs) is in `PROJECT.md`. Labels used below:
    └────────────────────────────┘            └───────────────────────┘
 ```
 
-**Spatial maths runs in Node with turf.js** (point-in-polygon, intersects, buffers) on GeoJSON. We need no PostGIS at this data size: tens of people and a handful of substations.
+**Stack (decided 28 Nov):** Turborepo + Next.js (web) + Hono (API) + Postgres with PostGIS (Docker). The code structure is hexagonal; see `ARCHITECTURE.md`. Spatial maths can run in PostGIS or in Node with turf.js; at this data size (tens of people, a handful of substations) either works.
 
 ### Data model (minimum)
 | Entity | Fields |
@@ -192,7 +192,7 @@ The demo is **2–3 minutes**: slide → alert → click 2 people → one task w
 ## 6. Open technical decisions
 - [ ] Map library: **MapLibre GL** (free, no key) or Leaflet (simpler)?
 - [ ] Routing: OpenRouteService API (key, rate limits) or a self-hosted router?
-- [ ] Storage: SQLite, or in-memory JSON for the demo?
+- [x] Storage: Postgres + PostGIS (decided 28 Nov)
 - [ ] One app with role switch (`/mayor`, `/crew`, `/grid`) or separate apps? Proposal: one app.
 - [ ] Where the GFM polygon comes from: GFM portal export vs CDSE Sentinel-1 processing (GFM is easier).
 - [ ] Hosting for the judges (a live URL is needed on TAIKAI).

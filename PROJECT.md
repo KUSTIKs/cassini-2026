@@ -198,7 +198,7 @@ Sources: `context/08-case-empower.md`, `context/09-case-france.md`.
 
 **Out of scope:** real personal data; our own flood detection; any new register.
 
-**Stack:** React + Node.js; libraries not decided yet.
+**Stack:** Turborepo, Next.js (web), Hono (API, hexagonal), Postgres + PostGIS. See `ARCHITECTURE.md`.
 
 ## 9. Security (counts in judging)
 Login with roles, HTTPS, encrypted storage, an audit log of who viewed which person, EU hosting, data deleted after the event, and names shared only during an alert and only for the affected area.
