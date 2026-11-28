@@ -13,6 +13,8 @@ One file per idea, copied from `_template.md`. Background is in `../context/`.
 
 R = relevance, I = innovativeness and business, T = team fit (web dev).
 
+**Chosen: 05 Lifeline.** See `../PROJECT.md`.
+
 **Suggested combination:** 01 + 02 (detect a suspect ship) → 04 (build the case). One product, two challenges, opening with the Stockholm jamming story from this week.
 **Key fact for ideas 01 and 02:** EMSA's Copernicus Maritime Surveillance already correlates radar-detected ships with AIS, **for authorities only**. So build on or around it, and focus on users who can't access it (private cable operators) or on workflows it doesn't cover (finding the jammer, legal evidence).
 
