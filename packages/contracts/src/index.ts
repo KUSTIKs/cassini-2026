@@ -203,3 +203,87 @@ export const REGISTER_FORMAT: readonly RegisterColumn[] = [
   { name: "carer_name", required: false, rule: "Who to call if the person can't answer.", example: "Věra Nováková" },
   { name: "carer_phone", required: false, rule: "The carer's phone number.", example: "+420 000 100 002" },
 ];
+
+// ---------- signals and alerts (Flow 2, read side of Flow 3) ----------
+export const SignalSummary = z.object({
+  id: z.string(),
+  sourceId: z.string(),
+  label: z.string(),
+  kind: z.enum(["flood", "power_outage", "storm", "fire"]),
+  stage: z.enum(["forecast", "observed"]),
+  issuedAt: z.iso.datetime(),
+  expectedAt: z.iso.datetime().nullable(),
+  confidence: z.enum(["low", "medium", "high"]),
+  euSpace: z.enum(["copernicus", "galileo"]).nullable(),
+  url: z.string().nullable(),
+  area: Area,
+});
+export type SignalSummary = z.infer<typeof SignalSummary>;
+
+/** Present only when the unsealing policy allows this viewer to see the person. */
+export const PersonDetails = z.object({
+  fullName: z.string(),
+  address: z.string(),
+  phone: z.string(),
+  carerName: z.string().nullable(),
+  carerPhone: z.string().nullable(),
+  location: LngLat,
+  externalRef: z.string(),
+});
+export type PersonDetails = z.infer<typeof PersonDetails>;
+
+export const AlertPerson = z.object({
+  personId: z.string(),
+  rank: z.number().int(),
+  substationRef: z.string(),
+  device: z.enum(["ventilator", "oxygen_concentrator", "other"]),
+  backupHours: z.number(),
+  hoursUntilOutage: z.number(),
+  hoursLeft: z.number(),
+  livesAlone: z.boolean(),
+  mobility: z.enum(["independent", "limited", "bedridden"]),
+  floor: z.number().int(),
+  homeInZone: z.boolean(),
+  reason: z.string(),
+  details: PersonDetails.nullable(),
+});
+export type AlertPerson = z.infer<typeof AlertPerson>;
+
+export const AlertDetail = z.object({
+  id: z.string(),
+  municipalityId: z.string(),
+  municipalityName: z.string(),
+  status: z.enum(["active", "closed"]),
+  openedAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
+  /** True when this viewer sees no names (counts and ranks only). */
+  sealed: z.boolean(),
+  signals: z.array(SignalSummary),
+  substations: z.array(z.object({ osmRef: z.string(), hoursUntilOutage: z.number() })),
+  people: z.array(AlertPerson),
+});
+export type AlertDetail = z.infer<typeof AlertDetail>;
+
+export const AlertSummary = z.object({
+  id: z.string(),
+  status: z.enum(["active", "closed"]),
+  openedAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
+  people: z.number().int(),
+  substations: z.number().int(),
+});
+export const AlertSummaryList = z.object({ items: z.array(AlertSummary) });
+export type AlertSummaryList = z.infer<typeof AlertSummaryList>;
+
+export const RunSignalsRequest = z.object({ at: z.iso.datetime() });
+export type RunSignalsRequest = z.infer<typeof RunSignalsRequest>;
+
+export const SignalRunReport = z.object({
+  at: z.iso.datetime(),
+  sources: z.array(z.object({ sourceId: z.string(), signals: z.number().int(), error: z.string().nullable() })),
+  alerts: z.array(z.object({
+    municipalityId: z.string(), alertId: z.string(), people: z.number().int(), substations: z.number().int(), opened: z.boolean(),
+  })),
+});
+export type SignalRunReport = z.infer<typeof SignalRunReport>;
+

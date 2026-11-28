@@ -1,3 +1,4 @@
+import type { ExposureInput } from "../../../domain/exposure.js";
 import type { Device, RegisteredPerson } from "../../../domain/registered-person.js";
 import type { PersonLocation, SubstationLink } from "../../../domain/substation-assignment.js";
 
@@ -17,4 +18,8 @@ export interface RegisterRepository {
   setSubstationLinks(municipalityId: string, links: readonly SubstationLink[]): Promise<void>;
   stats(municipalityId: string): Promise<RegisterStats>;
   countByMunicipality(): Promise<Record<string, number>>;
+  /** What ranking needs, without names or contact details. */
+  listForExposure(municipalityId: string): Promise<ExposureInput[]>;
+  /** Full records. Only for people an alert has unsealed; callers check the policy first. */
+  getPeople(municipalityId: string, ids: readonly string[]): Promise<RegisteredPerson[]>;
 }

@@ -2,11 +2,12 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { requireUser, type AppEnv } from "./auth.js";
 import { handleError } from "./errors.js";
+import { alertRoutes, type AlertRouteDeps } from "./routes/alerts.js";
 import { areaRoutes } from "./routes/areas.js";
 import { authRoutes, type AuthRouteDeps } from "./routes/auth.js";
 import { municipalityRoutes, type MunicipalityRouteDeps } from "./routes/municipalities.js";
 
-export type HttpDeps = MunicipalityRouteDeps & Parameters<typeof areaRoutes>[0] & AuthRouteDeps & { webOrigin: string };
+export type HttpDeps = MunicipalityRouteDeps & Parameters<typeof areaRoutes>[0] & AuthRouteDeps & AlertRouteDeps & { webOrigin: string };
 
 /**
  * DRIVING ADAPTER: translates HTTP <-> inbound ports.
@@ -23,6 +24,9 @@ export const createHttpApp = (deps: HttpDeps) => {
     .use("/municipalities/*", signedIn)
     .use("/municipalities", signedIn)
     .use("/areas/*", signedIn)
+    .use("/signals/*", signedIn)
+    .use("/alerts/*", signedIn)
+    .route("/", alertRoutes(deps))
     .route("/municipalities", municipalityRoutes(deps))
     .route("/areas", areaRoutes(deps));
 };

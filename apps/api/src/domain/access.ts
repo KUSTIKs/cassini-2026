@@ -1,3 +1,4 @@
+import type { Alert } from "./alert.js";
 import type { Municipality } from "./municipality.js";
 
 /**
@@ -31,7 +32,8 @@ export type Permission =
   | "municipality.create"
   | "municipality.view"
   | "municipality.setup" // area, substations
-  | "register.upload";
+  | "register.upload"
+  | "signals.run"; // poll the signal sources now (demo: the replay clock)
 
 const grantAllows = (grant: RoleGrant, permission: Permission, municipalityId?: string): boolean => {
   switch (grant.role) {
@@ -63,3 +65,16 @@ export const officerFor = (municipality: Municipality, id: string): User => ({
   organisation: `Municipality of ${municipality.name}`,
   grants: [officerGrant(municipality.id)],
 });
+
+/**
+ * The unsealing policy: a role is not enough, the decision also depends on the alert and the person.
+ * Names and contact details are visible only
+ *  - to an officer of the alert's municipality,
+ *  - while the alert is active,
+ *  - for people the alert lists.
+ * Everyone else (regional admin, grid operator) sees counts and ranks without names.
+ */
+export const canViewPersonDetails = (user: User, ctx: { alert: Alert; personId: string }): boolean =>
+  ctx.alert.status === "active" &&
+  ctx.alert.people.some((p) => p.personId === ctx.personId) &&
+  user.grants.some((g) => g.role === "municipality_officer" && g.municipalityId === ctx.alert.municipalityId);

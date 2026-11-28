@@ -156,7 +156,7 @@ export interface SignalSource {
 
 ### Rules
 1. **The core never branches on `sourceId`.** The exposure engine (signal area ∩ substations → people → ranking) uses only `kind`, `stage`, `area`, `expectedAt` and `confidence`. If you're tempted to write `if (signal.sourceId === "efas")`, the contract is missing a field: extend the contract, not the core.
-2. **The plugin owns translation to an area.** EFAS says "river Opava"; the `efas` plugin turns that into the DIBAVOD Q100 zone. GFM gives a raster; the `gfm` plugin vectorises it. The core only ever sees polygons.
+2. **The plugin owns translation to an area.** EFAS says "river Opava"; the `efas` plugin turns that into the official Q100 zone (VÚV TGM). GFM gives a raster; the `gfm` plugin vectorises it. The core only ever sees polygons.
 3. **Time is injected.** Plugins use the `now` they're given, never `Date.now()`. That makes **replay free**: the demo runs the same plugins against recorded data with a simulated clock.
 4. **Idempotent.** Returning the same `id` again means *update*, not *duplicate*; the core upserts by `id`.
 5. **Failure is isolated.** If one plugin throws or times out, it's logged and skipped, and the other signals still work.
