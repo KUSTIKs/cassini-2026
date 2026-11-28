@@ -25,9 +25,9 @@ function stubOrs(respond?: (call: Call) => Response | undefined) {
   return { calls, gateway: new OpenRouteServiceRoutingGateway({ apiKey: "test-key", fetch }) };
 }
 
-const observed = krnovSignals()[1]!.area;
-const DRY: LonLat = [17.7105, 50.0945];
-const UNDER_WATER: LonLat = [17.674, 50.087];
+const q100 = krnovSignals()[0]!.area; // real DIBAVOD Q100 zone
+const DRY: LonLat = [17.696, 50.096];
+const UNDER_WATER: LonLat = [17.676, 50.084];
 
 describe("OpenRouteServiceRoutingGateway", () => {
   it("posts to the directions endpoint with the key and no avoid area when there is none", async () => {
@@ -52,12 +52,12 @@ describe("OpenRouteServiceRoutingGateway", () => {
 
   it("when the destination is under water, routes to the last dry point on the normal approach", async () => {
     const { calls, gateway } = stubOrs();
-    const res = await gateway.route({ from: KRNOV_CREW_START, to: UNDER_WATER, avoid: observed });
+    const res = await gateway.route({ from: KRNOV_CREW_START, to: UNDER_WATER, avoid: q100 });
 
     expect(calls).toHaveLength(2);
     expect(calls[0]!.body.options).toBeUndefined(); // the approach, ignoring water
     const [, target] = calls[1]!.body.coordinates;
-    expect(turf.booleanPointInPolygon(target!, observed)).toBe(false);
+    expect(turf.booleanPointInPolygon(target!, q100)).toBe(false);
     expect(calls[1]!.body.options!.avoid_polygons).toBeDefined();
     expect(res).toMatchObject({ destinationInHazard: true, endPoint: target });
     expect(res.walkRemainingM).toBeGreaterThan(0);
@@ -65,7 +65,7 @@ describe("OpenRouteServiceRoutingGateway", () => {
 
   it("refuses a start inside the water without calling the API", async () => {
     const { calls, gateway } = stubOrs();
-    await expect(gateway.route({ from: UNDER_WATER, to: DRY, avoid: observed })).rejects.toBeInstanceOf(StartInHazardError);
+    await expect(gateway.route({ from: UNDER_WATER, to: DRY, avoid: q100 })).rejects.toBeInstanceOf(StartInHazardError);
     expect(calls).toHaveLength(0);
   });
 

@@ -34,9 +34,19 @@ export class FixtureRoutingGateway implements RoutingGateway {
       walkRemainingM = dry.walkRemainingM;
     }
 
-    const path = clear([from, endPoint], avoid) ? [from, endPoint] : gridPath(from, endPoint, avoid, this.opts);
+    const path = clear([from, endPoint], avoid) ? [from, endPoint] : this.findPath(from, endPoint, avoid);
     if (!path) throw new RouteNotFoundError("Every way to the destination is blocked by the flood area");
     return this.result(path, endPoint, walkRemainingM !== null, walkRemainingM);
+  }
+
+  /** Grid search; if the first/last hop still clips water inside a coarse cell, retry finer, else give up. */
+  private findPath(from: LonLat, to: LonLat, avoid: MultiPolygon): LonLat[] | null {
+    for (const cellM of [this.opts.cellM, this.opts.cellM / 2]) {
+      const path = gridPath(from, to, avoid, { ...this.opts, cellM });
+      if (!path) return null;
+      if (path.every((p, i) => i === 0 || clear([path[i - 1]!, p], avoid))) return path;
+    }
+    return null;
   }
 
   private result(path: LonLat[], endPoint: LonLat, destinationInHazard: boolean, walkRemainingM: number | null): RouteResult {
@@ -70,19 +80,17 @@ function gridPath(from: LonLat, to: LonLat, avoid: MultiPolygon, o: FixtureRouti
   const dLon = o.cellM / mPerLon;
   const dLat = o.cellM / mPerLat;
 
-  // A cell is blocked if its centre or any corner is wet; corners are shared between cells.
-  const cornerWet = new Uint8Array((nx + 1) * (ny + 1));
-  for (let y = 0; y <= ny; y++)
-    for (let x = 0; x <= nx; x++)
-      cornerWet[y * (nx + 1) + x] = turf.booleanPointInPolygon([minLon + x * dLon, minLat + y * dLat], avoid) ? 1 : 0;
+  // A cell is blocked if any polygon edge passes through it (exact, so thin strips can't slip
+  // between samples) or its centre is inside the area. Moves between free cells then never cross water.
   const centre = (x: number, y: number): LonLat => [minLon + (x + 0.5) * dLon, minLat + (y + 0.5) * dLat];
   const blocked = new Uint8Array(nx * ny);
+  const toGrid = (p: number[]) => [(p[0]! - minLon) / dLon, (p[1]! - minLat) / dLat] as const;
+  for (const polygon of avoid.coordinates)
+    for (const ring of polygon)
+      for (let i = 0; i + 1 < ring.length; i++) markSegment(toGrid(ring[i]!), toGrid(ring[i + 1]!), nx, ny, blocked);
   for (let y = 0; y < ny; y++)
-    for (let x = 0; x < nx; x++) {
-      const c = (cx: number, cy: number) => cornerWet[cy * (nx + 1) + cx]!;
-      blocked[y * nx + x] =
-        c(x, y) || c(x + 1, y) || c(x, y + 1) || c(x + 1, y + 1) || turf.booleanPointInPolygon(centre(x, y), avoid) ? 1 : 0;
-    }
+    for (let x = 0; x < nx; x++)
+      if (!blocked[y * nx + x] && turf.booleanPointInPolygon(centre(x, y), avoid)) blocked[y * nx + x] = 1;
 
   const cellOf = (p: LonLat) => [
     Math.min(nx - 1, Math.max(0, Math.floor((p[0] - minLon) / dLon))),
@@ -100,6 +108,38 @@ function gridPath(from: LonLat, to: LonLat, avoid: MultiPolygon, o: FixtureRouti
 
   const raw: LonLat[] = [from, ...cells.slice(1, -1).map((i) => centre(i % nx, Math.floor(i / nx))), to];
   return stringPull(raw, avoid);
+}
+
+/** Marks every grid cell the segment a→b passes through (Amanatides–Woo traversal), clipped to the grid. */
+function markSegment(a: readonly [number, number], b: readonly [number, number], nx: number, ny: number, out: Uint8Array) {
+  let x = Math.floor(a[0]);
+  let y = Math.floor(a[1]);
+  const endX = Math.floor(b[0]);
+  const endY = Math.floor(b[1]);
+  const dx = b[0] - a[0];
+  const dy = b[1] - a[1];
+  const stepX = Math.sign(dx);
+  const stepY = Math.sign(dy);
+  const tDeltaX = stepX ? Math.abs(1 / dx) : Infinity;
+  const tDeltaY = stepY ? Math.abs(1 / dy) : Infinity;
+  let tMaxX = stepX ? (stepX > 0 ? x + 1 - a[0] : a[0] - x) * tDeltaX : Infinity;
+  let tMaxY = stepY ? (stepY > 0 ? y + 1 - a[1] : a[1] - y) * tDeltaY : Infinity;
+  for (let guard = 0; guard < 100_000; guard++) {
+    if (x >= 0 && y >= 0 && x < nx && y < ny) out[y * nx + x] = 1;
+    if (x === endX && y === endY) return;
+    if (tMaxX < tMaxY) {
+      tMaxX += tDeltaX;
+      x += stepX;
+    } else {
+      tMaxY += tDeltaY;
+      y += stepY;
+    }
+    if (tMaxX > 1 && tMaxY > 1 && (x !== endX || y !== endY)) {
+      // Floating-point guard: we've passed b without landing exactly in its cell.
+      if (x >= 0 && y >= 0 && x < nx && y < ny) out[y * nx + x] = 1;
+      return;
+    }
+  }
 }
 
 function aStar(nx: number, ny: number, blocked: Uint8Array, start: number, goal: number): number[] | null {

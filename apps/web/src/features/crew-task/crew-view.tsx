@@ -17,7 +17,7 @@ type Props = {
 
 const BRING_LABEL: Record<string, string> = { generator: "Generator", oxygen: "Spare oxygen", transport: "Transport" };
 const BASIS_LABEL: Record<NonNullable<TaskResponse["route"]>["basis"], string> = {
-  observed: "Avoids satellite-observed water",
+  observed: "Avoids satellite-observed water and the forecast zone (the satellite can't see everywhere)",
   forecast: "Avoids the forecast flood zone",
   none: "No flood area active",
 };
@@ -55,7 +55,7 @@ export function CrewView({ now, crewId, initialTasks, hazards }: Props) {
         const n = res.data.rerouted.length;
         setBanner(
           res.data.basis === "observed"
-            ? `Satellite flood map in: ${n} route${n === 1 ? "" : "s"} changed${res.data.failed.length ? `, ${res.data.failed.length} could not be re-routed` : ""}.`
+            ? `Satellite flood map in: ${n} route${n === 1 ? "" : "s"} re-checked${res.data.failed.length ? `, ${res.data.failed.length} could not be re-routed` : ""}.`
             : null,
         );
       } else {
@@ -102,6 +102,12 @@ export function CrewView({ now, crewId, initialTasks, hazards }: Props) {
               {s.euSpace === "copernicus" ? " · Copernicus" : ""}
             </div>
           ))}
+          {hazards.signals.some((s) => s.unobserved) && (
+            <div>
+              <span className={`${styles.swatch} ${styles.swBlind}`} />
+              Satellite couldn&apos;t see here (built-up area); forecast zone still avoided
+            </div>
+          )}
         </div>
       </div>
 

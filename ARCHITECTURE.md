@@ -132,6 +132,7 @@ export type HazardSignal = {
   expiresAt: Date | null;
   confidence: "low" | "medium" | "high";
   provenance: { label: string; url?: string; euSpace: "copernicus" | "galileo" | null };
+  unobserved?: MultiPolygon | null; // optional, observed signals: where the sensor could NOT see (added 28 Nov, see below)
 };
 
 // application/ports/out/signal-source.ts: what every plugin must implement
@@ -155,6 +156,11 @@ export interface SignalSource {
 5. **Failure is isolated.** If one plugin throws or times out, it's logged and skipped, and the other signals still work.
 6. **Push sources use the same shape.** A webhook, or the mayor drawing a zone in the UI, comes in through a driving adapter (`adapters/in/http`) and calls the same `IngestSignals` use case with `HazardSignal`s.
 7. **The UI is generic.** The web app renders any signal from its `descriptor` (label, EU-space badge) and `kind`/`stage` (colour, solid vs dashed). There's no per-source UI code.
+
+### `unobserved` and "observed adds to forecast" (added 28 Nov)
+Real data showed why: on 15 Sept 2024 Copernicus GFM covered Krnov, but 74 % of the town was in GFM's exclusion mask (built-up area, where radar can't classify water), so it found only ~0.03 km² of water. "No water observed" there means *unknown*, not *dry*.
+- An observed plugin **may** set `unobserved` to the area it couldn't see (GFM: the exclusion mask). Optional; existing plugins don't need to change. The UI draws it grey.
+- Crew routing (`domain/route-hazards.ts`) therefore lets observed water **add to** the forecast zone and never remove it. If a future plugin can prove dry ground, use `unobserved` to subtract forecast areas only where the sensor really saw.
 
 ### Plugin folder
 ```

@@ -2,7 +2,7 @@
 
 import type { LonLat, RouteHazardsResponse, TaskResponse } from "@lifeline/contracts";
 import type { Feature, FeatureCollection } from "geojson";
-import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent } from "maplibre-gl";
+import type { FitBoundsOptions, GeoJSONSource, LngLatBoundsLike, Map as MapLibreMap, MapLayerMouseEvent } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef } from "react";
 import styles from "./crew.module.css";
@@ -20,6 +20,10 @@ const STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
 /** Copied into public/ by scripts/copy-maplibre-worker.mjs (predev/prebuild). */
 const WORKER_URL = "/maplibre-gl-worker.mjs";
 const KRNOV_CENTER: LonLat = [17.695, 50.09];
+// Bottom padding clears the attribution box; top clears the legend.
+const FIT: FitBoundsOptions = { padding: { top: 80, bottom: 90, left: 40, right: 50 }, maxZoom: 16 };
+/** Last area each map was fitted to, so it can re-fit when the panel below grows or shrinks. */
+const lastFit = new WeakMap<MapLibreMap, LngLatBoundsLike>();
 
 /** MapLibre map for the crew: flood areas, the selected route, the last dry point and person pins. */
 export function CrewMap({ hazards, tasks, selectedId, onSelect }: Props) {
@@ -48,6 +52,10 @@ export function CrewMap({ hazards, tasks, selectedId, onSelect }: Props) {
         const id = e.features?.[0]?.properties?.taskId;
         if (typeof id === "string") onSelectRef.current(id);
       });
+      map.on("resize", () => {
+        const bounds = lastFit.get(map);
+        if (bounds) map.fitBounds(bounds, { ...FIT, duration: 0 });
+      });
       map.on("mouseenter", "people", () => (map.getCanvas().style.cursor = "pointer"));
       map.on("mouseleave", "people", () => (map.getCanvas().style.cursor = ""));
     });
@@ -68,7 +76,16 @@ export function CrewMap({ hazards, tasks, selectedId, onSelect }: Props) {
 
 function addLayers(map: MapLibreMap) {
   const empty = { type: "FeatureCollection", features: [] } as FeatureCollection;
-  for (const id of ["hazards", "routes", "walk", "people", "start"]) map.addSource(id, { type: "geojson", data: empty });
+  for (const id of ["blind", "hazards", "routes", "walk", "people", "start"]) map.addSource(id, { type: "geojson", data: empty });
+
+  // Where the satellite couldn't see (e.g. GFM exclusion mask over built-up areas): grey, dotted edge.
+  map.addLayer({ id: "blind-fill", type: "fill", source: "blind", paint: { "fill-color": "#64748b", "fill-opacity": 0.16 } });
+  map.addLayer({
+    id: "blind-line",
+    type: "line",
+    source: "blind",
+    paint: { "line-color": "#475569", "line-width": 1, "line-dasharray": [0.5, 2] },
+  });
 
   map.addLayer({
     id: "hazards-fill",
@@ -150,6 +167,10 @@ function render(map: MapLibreMap, { hazards, tasks, selectedId }: Omit<Props, "o
     (map.getSource(id) as GeoJSONSource | undefined)?.setData({ type: "FeatureCollection", features });
 
   set(
+    "blind",
+    hazards.signals.flatMap((s) => (s.unobserved ? [{ type: "Feature" as const, geometry: s.unobserved, properties: {} }] : [])),
+  );
+  set(
     "hazards",
     hazards.signals.map((s) => ({ type: "Feature", geometry: s.area, properties: { stage: s.stage, label: s.label } })),
   );
@@ -191,12 +212,11 @@ function render(map: MapLibreMap, { hazards, tasks, selectedId }: Omit<Props, "o
   if (points.length >= 2) {
     const lons = points.map((p) => p[0]);
     const lats = points.map((p) => p[1]);
-    map.fitBounds(
-      [
-        [Math.min(...lons), Math.min(...lats)],
-        [Math.max(...lons), Math.max(...lats)],
-      ],
-      { padding: { top: 70, bottom: 40, left: 40, right: 40 }, maxZoom: 16, duration: initial ? 0 : 600 },
-    );
+    const bounds: LngLatBoundsLike = [
+      [Math.min(...lons), Math.min(...lats)],
+      [Math.max(...lons), Math.max(...lats)],
+    ];
+    lastFit.set(map, bounds);
+    map.fitBounds(bounds, { ...FIT, duration: initial ? 0 : 600 });
   }
 }

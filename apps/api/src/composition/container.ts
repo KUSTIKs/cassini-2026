@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from "node:fs";
 import { createHttpApp } from "../adapters/in/http/app.js";
 import {
   InMemoryHazardSignalRepository,
@@ -9,6 +10,7 @@ import { createDb } from "../adapters/out/postgres/client.js";
 import { PostgresGreetingRepository } from "../adapters/out/postgres/postgres-greeting-repository.js";
 import { FixtureRoutingGateway } from "../adapters/out/routing/fixture-routing-gateway.js";
 import { OpenRouteServiceRoutingGateway } from "../adapters/out/routing/openrouteservice-routing-gateway.js";
+import { RecordedRoutingGateway, type RecordedRoutes } from "../adapters/out/routing/recorded-routes.js";
 import type { RoutingGateway } from "../application/ports/out/routing-gateway.js";
 import { GetGreetingUseCase } from "../application/use-cases/get-greeting.js";
 import { GetRouteHazardsUseCase } from "../application/use-cases/get-route-hazards.js";
@@ -47,6 +49,11 @@ export function createRoutingGateway(routing: RoutingConfig): RoutingGateway {
   switch (routing.kind) {
     case "fixture":
       return new FixtureRoutingGateway();
+    case "recorded": {
+      const recorded = existsSync(routing.path) ? (JSON.parse(readFileSync(routing.path, "utf8")) as RecordedRoutes) : null;
+      if (!recorded) console.warn("ROUTING=recorded but no recorded routes yet (run pnpm routes:record); using the fixture router");
+      return new RecordedRoutingGateway(recorded, new FixtureRoutingGateway());
+    }
     case "ors":
       return new OpenRouteServiceRoutingGateway(routing);
   }

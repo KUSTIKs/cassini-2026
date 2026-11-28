@@ -18,6 +18,11 @@ export type HazardSignal = {
   expiresAt: Date | null;
   confidence: "low" | "medium" | "high";
   provenance: { label: string; url?: string; euSpace: "copernicus" | "galileo" | null };
+  /**
+   * Optional, observed signals only: where the sensor could NOT see inside its footprint
+   * (e.g. the GFM exclusion mask over built-up areas). Absent or null = it saw everything.
+   */
+  unobserved?: MultiPolygon | null;
 };
 
 /** Known at `now` (issued) and not yet expired. Uses the injected clock, never Date.now(). */

@@ -12,14 +12,16 @@ export type RouteHazardSelection = {
 
 /**
  * Which signals a route must avoid at `now`.
- * Observed water is ground truth, so once any observed signal is active it replaces the forecast
- * (TECH.md Flow 4/5: before the satellite map, avoid the predicted zone; after it, the observed extent).
+ * Observed water ADDS to the forecast zone; it never removes it. Satellites don't see everywhere:
+ * on 15 Sept 2024 Copernicus GFM could not classify 74 % of Krnov (built-up area in its exclusion
+ * mask), so "no water observed" there means "unknown", not "dry". Until signals can say exactly
+ * where they saw dry ground, the forecast zone stays avoided. `basis` tells which stages are in.
  */
 export function selectRouteHazards(signals: readonly HazardSignal[], now: Date): RouteHazardSelection {
   const active = signals.filter((s) => ROAD_BLOCKING_KINDS.includes(s.kind) && isActiveAt(s, now));
   const observed = active.filter((s) => s.stage === "observed");
-  if (observed.length > 0) return { basis: "observed", signals: byId(observed) };
   const forecast = active.filter((s) => s.stage === "forecast");
+  if (observed.length > 0) return { basis: "observed", signals: byId([...observed, ...forecast]) };
   if (forecast.length > 0) return { basis: "forecast", signals: byId(forecast) };
   return { basis: "none", signals: [] };
 }
@@ -32,16 +34,15 @@ export function combinedArea(selection: RouteHazardSelection): MultiPolygon | nu
 
 /** Why an existing route must be replaced, or null if it already avoids exactly these signals. */
 export function rerouteReason(route: TaskRoute, selection: RouteHazardSelection): string | null {
-  const before = [...route.avoidedSignalIds].sort().join("|");
-  const after = selection.signals.map((s) => s.id).join("|");
-  if (before === after) return null;
+  const before = new Set(route.avoidedSignalIds);
+  const added = selection.signals.filter((s) => !before.has(s.id));
+  const removed = route.avoidedSignalIds.filter((id) => !selection.signals.some((s) => s.id === id));
+  if (added.length === 0 && removed.length === 0) return null;
 
-  const labels = [...new Set(selection.signals.map((s) => s.provenance.label))].join("; ");
-  if (selection.basis === "none") return "Hazard area no longer active; route no longer avoids it";
-  if (route.basis !== selection.basis) {
-    return `Now avoids ${selection.basis} flood area instead of ${route.basis}: ${labels}`;
-  }
-  return `Flood area updated: ${labels}`;
+  const labels = (list: HazardSignal[]) => [...new Set(list.map((s) => s.provenance.label))].join("; ");
+  if (selection.signals.length === 0) return "Flood areas no longer active; route no longer avoids them";
+  if (removed.length === 0) return `Now also avoids ${labels(added)}`;
+  return `Flood areas updated; now avoids ${labels(selection.signals)}`;
 }
 
 function byId(signals: HazardSignal[]): HazardSignal[] {

@@ -83,7 +83,8 @@ describe("crew routing HTTP adapter", () => {
     const res = await app().request(`/route-hazards?now=${encodeURIComponent(REPLAY.satelliteUpdate.toISOString())}`);
     const body = RouteHazardsResponse.parse(await res.json());
     expect(body.basis).toBe("observed");
-    expect(body.signals).toHaveLength(1);
+    expect(body.signals.map((s) => s.stage).sort()).toEqual(["forecast", "observed"]);
+    expect(body.signals.find((s) => s.stage === "observed")!.unobserved).not.toBeNull();
     expect((await app().request("/route-hazards")).status).toBe(400);
   });
 });

@@ -11,7 +11,8 @@
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/adapters/out/postgres/migrate.ts",
-    "db:seed": "tsx src/adapters/out/postgres/seed.ts"
+    "db:seed": "tsx src/adapters/out/postgres/seed.ts",
+    "routes:record": "tsx scripts/record-routes.ts"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.11",
@@ -24,9 +25,16 @@
   },
   "devDependencies": {
     "@lifeline/tsconfig": "workspace:*",
+    "@types/d3-contour": "^3.0.6",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^26.6.11",
+    "@types/proj4": "^2.19.0",
+    "@types/shapefile": "^0.6.4",
+    "d3-contour": "^4.0.3",
     "drizzle-kit": "^0.31.11",
+    "geotiff": "^3.0.5",
+    "proj4": "^2.23.0",
+    "shapefile": "^0.6.6",
     "tsup": "^9.0.0",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3",

@@ -26,7 +26,7 @@ function setup(routing: RoutingGateway = new FixtureRoutingGateway()) {
 const ROUTED = ["T-KRN-1", "T-KRN-2", "T-KRN-3"];
 
 describe("RerouteOpenTasksUseCase (fixture routing, Krnov replay)", () => {
-  it("re-routes every open routed task when the satellite map replaces the forecast", async () => {
+  it("re-routes every open routed task when the satellite map arrives", async () => {
     const s = setup();
     for (const taskId of ROUTED) await s.plan.execute({ taskId, now: REPLAY.crewsDispatched });
 
@@ -37,18 +37,18 @@ describe("RerouteOpenTasksUseCase (fixture routing, Krnov replay)", () => {
     expect(result.failed).toEqual([]);
     for (const r of result.rerouted) {
       expect(r.previousBasis).toBe("forecast");
-      expect(r.reason).toMatch(/observed/);
+      expect(r.reason).toBe("Now also avoids Copernicus GFM (Sentinel-1), 15 Sept 2024 05:01 UTC");
     }
     expect(result.rerouted.find((r) => r.taskId === "T-KRN-2")!.destinationInHazard).toBe(true);
 
     const t1 = await s.tasks.findById("T-KRN-1");
     expect(t1!.route).toMatchObject({ version: 2, basis: "observed" });
-    expect(t1!.route!.rerouteReason).toMatch(/observed/);
+    expect(t1!.route!.rerouteReason).toMatch(/Copernicus GFM/);
   });
 
   it("keeps the crew's original start point when re-routing", async () => {
     const s = setup();
-    const from: [number, number] = [17.7065, 50.0935];
+    const from: [number, number] = [17.6835, 50.0955];
     await s.plan.execute({ taskId: "T-KRN-1", now: REPLAY.crewsDispatched, from });
     await s.reroute.execute({ now: REPLAY.satelliteUpdate });
     expect((await s.tasks.findById("T-KRN-1"))!.route!.from).toEqual(from);

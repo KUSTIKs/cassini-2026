@@ -115,6 +115,8 @@ export const RouteHazardsResponse = z.object({
       confidence: z.enum(["low", "medium", "high"]),
       label: z.string(),
       euSpace: z.enum(["copernicus", "galileo"]).nullable(),
+      /** Observed signals: where the sensor couldn't see (e.g. GFM exclusion mask). Null = saw everything. */
+      unobserved: MultiPolygonGeometry.nullable(),
     }),
   ),
 });

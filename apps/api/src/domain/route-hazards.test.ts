@@ -35,10 +35,10 @@ describe("selectRouteHazards", () => {
     expect(sel.signals.map((s) => s.id)).toEqual(["efas:opava"]);
   });
 
-  it("prefers observed water over the forecast once it exists", () => {
+  it("adds observed water to the forecast zone; it never removes it (satellites can be blind)", () => {
     const sel = selectRouteHazards([forecast, observed], new Date("2024-09-15T12:00:00Z"));
     expect(sel.basis).toBe("observed");
-    expect(sel.signals.map((s) => s.id)).toEqual(["gfm:s1-0915"]);
+    expect(sel.signals.map((s) => s.id)).toEqual(["efas:opava", "gfm:s1-0915"]);
   });
 
   it("ignores expired signals and kinds that don't close roads", () => {
@@ -80,14 +80,17 @@ describe("rerouteReason", () => {
     expect(rerouteReason(route({}), { basis: "forecast", signals: [forecast] })).toBeNull();
   });
 
-  it("explains a switch from forecast to observed using the signal's own label", () => {
-    const reason = rerouteReason(route({}), { basis: "observed", signals: [observed] });
-    expect(reason).toContain("observed");
-    expect(reason).toContain("label of gfm:s1-0915");
+  it("names only the newly added area, using the signal's own label", () => {
+    const reason = rerouteReason(route({}), { basis: "observed", signals: [forecast, observed] });
+    expect(reason).toBe("Now also avoids label of gfm:s1-0915");
   });
 
-  it("explains an updated area within the same stage", () => {
+  it("explains a replaced area", () => {
     const newer = signal({ id: "efas:opava-v2", stage: "forecast" });
     expect(rerouteReason(route({}), { basis: "forecast", signals: [newer] })).toMatch(/updated/);
+  });
+
+  it("explains when nothing is avoided any more", () => {
+    expect(rerouteReason(route({}), { basis: "none", signals: [] })).toMatch(/no longer active/);
   });
 });

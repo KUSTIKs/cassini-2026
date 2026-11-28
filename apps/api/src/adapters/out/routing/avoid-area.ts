@@ -91,11 +91,16 @@ function simplifyValid(area: Area, o: PrepareAvoidOptions): Area {
   let best: Area = area;
   for (let tol = o.toleranceDeg; tol < 0.01; tol *= 2) {
     const candidate = turf.simplify(area, { tolerance: tol, highQuality: true, mutate: false });
-    if (!turf.booleanValid(candidate)) break;
+    if (!piecesValid(candidate)) break;
     best = candidate;
     if (turf.coordAll(candidate).length <= o.maxVertices) break;
   }
   return best;
+}
+
+/** Each polygon valid on its own; separate polygons may touch at points (OGC-valid, accepted by ORS/JTS). */
+function piecesValid(area: Area): boolean {
+  return turf.flatten(area).features.every((p) => turf.booleanValid(p));
 }
 
 function toMulti(area: Area): MultiPolygon {
